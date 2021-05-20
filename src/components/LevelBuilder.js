@@ -28,6 +28,7 @@ export default class LevelBuilder {
             blocks: [],
             goals: [],
         };
+
     }
 
     /**
