@@ -30,7 +30,7 @@ export default class LevelBuilder {
             goals: [],
         };
 
-        this.levelData = new LevelData()
+        this.levelData = new LevelData();
     }
 
     /**
