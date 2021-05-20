@@ -11,4 +11,14 @@ export default class extends Mesh {
             })
         )
     }
+
+    Move(x,z){
+
+        console.log("MOOOVE")
+
+        let newX = this.position.x + x * config.blockSize;
+        let newZ = this.position.z + z * config.blockSize;
+
+        this.position.set(newX, this.position.y, newZ);
+    }
 }

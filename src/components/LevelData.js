@@ -1,3 +1,5 @@
+import Floor from "./Floor";
+import Goal from "./Goal";
 import Keyboard from "./Keyboard";
 import Player from "./Player";
 
@@ -30,8 +32,10 @@ export default class{
             for(let x = 0; x < this.objectsArray.length; x++){
                 for(let z = 0; z < this.objectsArray[x].length; z++){
                     if(this.objectsArray[x][z] instanceof Player){
-                        if(this.objectsArray[x-1][z] == null){
+                        if(this.objectsArray[x-1][z] == null && (this.groundArray[x-1][z] instanceof Floor || this.groundArray[x-1][z] instanceof Goal)){
                             this.objectsArray[x][z].Move(-1, 0);
+                            this.objectsArray[x-1][z] = this.objectsArray[x][z];
+                            this.objectsArray[x][z] = null;
                         }
                     }
                 }
@@ -40,11 +44,13 @@ export default class{
             keyboard.playersCanMove = true;
         }
         else if(keyboard.moveUp){
-            for(let i = 0; i < this.objectsArray.length; i++){
-                for(let j = 0; j < this.objectsArray[i].length; j++){
-                    if(this.objectsArray[i][j] instanceof Player){
-                        if(this.objectsArray[i-1][j] == null){
-                            this.objectsArray[i][j].Move(0, -1);
+            for(let z = 0; z < this.objectsArray[0].length; z++){
+                for(let x = 0; x < this.objectsArray[z].length; x++){
+                    if(this.objectsArray[x][z] instanceof Player){
+                        if(this.objectsArray[x][z-1] == null && (this.groundArray[x][z-1] instanceof Floor || this.groundArray[x][z-1] instanceof Goal)){
+                            this.objectsArray[x][z].Move(0, -1);
+                            this.objectsArray[x][z-1] = this.objectsArray[x][z];
+                            this.objectsArray[x][z] = null;
                         }
                     }
                 }
@@ -56,8 +62,10 @@ export default class{
             for(let x = this.objectsArray.length-1; x >= 0; x--){
                 for(let z = 0; z < this.objectsArray[x].length; z++){
                     if(this.objectsArray[x][z] instanceof Player){
-                        if(this.objectsArray[x-1][z] == null){
+                        if(this.objectsArray[x+1][z] == null && (this.groundArray[x+1][z] instanceof Floor || this.groundArray[x+1][z] instanceof Goal)){
                             this.objectsArray[x][z].Move(1, 0);
+                            this.objectsArray[x+1][z] = this.objectsArray[x][z];
+                            this.objectsArray[x][z] = null;
                         }
                     }
                 }
@@ -66,7 +74,19 @@ export default class{
             keyboard.playersCanMove = true;
         }
         else if(keyboard.moveDown){
-
+            for(let z = this.objectsArray[0].length - 1; z >= 0 ; z--){
+                for(let x = 0; x < this.objectsArray[z].length; x++){
+                    if(this.objectsArray[x][z] instanceof Player){
+                        if(this.objectsArray[x][z+1] == null && (this.groundArray[x][z+1] instanceof Floor || this.groundArray[x][z+1] instanceof Goal)){
+                            this.objectsArray[x][z].Move(0, 1);
+                            this.objectsArray[x][z+1] = this.objectsArray[x][z];
+                            this.objectsArray[x][z] = null;
+                        }
+                    }
+                }
+            }
+            keyboard.moveDown = false;
+            keyboard.playersCanMove = true;
         }
     }
 }

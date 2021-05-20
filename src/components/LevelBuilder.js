@@ -10,6 +10,7 @@ import Block from "./Block";
 import Floor from "./Floor";
 import Player from "./Player";
 import Goal from "./Goal";
+import LevelData from "./LevelData";
 
 export default class LevelBuilder {
     /**
@@ -28,6 +29,8 @@ export default class LevelBuilder {
             blocks: [],
             goals: [],
         };
+
+        this.levelData = new LevelData()
     }
 
     /**
@@ -43,6 +46,8 @@ export default class LevelBuilder {
      */
     build(data) {
         let p = new Promise((resolve, reject) => {
+            this.levelData.Create(data.size);
+
             let count = data.data.length;
 
             let size = Config.blockSize;
@@ -112,6 +117,8 @@ export default class LevelBuilder {
         this.scene.add(block);
         this.objects.blocks.push(block);
 
+        this.levelData.objectsArray[x][z] = block;
+
         return block;
     }
 
@@ -131,6 +138,8 @@ export default class LevelBuilder {
 
         this.scene.add(floor);
         this.objects.floors.push(floor);
+
+        this.levelData.groundArray[x][z] = floor;
 
         return floor;
     }
@@ -152,6 +161,8 @@ export default class LevelBuilder {
         this.scene.add(player);
         this.objects.players.push(player);
 
+        this.levelData.objectsArray[x][z] = player;
+
         return player;
     }
 
@@ -171,6 +182,8 @@ export default class LevelBuilder {
 
         this.scene.add(goal);
         this.objects.goals.push(goal);
+
+        this.levelData.groundArray[x][z] = goal;
 
         return goal;
     }

@@ -11,6 +11,7 @@ import Renderer from './Renderer';
 import Camera from './Camera';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import LevelBuilder from "./LevelBuilder";
+import Keyboard from './Keyboard';
 
 export default class Main {
     /**
@@ -46,6 +47,8 @@ export default class Main {
             .then(data => {
                 this.levelBuilder.build(data)
                     .then(() => {
+                        this.keyboard = new Keyboard(window);
+                        console.log(this.levelBuilder.levelData.objectsArray);
                         this.render();
                     })
             })
@@ -55,6 +58,8 @@ export default class Main {
         this.stats.begin()
 
         this.renderer.render(this.scene, this.camera);
+
+        this.levelBuilder.levelData.Update(this.keyboard);
 
         this.stats.end()
 
