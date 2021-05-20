@@ -8,7 +8,7 @@
     "build": "webpack",
     "watch": "webpack --progress --watch",
     "server": "webpack serve --open",
-    "go": "webpack && webpack serve --open"
+    "go": "webpack && webpack serve --open chrome"
   },
   "repository": {
     "type": "git",
