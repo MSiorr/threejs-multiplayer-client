@@ -23,14 +23,13 @@ export default class Main {
         this.camera = new Camera(75, this.renderer);
         this.levelBuilder = new LevelBuilder(this.scene);
 
-        const gridHelper = new GridHelper(1000, 100);
+        const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
         this.scene.add(gridHelper);
-
-        this.axisHelper = new AxesHelper(10000);
-        this.scene.add(this.axisHelper);
 
         this.camera.position.set(1000, 1000, 1000);
         this.camera.lookAt(0, 0, 0);
+        this.camera.far = 10000;
+        this.camera.updateProjectionMatrix();
 
         this.ambientLight = new AmbientLight(0xffffff, 1);
         this.scene.add(this.ambientLight);
