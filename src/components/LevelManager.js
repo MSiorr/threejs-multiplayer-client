@@ -129,6 +129,7 @@ export default class LevelBuilder {
      */
     _createFloor(x, z, size) {
         let floor = new Floor(x, z);
+        floor.createOutline();
 
         //@ts-ignore
         let y = new Box3().setFromObject(floor).getSize().y;
@@ -169,6 +170,7 @@ export default class LevelBuilder {
      */
     _createGoal(x, z, size) {
         let goal = new Goal(x, z);
+        goal.createOutline();
 
         //@ts-ignore
         let y = new Box3().setFromObject(goal).getSize().y;

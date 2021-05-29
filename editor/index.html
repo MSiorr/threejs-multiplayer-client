@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <script src="./app.js" type="module"></script>
+
+    <div id="container">
+        <div id="controls">
+            <h1>Editor</h1>
+
+            <div id="tiles">
+                <div data-tile="wall" class="tile">wall</div>
+                <div data-tile="enemy" class="tile">enemy</div>
+                <div data-tile="treasure" class="tile">treasure</div>
+                <div data-tile="light" class="tile">light</div>
+                <div data-tile="delete" class="tile">delete</div>
+            </div>
+
+            <div id="buttons">
+                <div data-action="save" class="button">Save</div>
+                <div data-action="load" class="button">Load</div>
+                <div data-action="test" class="button">Save TEST</div>
+            </div>
+        </div>
+        <div id="board-container">
+            <div id="board"></div>
+        </div>
+        <div id="output">
+            <h1>Output</h1>
+            <textarea id="json" readonly></textarea>
+        </div>
+    </div>
+</body>
+
+</html>

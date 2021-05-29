@@ -1,0 +1,192 @@
+$controlsWidth: 300px;
+$boardContainerWidthMin: 300px;
+$outputWidth: 500px;
+
+$bg-primary: rgb(17, 17, 21);
+$bg-secondary: rgb(37, 37, 41);
+$bg-tertiary: rgb(57, 57, 61);
+
+$fg-primary: rgb(245, 245, 245);
+$fg-secondary: rgb(205, 205, 205);
+$fg-tertiary: rgb(155, 155, 155);
+
+$tile-colors: (
+    "wall": rgb(85, 238, 71),
+    "enemy": rgb(240, 73, 73),
+    "treasure": rgb(67, 186, 241),
+    "light": rgb(238, 210, 83),
+    "delete": $fg-secondary,
+);
+
+* {
+    box-sizing: border-box;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: white;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    #board-container {
+        height: 100%;
+        width: calc(100% - #{$controlsWidth} - #{$outputWidth});
+        min-width: $boardContainerWidthMin;
+        background-color: $bg-tertiary;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        #board {
+            $a: $controlsWidth + $outputWidth;
+            width: clamp(300px, calc(100vw - #{$a}), 600px);
+            height: clamp(300px, calc(100vw - #{$a}), 600px);
+            border: 1px solid $fg-secondary;
+            background-color: $fg-secondary;
+
+            display: grid;
+
+            .field {
+                border: 1px solid $fg-secondary;
+                background-color: $bg-tertiary;
+                cursor: pointer;
+
+                @each $color, $value in $tile-colors {
+                    &.#{$color} {
+                        background-color: adjust-color($color: $value, $lightness: -15%);
+                    }
+                }
+            }
+        }
+    }
+
+    #controls {
+        height: 100%;
+        width: $controlsWidth;
+        background-color: $bg-secondary;
+        padding: 10px;
+
+        h1 {
+            color: $fg-primary;
+            font-size: 42px;
+            text-align: center;
+            margin: 0;
+            margin-bottom: 40px;
+        }
+
+        #tiles {
+            .tile {
+                font-size: 20px;
+                max-width: 180px;
+                margin: 0 auto 8px;
+                padding: 3px 5px;
+                text-align: center;
+                cursor: pointer;
+                border-radius: 8px;
+                color: $fg-secondary;
+
+                &:nth-child(4) {
+                    margin-bottom: 20px;
+                }
+
+                @each $tile, $color in $tile-colors {
+                    &[data-tile="#{$tile}"] {
+                        border: 2px solid $color;
+                        transition: background-color 0.2s;
+
+                        &:hover {
+                            background-color: rgba($color, 0.2);
+                        }
+
+                        &.selected {
+                            background-color: rgba($color, 0.5);
+                            color: $fg-primary;
+                        }
+                    }
+                }
+            }
+        }
+
+        #buttons {
+            margin-top: 64px;
+
+            .button {
+                font-size: 20px;
+                max-width: 180px;
+                margin: 0 auto 8px;
+                padding: 3px 5px;
+                text-align: center;
+                cursor: pointer;
+                border-radius: 8px;
+                border: 4px solid $bg-primary;
+                color: $fg-secondary;
+                transition: background-color 0.15s;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                &:hover {
+                    background-color: rgba($bg-primary, 0.5);
+                    color: $fg-primary;
+                }
+            }
+        }
+    }
+
+    #output {
+        height: 100%;
+        width: calc(100% - #{$controlsWidth} - #{$boardContainerWidthMin});
+        max-width: $outputWidth;
+        background-color: $bg-secondary;
+        padding: 10px;
+        text-align: center;
+        overflow: hidden;
+
+        @media (max-width: 620px) {
+            & {
+                padding: 10px calc((100% - 600px) / 2);
+            }
+        }
+
+        h1 {
+            color: $fg-primary;
+            font-size: 42px;
+            text-align: center;
+            margin: 0;
+            margin-bottom: 40px;
+        }
+
+        #json {
+            background-color: transparent;
+            white-space: pre;
+            color: $fg-secondary;
+            resize: none;
+            width: calc(100% - 40px);
+            max-height: 600px;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}

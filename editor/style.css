@@ -1,0 +1,202 @@
+* {
+  box-sizing: border-box;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: white;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#container #board-container {
+  height: 100%;
+  width: calc(100% - 300px - 500px);
+  min-width: 300px;
+  background-color: #39393d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#container #board-container #board {
+  width: clamp(300px, calc(100vw - 800px), 600px);
+  height: clamp(300px, calc(100vw - 800px), 600px);
+  border: 1px solid #cdcdcd;
+  background-color: #cdcdcd;
+  display: grid;
+}
+#container #board-container #board .field {
+  border: 1px solid #cdcdcd;
+  background-color: #39393d;
+  cursor: pointer;
+}
+#container #board-container #board .field.wall {
+  background-color: #24d514;
+}
+#container #board-container #board .field.enemy {
+  background-color: #da1212;
+}
+#container #board-container #board .field.treasure {
+  background-color: #1098d7;
+}
+#container #board-container #board .field.light {
+  background-color: #dfba16;
+}
+#container #board-container #board .field.delete {
+  background-color: #a7a7a7;
+}
+#container #controls {
+  height: 100%;
+  width: 300px;
+  background-color: #252529;
+  padding: 10px;
+}
+#container #controls h1 {
+  color: whitesmoke;
+  font-size: 42px;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 40px;
+}
+#container #controls #tiles .tile {
+  font-size: 20px;
+  max-width: 180px;
+  margin: 0 auto 8px;
+  padding: 3px 5px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #cdcdcd;
+}
+#container #controls #tiles .tile:nth-child(4) {
+  margin-bottom: 20px;
+}
+#container #controls #tiles .tile[data-tile=wall] {
+  border: 2px solid #55ee47;
+  transition: background-color 0.2s;
+}
+#container #controls #tiles .tile[data-tile=wall]:hover {
+  background-color: rgba(85, 238, 71, 0.2);
+}
+#container #controls #tiles .tile[data-tile=wall].selected {
+  background-color: rgba(85, 238, 71, 0.5);
+  color: whitesmoke;
+}
+#container #controls #tiles .tile[data-tile=enemy] {
+  border: 2px solid #f04949;
+  transition: background-color 0.2s;
+}
+#container #controls #tiles .tile[data-tile=enemy]:hover {
+  background-color: rgba(240, 73, 73, 0.2);
+}
+#container #controls #tiles .tile[data-tile=enemy].selected {
+  background-color: rgba(240, 73, 73, 0.5);
+  color: whitesmoke;
+}
+#container #controls #tiles .tile[data-tile=treasure] {
+  border: 2px solid #43baf1;
+  transition: background-color 0.2s;
+}
+#container #controls #tiles .tile[data-tile=treasure]:hover {
+  background-color: rgba(67, 186, 241, 0.2);
+}
+#container #controls #tiles .tile[data-tile=treasure].selected {
+  background-color: rgba(67, 186, 241, 0.5);
+  color: whitesmoke;
+}
+#container #controls #tiles .tile[data-tile=light] {
+  border: 2px solid #eed253;
+  transition: background-color 0.2s;
+}
+#container #controls #tiles .tile[data-tile=light]:hover {
+  background-color: rgba(238, 210, 83, 0.2);
+}
+#container #controls #tiles .tile[data-tile=light].selected {
+  background-color: rgba(238, 210, 83, 0.5);
+  color: whitesmoke;
+}
+#container #controls #tiles .tile[data-tile=delete] {
+  border: 2px solid #cdcdcd;
+  transition: background-color 0.2s;
+}
+#container #controls #tiles .tile[data-tile=delete]:hover {
+  background-color: rgba(205, 205, 205, 0.2);
+}
+#container #controls #tiles .tile[data-tile=delete].selected {
+  background-color: rgba(205, 205, 205, 0.5);
+  color: whitesmoke;
+}
+#container #controls #buttons {
+  margin-top: 64px;
+}
+#container #controls #buttons .button {
+  font-size: 20px;
+  max-width: 180px;
+  margin: 0 auto 8px;
+  padding: 3px 5px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 4px solid #111115;
+  color: #cdcdcd;
+  transition: background-color 0.15s;
+}
+#container #controls #buttons .button:last-child {
+  margin-bottom: 0;
+}
+#container #controls #buttons .button:hover {
+  background-color: rgba(17, 17, 21, 0.5);
+  color: whitesmoke;
+}
+#container #output {
+  height: 100%;
+  width: calc(100% - 300px - 300px);
+  max-width: 500px;
+  background-color: #252529;
+  padding: 10px;
+  text-align: center;
+  overflow: hidden;
+}
+@media (max-width: 620px) {
+  #container #output {
+    padding: 10px calc((100% - 600px) / 2);
+  }
+}
+#container #output h1 {
+  color: whitesmoke;
+  font-size: 42px;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 40px;
+}
+#container #output #json {
+  background-color: transparent;
+  white-space: pre;
+  color: #cdcdcd;
+  resize: none;
+  width: calc(100% - 40px);
+  max-height: 600px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#container #output #json:focus {
+  outline: none;
+}
+
+/*# sourceMappingURL=style.css.map */

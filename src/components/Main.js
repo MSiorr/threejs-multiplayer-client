@@ -25,8 +25,8 @@ export default class Main {
         this.camera = new Camera(75, this.renderer);
         this.levelManager = new LevelBuilder(this.scene);
 
-        const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
-        this.scene.add(gridHelper);
+        // const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
+        // this.scene.add(gridHelper);
 
         this.camera.position.set(1000, 1000, 1000);
         this.camera.lookAt(0, 0, 0);
