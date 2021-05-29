@@ -107,6 +107,9 @@ function createMenuButtons() {
                 el.target.style.color = "black";
             }
         }
+        /**
+         * @param {MouseEvent} el 
+         */
         button.onmouseout = (el) => {
             if (e.clicked == false || e.clicked == undefined) {
                 el.target.style.backgroundColor = "transparent";
@@ -131,34 +134,66 @@ function createMenuButtons() {
                     el.target.style.color = "black";
                 }
             } else {
-                switch (e.value) {
-                    case "save": {
-                        let json = JSON.stringify({
-                            size: arenaSize,
-                            data: outputData
-                        })
-                        saveFetch(json)
-                        break;
-                    }
-                    case "saveTest": {
-                        let json = JSON.stringify({
-                            size: arenaSize,
-                            data: JSON.parse(testLevel)
-                        })
-                        saveFetch(json)
-                        break;
-                    }
-                    case "load": {
-                        fetch("/level", { method: "GET" })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log(data);
-                                readLoadedData(data.data)
-                            })
-                        break;
+                if (outputData.length > 0) {
+                    switch (e.value) {
+                        case "save": {
+                            // let json = JSON.stringify({
+                            //     size: arenaSize,
+                            //     data: outputData
+                            // })
+                            saveFetch(outputData)
+                            break;
+                        }
+                        case "saveTest": {
+                            // let json = JSON.stringify({
+                            //     size: arenaSize,
+                            //     data: JSON.parse(testLevel)
+                            // })
+                            saveFetch(JSON.parse(testLevel))
+                            break;
+                        }
+                        case "load": {
+                            fetch("/level", { method: "GET" })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(data);
+                                    readLoadedData(data.data)
+                                })
+                            break;
+                        }
                     }
                 }
-                function saveFetch(data) {
+
+                function saveFetch(arenaData) {
+                    let firstX = arenaData[0].x;
+                    let firstZ = arenaData[0].z;
+
+                    arenaData.forEach(e => {
+                        if (firstX == null) {
+                            firstX = e.x
+                        }
+                        if (firstZ == null) {
+                            firstZ = e.z
+                        }
+                        if (firstX > e.x) {
+                            firstX = e.x
+                        }
+                        if (firstZ > e.z) {
+                            firstZ = e.z
+                        }
+                    })
+
+                    for (let i = 0; i < arenaData.length; i++) {
+                        arenaData[i].x = arenaData[i].x - firstX;
+                        arenaData[i].z = arenaData[i].z - firstZ;
+                        arenaData[i].id = (arenaSize * arenaData[i].x) + outputData[i].z
+                    }
+
+                    let data = JSON.stringify({
+                        size: arenaSize,
+                        data: arenaData
+                    })
+
                     fetch("/level", {
                         method: "POST",
                         headers: {
