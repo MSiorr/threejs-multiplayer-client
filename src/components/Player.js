@@ -17,6 +17,9 @@ export default class extends Mesh {
 
         this.x = x;
         this.z = z;
+        this.fallingVelocity = 0;
+        this.fallingVelocityCap = 30;
+        this.fallingVelocityIncrement = 0.6;
     }
 
     // /**
@@ -64,6 +67,7 @@ export default class extends Mesh {
     }
 
     fall() {
-        this.position.y -= 1;
+        this.fallingVelocity = Math.min(this.fallingVelocity + this.fallingVelocityIncrement, this.fallingVelocityCap);
+        this.position.y -= this.fallingVelocity;
     }
 }

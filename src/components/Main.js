@@ -73,8 +73,12 @@ export default class Main {
         //         player.fall();
         //     }
         // }
-        for(const player of this.levelManager.objects.playersFalling){
+        for (const player of this.levelManager.objects.playersFalling) {
             player.fall();
+        }
+
+        if (this.levelManager.functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity()) {
+            console.log("Bravo");
         }
 
         this.renderer.render(this.scene, this.camera);

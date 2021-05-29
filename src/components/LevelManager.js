@@ -200,18 +200,18 @@ export default class LevelBuilder {
         this.objects.players.sort((a, b) => {
             return a.x - b.x
         });
-        
+
         let tabToDel = [];
 
         for (const player of this.objects.players) {
             if (this.canMove(player.x - 1, player.z)) {
                 player.moveLeft();
-                if(this.ShouldFall(player)){
+                if (this.ShouldFall(player)) {
                     tabToDel.push(player);
                 }
             }
         }
-        
+
         this.MakeFall(tabToDel);
     }
 
@@ -219,18 +219,18 @@ export default class LevelBuilder {
         this.objects.players.sort((a, b) => {
             return - (a.x - b.x)
         });
-        
+
         let tabToDel = [];
 
         for (const player of this.objects.players) {
             if (this.canMove(player.x + 1, player.z)) {
                 player.moveRight();
-                if(this.ShouldFall(player)){
+                if (this.ShouldFall(player)) {
                     tabToDel.push(player);
                 }
             }
         }
-        
+
         this.MakeFall(tabToDel);
     }
 
@@ -244,12 +244,12 @@ export default class LevelBuilder {
         for (const player of this.objects.players) {
             if (this.canMove(player.x, player.z - 1)) {
                 player.moveUp();
-                if(this.ShouldFall(player)){
+                if (this.ShouldFall(player)) {
                     tabToDel.push(player);
                 }
             }
         }
-        
+
         this.MakeFall(tabToDel);
     }
 
@@ -263,7 +263,7 @@ export default class LevelBuilder {
         for (const player of this.objects.players) {
             if (this.canMove(player.x, player.z + 1)) {
                 player.moveDown();
-                if(this.ShouldFall(player)){
+                if (this.ShouldFall(player)) {
                     tabToDel.push(player);
                 }
             }
@@ -275,15 +275,15 @@ export default class LevelBuilder {
     /**
      * @param {Player} player
      */
-    ShouldFall(player){
-        for(let floor of this.objects.floors){
-            if(floor.x == player.x && floor.z == player.z){
+    ShouldFall(player) {
+        for (let floor of this.objects.floors) {
+            if (floor.x == player.x && floor.z == player.z) {
                 return false;
             }
         }
 
-        for(let goal of this.objects.goals){
-            if(goal.x == player.x && goal.z == player.z){
+        for (let goal of this.objects.goals) {
+            if (goal.x == player.x && goal.z == player.z) {
                 return false;
             }
         }
@@ -294,10 +294,35 @@ export default class LevelBuilder {
     /**
      * @param {Player[]} tab
      */
-    MakeFall(tab){
-        for(let player of tab){
+    MakeFall(tab) {
+        for (let player of tab) {
             this.objects.players.splice(this.objects.players.indexOf(player), 1);
             this.objects.playersFalling.push(player);
         }
+    }
+
+    /**
+     * @returns {Boolean}
+     */
+    functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity() {
+        if (this.objects.players.length !== this.objects.goals.length) {
+            return false;
+        }
+
+        for (const player of this.objects.players) {
+            let isOnGoal = false;
+
+            for (const goal of this.objects.goals) {
+                if (player.x == goal.x && player.z == goal.z) {
+                    isOnGoal = true;
+                }
+            }
+
+            if (isOnGoal == false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
