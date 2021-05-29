@@ -19,7 +19,7 @@ export default class LevelBuilder {
         this.scene = scene;
 
         /**
-         * @type {{floors: Floor[], players: Player[], blocks: Block[], goals: Goal[]}}
+         * @type {{floors: Floor[], players: Player[], blocks: Block[], goals: Goal[], playersFalling: Player[]}}
          */
 
         this.objects = {
@@ -27,6 +27,7 @@ export default class LevelBuilder {
             players: [],
             blocks: [],
             goals: [],
+            playersFalling: []
         };
     }
 
@@ -96,6 +97,7 @@ export default class LevelBuilder {
             players: [],
             floors: [],
             goals: [],
+            playersFalling: []
         };
     }
 
@@ -198,24 +200,38 @@ export default class LevelBuilder {
         this.objects.players.sort((a, b) => {
             return a.x - b.x
         });
+        
+        let tabToDel = [];
 
         for (const player of this.objects.players) {
             if (this.canMove(player.x - 1, player.z)) {
                 player.moveLeft();
+                if(this.ShouldFall(player)){
+                    tabToDel.push(player);
+                }
             }
         }
+        
+        this.MakeFall(tabToDel);
     }
 
     moveRight() {
         this.objects.players.sort((a, b) => {
             return - (a.x - b.x)
         });
+        
+        let tabToDel = [];
 
         for (const player of this.objects.players) {
             if (this.canMove(player.x + 1, player.z)) {
                 player.moveRight();
+                if(this.ShouldFall(player)){
+                    tabToDel.push(player);
+                }
             }
         }
+        
+        this.MakeFall(tabToDel);
     }
 
     moveUp() {
@@ -223,11 +239,18 @@ export default class LevelBuilder {
             return a.z - b.z
         });
 
+        let tabToDel = [];
+
         for (const player of this.objects.players) {
             if (this.canMove(player.x, player.z - 1)) {
                 player.moveUp();
+                if(this.ShouldFall(player)){
+                    tabToDel.push(player);
+                }
             }
         }
+        
+        this.MakeFall(tabToDel);
     }
 
     moveDown() {
@@ -235,10 +258,46 @@ export default class LevelBuilder {
             return - (a.z - b.z)
         });
 
+        let tabToDel = [];
+
         for (const player of this.objects.players) {
             if (this.canMove(player.x, player.z + 1)) {
                 player.moveDown();
+                if(this.ShouldFall(player)){
+                    tabToDel.push(player);
+                }
             }
+        }
+
+        this.MakeFall(tabToDel);
+    }
+
+    /**
+     * @param {Player} player
+     */
+    ShouldFall(player){
+        for(let floor of this.objects.floors){
+            if(floor.x == player.x && floor.z == player.z){
+                return false;
+            }
+        }
+
+        for(let goal of this.objects.goals){
+            if(goal.x == player.x && goal.z == player.z){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param {Player[]} tab
+     */
+    MakeFall(tab){
+        for(let player of tab){
+            this.objects.players.splice(this.objects.players.indexOf(player), 1);
+            this.objects.playersFalling.push(player);
         }
     }
 }

@@ -17,7 +17,6 @@ export default class extends Mesh {
 
         this.x = x;
         this.z = z;
-        this.shouldFall = false;
     }
 
     // /**
