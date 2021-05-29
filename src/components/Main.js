@@ -30,7 +30,7 @@ export default class Main {
 
         this.camera.position.set(1000, 1000, 1000);
         this.camera.lookAt(0, 0, 0);
-        this.camera.far = 10000;
+        this.camera.far = 100000;
         this.camera.updateProjectionMatrix();
 
         this.ambientLight = new AmbientLight(0xffffff, 1);
@@ -68,11 +68,6 @@ export default class Main {
         // if (this.keyboard.moveUp) { this.levelManager.moveUp(); this.keyboard.moveUp = false; this.keyboard.playersCanMove = true; }
         // if (this.keyboard.moveDown) { this.levelManager.moveDown(); this.keyboard.moveDown = false; this.keyboard.playersCanMove = true; }
 
-        // for (const player of this.levelManager.objects.players) {
-        //     if (player.shouldFall) {
-        //         player.fall();
-        //     }
-        // }
         for (const player of this.levelManager.objects.playersFalling) {
             player.fall();
         }
