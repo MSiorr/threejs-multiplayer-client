@@ -134,109 +134,110 @@ function createMenuButtons() {
                     el.target.style.color = "black";
                 }
             } else {
-                if (outputData.length > 0) {
-                    switch (e.value) {
-                        case "save": {
-                            // let json = JSON.stringify({
-                            //     size: arenaSize,
-                            //     data: outputData
-                            // })
+
+                switch (e.value) {
+                    case "save": {
+                        // let json = JSON.stringify({
+                        //     size: arenaSize,
+                        //     data: outputData
+                        // })
+                        if (outputData.length > 0) {
                             saveFetch(outputData)
-                            break;
                         }
-                        case "saveTest": {
-                            // let json = JSON.stringify({
-                            //     size: arenaSize,
-                            //     data: JSON.parse(testLevel)
-                            // })
-                            saveFetch(JSON.parse(testLevel))
-                            break;
-                        }
-                        case "load": {
-                            fetch("/level", { method: "GET" })
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log(data);
-                                    readLoadedData(data.data)
-                                })
-                            break;
-                        }
+                        break;
+                    }
+                    case "saveTest": {
+                        // let json = JSON.stringify({
+                        //     size: arenaSize,
+                        //     data: JSON.parse(testLevel)
+                        // })
+                        saveFetch(JSON.parse(testLevel))
+                        break;
+                    }
+                    case "load": {
+                        fetch("/level", { method: "GET" })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data);
+                                readLoadedData(data.data)
+                            })
+                        break;
                     }
                 }
+            }
 
-                function saveFetch(arenaData) {
-                    let firstX = arenaData[0].x;
-                    let firstZ = arenaData[0].z;
+            function saveFetch(arenaData) {
+                let firstX = arenaData[0].x;
+                let firstZ = arenaData[0].z;
 
-                    arenaData.forEach(e => {
-                        if (firstX == null) {
-                            firstX = e.x
-                        }
-                        if (firstZ == null) {
-                            firstZ = e.z
-                        }
-                        if (firstX > e.x) {
-                            firstX = e.x
-                        }
-                        if (firstZ > e.z) {
-                            firstZ = e.z
-                        }
-                    })
-
-                    for (let i = 0; i < arenaData.length; i++) {
-                        arenaData[i].x = arenaData[i].x - firstX;
-                        arenaData[i].z = arenaData[i].z - firstZ;
-                        arenaData[i].id = (arenaSize * arenaData[i].x) + outputData[i].z
+                arenaData.forEach(e => {
+                    if (firstX == null) {
+                        firstX = e.x
                     }
+                    if (firstZ == null) {
+                        firstZ = e.z
+                    }
+                    if (firstX > e.x) {
+                        firstX = e.x
+                    }
+                    if (firstZ > e.z) {
+                        firstZ = e.z
+                    }
+                })
 
-                    let data = JSON.stringify({
-                        size: arenaSize,
-                        data: arenaData
-                    })
-
-                    fetch("/level", {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': "application/json"
-                        },
-                        body: data
-                    })
-                        .then(response => response.text())
-                        .then(data => {
-                            alert(data)
-                        })
+                for (let i = 0; i < arenaData.length; i++) {
+                    arenaData[i].x = arenaData[i].x - firstX;
+                    arenaData[i].z = arenaData[i].z - firstZ;
+                    arenaData[i].id = (arenaSize * arenaData[i].x) + outputData[i].z
                 }
 
-                function readLoadedData(data) {
-                    arenaFields.forEach(e => {
-                        e.forEach(i => {
-                            i.removeAttribute("style");
-                        })
+                let data = JSON.stringify({
+                    size: arenaSize,
+                    data: arenaData
+                })
+
+                fetch("/level", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: data
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert(data)
                     })
-                    for (let i = 0; i < arenaData.length; i++) {
-                        for (let j = 0; j < arenaData[i].length; j++) {
-                            arenaData[i][j] = null;
-                        }
+            }
+
+            function readLoadedData(data) {
+                arenaFields.forEach(e => {
+                    e.forEach(i => {
+                        i.removeAttribute("style");
+                    })
+                })
+                for (let i = 0; i < arenaData.length; i++) {
+                    for (let j = 0; j < arenaData[i].length; j++) {
+                        arenaData[i][j] = null;
                     }
-                    data.forEach(e => {
-                        arenaFields[e.x][e.z].style.backgroundColor = colors[e.type];
-                        arenaData[e.x][e.z] = {
-                            id: e.id,
-                            x: e.x,
-                            z: e.z,
-                            type: e.type
+                }
+                data.forEach(e => {
+                    arenaFields[e.x][e.z].style.backgroundColor = colors[e.type];
+                    arenaData[e.x][e.z] = {
+                        id: e.id,
+                        x: e.x,
+                        z: e.z,
+                        type: e.type
+                    }
+                })
+                outputData = [];
+                arenaData.forEach(e => {
+                    e.forEach(k => {
+                        if (k != null) {
+                            outputData.push(k);
                         }
                     })
-                    outputData = [];
-                    arenaData.forEach(e => {
-                        e.forEach(k => {
-                            if (k != null) {
-                                outputData.push(k);
-                            }
-                        })
-                    })
-                    outputTextArea.value = JSON.stringify(outputData, null, 4)
-                }
+                })
+                outputTextArea.value = JSON.stringify(outputData, null, 4)
             }
         }
 
