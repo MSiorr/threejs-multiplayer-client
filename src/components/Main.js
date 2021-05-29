@@ -12,6 +12,7 @@ import Camera from './Camera';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import LevelBuilder from "./LevelManager";
 import Keyboard from './Keyboard';
+import InputManager from './InputManager';
 
 export default class Main {
     /**
@@ -47,7 +48,13 @@ export default class Main {
             .then(data => {
                 this.levelManager.build(data)
                     .then(() => {
-                        this.keyboard = new Keyboard(window);
+                        this.inputManager = new InputManager([true]);
+                        this.inputManager.RegisterEventCapture();
+                        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], false);
+                        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], false);
+                        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], false);
+                        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], false);
+
                         this.render();
                     })
             })
@@ -56,10 +63,10 @@ export default class Main {
     render() {
         this.stats.begin()
 
-        if (this.keyboard.moveLeft) { this.levelManager.moveLeft(); this.keyboard.moveLeft = false; this.keyboard.playersCanMove = true; }
-        if (this.keyboard.moveRight) { this.levelManager.moveRight(); this.keyboard.moveRight = false; this.keyboard.playersCanMove = true; }
-        if (this.keyboard.moveUp) { this.levelManager.moveUp(); this.keyboard.moveUp = false; this.keyboard.playersCanMove = true; }
-        if (this.keyboard.moveDown) { this.levelManager.moveDown(); this.keyboard.moveDown = false; this.keyboard.playersCanMove = true; }
+        // if (this.keyboard.moveLeft) { this.levelManager.moveLeft(); this.keyboard.moveLeft = false; this.keyboard.playersCanMove = true; }
+        // if (this.keyboard.moveRight) { this.levelManager.moveRight(); this.keyboard.moveRight = false; this.keyboard.playersCanMove = true; }
+        // if (this.keyboard.moveUp) { this.levelManager.moveUp(); this.keyboard.moveUp = false; this.keyboard.playersCanMove = true; }
+        // if (this.keyboard.moveDown) { this.levelManager.moveDown(); this.keyboard.moveDown = false; this.keyboard.playersCanMove = true; }
 
         this.renderer.render(this.scene, this.camera);
 
