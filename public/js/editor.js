@@ -188,7 +188,7 @@ function createMenuButtons() {
                 for (let i = 0; i < arenaData.length; i++) {
                     arenaData[i].x = arenaData[i].x - firstX;
                     arenaData[i].z = arenaData[i].z - firstZ;
-                    arenaData[i].id = (arenaSize * arenaData[i].x) + outputData[i].z
+                    arenaData[i].id = (arenaSize * arenaData[i].x) + arenaData[i].z
                 }
 
                 let data = JSON.stringify({
