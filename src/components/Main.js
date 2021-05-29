@@ -4,7 +4,12 @@ import {
     Scene,
     GridHelper,
     AmbientLight,
-    AxesHelper
+    AxesHelper,
+    Vector3,
+    Euler,
+    CameraHelper,
+    DirectionalLightHelper,
+    PointLight
 } from 'three';
 
 import Renderer from './Renderer';

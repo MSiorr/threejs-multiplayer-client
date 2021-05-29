@@ -15,6 +15,8 @@ export default class extends Mesh {
             })
         )
 
+        this.receiveShadow = true;
+
         this.x = x;
         this.z = z;
     }
@@ -35,9 +37,9 @@ export default class extends Mesh {
         //@ts-ignore
         let z = new Box3().setFromObject(this).getSize().z;
 
-        mesh.position.x -= x / 2 + 1;
+        mesh.position.x -= x / 2;
         mesh.position.y += y / 2 + 1;
-        mesh.position.z -= z / 2 + 1;
+        mesh.position.z -= z / 2;
         this.add(mesh);
     }
 }

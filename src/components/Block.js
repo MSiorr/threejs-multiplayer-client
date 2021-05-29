@@ -9,11 +9,14 @@ export default class extends Mesh {
      */
     constructor(x, z) {
         super(
-            new BoxGeometry(config.blockSize, config.blockSize, config.blockSize),
+            new BoxGeometry(config.blockSize, config.blockSize / 3, config.blockSize),
             new MeshPhongMaterial({
-                color: 0x000000
+                color: 0x444444
             })
         )
+
+        this.castShadow = true;
+        this.receiveShadow = true;
 
         this.x = x;
         this.z = z;

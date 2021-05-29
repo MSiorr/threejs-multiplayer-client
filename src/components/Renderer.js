@@ -9,7 +9,7 @@ export default class Renderer extends WebGLRenderer {
 
         this.container = container;
 
-        this.setClearColor(0x888888);
+        this.setClearColor(0x87ceeb);
         this.shadowMap.enabled = true;
         this.shadowMap.type = PCFSoftShadowMap;
 
@@ -22,7 +22,10 @@ export default class Renderer extends WebGLRenderer {
     }
 
     updateSize() {
-        this.setSize(window.innerWidth, window.innerHeight);
+        // let bbox = this.container.getBoundingClientRect();
+
+        // this.setSize(bbox.width, bbox.height);
+        this.setSize(innerWidth, innerHeight);
     }
 
     /**

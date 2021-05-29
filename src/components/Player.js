@@ -15,6 +15,9 @@ export default class extends Mesh {
             })
         )
 
+        this.castShadow = true;
+        this.receiveShadow = true;
+
         this.x = x;
         this.z = z;
         this.fallingVelocity = 0;
