@@ -10,7 +10,6 @@ import Block from "./Block";
 import Floor from "./Floor";
 import Player from "./Player";
 import Goal from "./Goal";
-import LevelData from "./LevelData";
 
 export default class LevelBuilder {
     /**
@@ -29,8 +28,6 @@ export default class LevelBuilder {
             blocks: [],
             goals: [],
         };
-
-        this.levelData = new LevelData();
     }
 
     /**
@@ -46,8 +43,6 @@ export default class LevelBuilder {
      */
     build(data) {
         let p = new Promise((resolve, reject) => {
-            this.levelData.Create(data.size);
-
             let count = data.data.length;
 
             let size = Config.blockSize;
@@ -89,7 +84,11 @@ export default class LevelBuilder {
 
     empty() {
         this.scene.traverse(object => {
-            this.scene.remove(object);
+            if (object instanceof Player ||
+                object instanceof Goal ||
+                object instanceof Floor ||
+                object instanceof Block)
+                this.scene.remove(object);
         });
 
         this.objects = {
@@ -107,7 +106,7 @@ export default class LevelBuilder {
      * @returns {Block}
      */
     _createBlock(x, z, size) {
-        let block = new Block();
+        let block = new Block(x, z);
 
         //@ts-ignore
         let y = new Box3().setFromObject(block).getSize().y;
@@ -116,8 +115,6 @@ export default class LevelBuilder {
 
         this.scene.add(block);
         this.objects.blocks.push(block);
-
-        this.levelData.objectsArray[x][z] = block;
 
         return block;
     }
@@ -129,7 +126,7 @@ export default class LevelBuilder {
      * @returns {Floor}
      */
     _createFloor(x, z, size) {
-        let floor = new Floor();
+        let floor = new Floor(x, z);
 
         //@ts-ignore
         let y = new Box3().setFromObject(floor).getSize().y;
@@ -138,8 +135,6 @@ export default class LevelBuilder {
 
         this.scene.add(floor);
         this.objects.floors.push(floor);
-
-        this.levelData.groundArray[x][z] = floor;
 
         return floor;
     }
@@ -151,7 +146,7 @@ export default class LevelBuilder {
      * @returns {Player}
      */
     _createPlayer(x, z, size) {
-        let player = new Player();
+        let player = new Player(x, z);
 
         //@ts-ignore
         let y = new Box3().setFromObject(player).getSize().y;
@@ -160,8 +155,6 @@ export default class LevelBuilder {
 
         this.scene.add(player);
         this.objects.players.push(player);
-
-        this.levelData.objectsArray[x][z] = player;
 
         return player;
     }
@@ -173,7 +166,7 @@ export default class LevelBuilder {
      * @returns {Goal}
      */
     _createGoal(x, z, size) {
-        let goal = new Goal();
+        let goal = new Goal(x, z);
 
         //@ts-ignore
         let y = new Box3().setFromObject(goal).getSize().y;
@@ -183,8 +176,69 @@ export default class LevelBuilder {
         this.scene.add(goal);
         this.objects.goals.push(goal);
 
-        this.levelData.groundArray[x][z] = goal;
-
         return goal;
+    }
+
+
+    /**
+     * @param {number} toX
+     * @param {number} toZ
+     */
+    canMove(toX, toZ) {
+        for (const block of this.objects.blocks) {
+            if (block.x == toX && block.z == toZ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    moveLeft() {
+        this.objects.players.sort((a, b) => {
+            return a.x - b.x
+        });
+
+        for (const player of this.objects.players) {
+            if (this.canMove(player.x - 1, player.z)) {
+                player.moveLeft();
+            }
+        }
+    }
+
+    moveRight() {
+        this.objects.players.sort((a, b) => {
+            return - (a.x - b.x)
+        });
+
+        for (const player of this.objects.players) {
+            if (this.canMove(player.x + 1, player.z)) {
+                player.moveRight();
+            }
+        }
+    }
+
+    moveUp() {
+        this.objects.players.sort((a, b) => {
+            return a.z - b.z
+        });
+
+        for (const player of this.objects.players) {
+            if (this.canMove(player.x, player.z - 1)) {
+                player.moveUp();
+            }
+        }
+    }
+
+    moveDown() {
+        this.objects.players.sort((a, b) => {
+            return - (a.z - b.z)
+        });
+
+        for (const player of this.objects.players) {
+            if (this.canMove(player.x, player.z + 1)) {
+                player.moveDown();
+            }
+        }
     }
 }
