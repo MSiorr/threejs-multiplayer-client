@@ -68,6 +68,12 @@ export default class Main {
         // if (this.keyboard.moveUp) { this.levelManager.moveUp(); this.keyboard.moveUp = false; this.keyboard.playersCanMove = true; }
         // if (this.keyboard.moveDown) { this.levelManager.moveDown(); this.keyboard.moveDown = false; this.keyboard.playersCanMove = true; }
 
+        for (const player of this.levelManager.objects.players) {
+            if (player.shouldFall) {
+                player.fall();
+            }
+        }
+
         this.renderer.render(this.scene, this.camera);
 
         this.stats.end()

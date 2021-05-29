@@ -17,6 +17,7 @@ export default class extends Mesh {
 
         this.x = x;
         this.z = z;
+        this.shouldFall = false;
     }
 
     // /**
@@ -63,4 +64,7 @@ export default class extends Mesh {
         this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
     }
 
+    fall() {
+        this.position.y -= 1;
+    }
 }
