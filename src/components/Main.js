@@ -18,6 +18,7 @@ import LevelBuilder from "./LevelManager";
 import Keyboard from './Keyboard';
 import InputManager from './InputManager';
 import Sun from './Sun';
+import Utility from './Utility';
 
 export default class Main {
     /**
@@ -62,8 +63,11 @@ export default class Main {
                         this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], false);
 
                         this.sun = new Sun();
-                        this.sun.position.set(500, 1000, 1000);
-                        this.sun.target.position.set(500, 0, 500);
+
+                        let m = Math.min(this.levelManager.lengthX, this.levelManager.lengthZ);
+
+                        this.sun.position.set(this.levelManager.center.x, 1000, this.levelManager.center.z + m);
+                        this.sun.target.position.copy(this.levelManager.center);
                         this.scene.add(this.sun);
                         this.scene.add(this.sun.target);
                         this.cameraHelper = new CameraHelper(this.sun.shadow.camera)
@@ -90,12 +94,15 @@ export default class Main {
             console.log("Bravo");
         }
 
-        let rotationVector = new Vector3(500, 0, 500);
-        this.sun.position.sub(rotationVector)
-        this.sun.position.applyEuler(new Euler(0, Math.PI / 36, 0))
-        this.sun.position.add(rotationVector);
-        this.sun.target.position.copy(rotationVector);
-        this.cameraHelper.update();
+        // let rotationVector = new Vector3(500, 0, 500);
+        // this.sun.position.sub(rotationVector)
+        // this.sun.position.applyEuler(new Euler(0, Math.PI / 36, 0))
+        // this.sun.position.add(rotationVector);
+        // this.sun.target.position.copy(rotationVector);
+        // this.cameraHelper.update();
+
+        let v = Utility.rotateVectorAroundPoint(this.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72, 0));
+        this.sun.position.copy(v);
 
         this.renderer.render(this.scene, this.camera);
 

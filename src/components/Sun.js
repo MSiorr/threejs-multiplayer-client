@@ -16,6 +16,7 @@ export default class extends DirectionalLight {
         this.shadow.camera.right = size;
         this.shadow.camera.top = -size;
         this.shadow.camera.bottom = size;
+        this.shadow.bias = -0.001;
 
 
         this.add(new Mesh(

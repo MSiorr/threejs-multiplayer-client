@@ -3,7 +3,7 @@
  * @typedef {{data: LevelItem[], size: Number}} Level
  */
 
-import { Box3 } from "three";
+import { Box3, Vector3 } from "three";
 
 import Config from "./Config";
 import Block from "./Block";
@@ -29,6 +29,14 @@ export default class LevelBuilder {
             goals: [],
             playersFalling: []
         };
+
+        this.lengthX = null;
+        this.lengthZ = null;
+
+        /**
+         * @type {Vector3}
+         */
+        this.center = null;
     }
 
     /**
@@ -47,6 +55,9 @@ export default class LevelBuilder {
             let count = data.data.length;
 
             let size = Config.blockSize;
+
+            let maxX = 0;
+            let maxZ = 0;
 
             data.data.forEach(el => {
                 switch (el.type) {
@@ -77,7 +88,15 @@ export default class LevelBuilder {
                         break;
                     }
                 }
+
+                if (el.x > maxX) { maxX = el.x; }
+                if (el.z > maxZ) { maxZ = el.z; }
             });
+
+            this.lengthX = (maxX + 1) * Config.blockSize;
+            this.lengthZ = (maxZ + 1) * Config.blockSize;
+
+            this.center = new Vector3(this.lengthX / 2, 0, this.lengthZ / 2);
         });
 
         return p;
