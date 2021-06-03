@@ -19,6 +19,7 @@ import Keyboard from './Keyboard';
 import InputManager from './InputManager';
 import Sun from './Sun';
 import Utility from './Utility';
+import Socket from './Socket';
 
 export default class Main {
     /**
@@ -30,6 +31,8 @@ export default class Main {
         this.renderer = new Renderer(container);
         this.camera = new Camera(75, this.renderer);
         this.levelManager = new LevelBuilder(this.scene);
+
+        this.socket = new Socket();
 
         // const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
         // this.scene.add(gridHelper);
@@ -101,7 +104,7 @@ export default class Main {
         // this.sun.target.position.copy(rotationVector);
         // this.cameraHelper.update();
 
-        let v = Utility.rotateVectorAroundPoint(this.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72, 0));
+        let v = Utility.rotateVectorAroundPoint(this.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
         this.sun.position.copy(v);
 
         this.renderer.render(this.scene, this.camera);
