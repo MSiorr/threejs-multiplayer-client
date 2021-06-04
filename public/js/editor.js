@@ -1,3 +1,8 @@
+/**
+ * @typedef {{id: number, x: number, z: number, type: "floor" | "goal" | "block" | "player"}} levelItem
+ * @typedef {{data: levelItem[], difficulty: "easy" | "medium" | "hard", id : number}} level
+ */
+
 let left = document.querySelector("#left");
 let center = document.querySelector("#center");
 let right = document.querySelector("#right");
@@ -15,23 +20,27 @@ let colors = {
     "goal": "#e2e225",
     "delete": "white",
     "save": "black",
-    "saveTest": "black",
-    "load": "black"
+    "restart": "black",
+    "deleteLvl": "black"
 }
 
 let currentItem = null;
 
+let mapList = null;
 let outputTextArea = null;
 let buttonsList = [
-    { name: "Save level on server", type: "action", value: "save" },
-    { name: "Save test level on server", type: "action", value: "saveTest" },
-    { name: "Load level from server", type: "action", value: "load" },
+    { name: "Save/Update level on server", type: "action", value: "save" },
+    { name: "Delete level from server", type: "action", value: "deleteLvl" },
+    { name: "Restart", type: "action", value: "restart" },
     { name: "Floor", type: "item", clicked: false, value: "floor" },
     { name: "Player", type: "item", clicked: false, value: "player" },
     { name: "Block", type: "item", clicked: false, value: "block" },
     { name: "Goal", type: "item", clicked: false, value: "goal" },
     { name: "Delete", type: "item", clicked: false, value: "delete" }
 ]
+
+let creatingNewLevel = true;
+let currentEditingMapID = null;
 
 createArena();
 createMenuButtons();
@@ -52,6 +61,7 @@ function createArena() {
             field.onclick = (e) => {
                 if (currentItem != null) {
                     if (currentItem.item !== "delete") {
+                        // @ts-ignore
                         e.target.style.backgroundColor = currentItem.color;
                         arenaData[i][j] = {
                             id: (arenaSize * i) + j,
@@ -60,12 +70,13 @@ function createArena() {
                             type: currentItem.item
                         }
                     } else {
+                        // @ts-ignore
                         e.target.style.backgroundColor = "transparent";
                         arenaData[i][j] = null;
                     }
                     outputData = [];
                     arenaData.forEach(e => {
-                        e.forEach(k => {
+                        e.forEach((/** @type {any} */ k) => {
                             if (k != null) {
                                 outputData.push(k);
                             }
@@ -87,7 +98,6 @@ function createArena() {
 
 function createMenuButtons() {
     let moveToItem = false;
-    console.log("BG")
     let btnTable = [];
     let menu = document.createElement("div");
     menu.id = "menu";
@@ -102,8 +112,10 @@ function createMenuButtons() {
         }
 
         button.onmouseover = (el) => {
+            // @ts-ignore
             el.target.style.backgroundColor = colors[e.value];
             if (colors[e.value] === "white" || colors[e.value] === "#e2e225") {
+                // @ts-ignore
                 el.target.style.color = "black";
             }
         }
@@ -112,8 +124,10 @@ function createMenuButtons() {
          */
         button.onmouseout = (el) => {
             if (e.clicked === false || e.clicked === undefined) {
+                // @ts-ignore
                 el.target.style.backgroundColor = "transparent";
                 if (colors[e.value] === "white" || colors[e.value] === "#e2e225") {
+                    // @ts-ignore
                     el.target.style.color = "white";
                 }
             }
@@ -129,48 +143,43 @@ function createMenuButtons() {
                 })
                 e.clicked = !e.clicked;
                 currentItem = { item: e.value, color: colors[e.value] };
+                // @ts-ignore
                 el.target.style.backgroundColor = colors[e.value];
                 if (colors[e.value] === "white" || colors[e.value] === "#e2e225") {
+                    // @ts-ignore
                     el.target.style.color = "black";
                 }
             } else {
 
                 switch (e.value) {
                     case "save": {
-                        // let json = JSON.stringify({
-                        //     size: arenaSize,
-                        //     data: outputData
-                        // })
                         if (outputData.length > 0) {
                             saveFetch(outputData)
                         }
                         break;
                     }
-                    case "saveTest": {
-                        // let json = JSON.stringify({
-                        //     size: arenaSize,
-                        //     data: JSON.parse(testLevel)
-                        // })
-                        saveFetch(JSON.parse(testLevel))
+                    case "restart": {
+                        createMapList();
                         break;
                     }
-                    case "load": {
-                        fetch("/level", { method: "GET" })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log(data);
-                                readLoadedData(data.data)
-                            })
+                    case "deleteLvl": {
+                        deleteLvl();
                         break;
                     }
                 }
             }
 
-            function saveFetch(arenaData) {
+            /**
+             * @param {any[]} arenaData
+             */
+            async function saveFetch(arenaData) {
+                let difficultyVal = await createSelectPrompt();
+                console.log(difficultyVal);
+
                 let firstX = arenaData[0].x;
                 let firstZ = arenaData[0].z;
 
-                arenaData.forEach(e => {
+                arenaData.forEach((/** @type {{ x: number; z: number; }} */ e) => {
                     if (firstX == null) {
                         firstX = e.x
                     }
@@ -192,52 +201,62 @@ function createMenuButtons() {
                 }
 
                 let data = JSON.stringify({
-                    size: arenaSize,
+                    difficulty: difficultyVal,
                     data: arenaData
                 })
 
-                fetch("/level", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': "application/json"
-                    },
-                    body: data
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        alert(data)
+                if (creatingNewLevel == true) {
+                    fetch("https://progetto-stefanetto.herokuapp.com/level/", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': "application/json"
+                        },
+                        body: data
                     })
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data)
+                            creatingNewLevel = true;
+                            currentEditingMapID = null;
+                            createMapList();
+                            readLoadedData([]);
+                        })
+                } else {
+
+                    if (currentEditingMapID != null) {
+                        fetch(`https://progetto-stefanetto.herokuapp.com/level/${currentEditingMapID}`, {
+                            method: "PUT",
+                            headers: {
+                                'Content-Type': "application/json"
+                            },
+                            body: data
+                        })
+                            .then(response => response.text())
+                            .then(data => {
+                                alert(data)
+                                createMapList();
+                            })
+                    } 
+                }
+
             }
 
-            function readLoadedData(data) {
-                arenaFields.forEach(e => {
-                    e.forEach(i => {
-                        i.removeAttribute("style");
+            function deleteLvl(){
+                if (currentEditingMapID != null) {
+                    fetch(`https://progetto-stefanetto.herokuapp.com/level/${currentEditingMapID}`, {
+                        method: "DELETE"
                     })
-                })
-                for (let i = 0; i < arenaData.length; i++) {
-                    for (let j = 0; j < arenaData[i].length; j++) {
-                        arenaData[i][j] = null;
-                    }
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data)
+                            creatingNewLevel = true;
+                            currentEditingMapID = null;
+                            createMapList();
+                            readLoadedData([]);
+                        })
+                } else {
+                    alert("Choose map first!")
                 }
-                data.forEach(e => {
-                    arenaFields[e.x][e.z].style.backgroundColor = colors[e.type];
-                    arenaData[e.x][e.z] = {
-                        id: e.id,
-                        x: e.x,
-                        z: e.z,
-                        type: e.type
-                    }
-                })
-                outputData = [];
-                arenaData.forEach(e => {
-                    e.forEach(k => {
-                        if (k != null) {
-                            outputData.push(k);
-                        }
-                    })
-                })
-                outputTextArea.value = JSON.stringify(outputData, null, 4)
             }
         }
 
@@ -249,14 +268,198 @@ function createMenuButtons() {
 }
 
 function createOutputData() {
+
+    createMapList();
+
+    let outputTextAreaDiv = document.createElement("div")
+    outputTextAreaDiv.id = "outputTextAreaDiv";
+
     outputTextArea = document.createElement("textarea");
     outputTextArea.id = "outputTextArea";
     outputTextArea.readOnly = true;
     outputTextArea.value = JSON.stringify(outputData, null, 4)
-    left.appendChild(outputTextArea);
+    outputTextAreaDiv.appendChild(outputTextArea);
+
+    let copyJSONBtn = document.createElement("button");
+    copyJSONBtn.id = "copyJSONBtn";
+    copyJSONBtn.innerText = "Copy"
+    outputTextAreaDiv.appendChild(copyJSONBtn);
+
+    copyJSONBtn.onclick = (e) => {
+        let fastTextArea = document.createElement("textarea");
+        fastTextArea.classList.add("fastTextArea");
+        fastTextArea.value = JSON.stringify(outputData);
+        document.body.appendChild(fastTextArea);
+        fastTextArea.select();
+        document.execCommand('copy')
+        document.body.removeChild(fastTextArea);
+    }
+
+    left.appendChild(outputTextAreaDiv);
 }
 
-/*
-TODO
-- Klient WebGL
-*/
+function createMapList() {
+    if (mapList == null) {
+        mapList = document.createElement("div");
+        mapList.id = "mapList";
+        left.appendChild(mapList);
+    } else {
+        mapList.innerHTML = "";
+    }
+
+    fetch("https://progetto-stefanetto.herokuapp.com/level/all", {
+        method: "GET",
+    })
+        .then(response => response.json())
+        .then((/** @type {level[]} */ data) => {
+            
+            let sortedArray = [];
+            let difficultyList = ["easy", "medium", "hard"];
+            difficultyList.forEach( e => {
+                data.forEach( m => {
+                    if(m.difficulty == e){
+                        sortedArray.push(m);
+                    }
+                })
+            })
+
+            data = JSON.parse(JSON.stringify(sortedArray));
+
+            for (let i = 0; i < data.length; i++) {
+                let mapListItem = document.createElement("div");
+                mapListItem.classList.add("mapListItem");
+
+                let leftMapListItemDiv = document.createElement("div");
+                leftMapListItemDiv.classList.add("leftMapListItemDiv")
+                mapListItem.appendChild(leftMapListItemDiv);
+
+                let rightMapListItemDiv = document.createElement("div");
+                rightMapListItemDiv.classList.add("rightMapListItemDiv")
+                mapListItem.appendChild(rightMapListItemDiv);
+
+                let mapMiniature = createMapMiniature(data[i].data, 12);
+                leftMapListItemDiv.appendChild(mapMiniature);
+
+                let mapDifficulty = document.createElement("span");
+                mapDifficulty.innerText = `${data[i].difficulty[0].toUpperCase()}${data[i].difficulty.substr(1)}`;
+                mapDifficulty.classList.add("mapDifficulty");
+                mapDifficulty.classList.add(`diff${mapDifficulty.innerText}`);
+                rightMapListItemDiv.appendChild(mapDifficulty);
+
+                mapListItem.onclick = () => {
+                    creatingNewLevel = false;
+                    currentEditingMapID = data[i].id;
+                    readLoadedData(data[i].data);
+                }
+
+                mapList.appendChild(mapListItem);
+            }
+        })
+}
+
+function createMapMiniature(data, blockSize) {
+
+    let mapMiniature = document.createElement("canvas");
+    mapMiniature.width = 10 * blockSize;
+    mapMiniature.height = 10 * blockSize;
+    mapMiniature.classList.add("mapMiniature");
+
+    let ctx = mapMiniature.getContext("2d");
+
+    data.forEach((/** @type {levelItem} */ e) => {
+        let x = e.x * blockSize + 1;
+        let z = e.z * blockSize + 1;
+        let width = blockSize - 2;
+        let height = blockSize - 2;
+        let color = colors[e.type];
+
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.rect(x, z, width, height)
+        ctx.fill();
+        ctx.closePath();
+    })
+
+    return mapMiniature
+}
+
+function readLoadedData(data) {
+    arenaFields.forEach(e => {
+        e.forEach((i) => {
+            i.removeAttribute("style");
+        })
+    })
+    for (let i = 0; i < arenaData.length; i++) {
+        for (let j = 0; j < arenaData[i].length; j++) {
+            arenaData[i][j] = null;
+        }
+    }
+    data.forEach((e) => {
+        arenaFields[e.x][e.z].style.backgroundColor = colors[e.type];
+        arenaData[e.x][e.z] = {
+            id: e.id,
+            x: e.x,
+            z: e.z,
+            type: e.type
+        }
+    })
+    outputData = [];
+    arenaData.forEach(e => {
+        e.forEach((k) => {
+            if (k != null) {
+                outputData.push(k);
+            }
+        })
+    })
+    outputTextArea.value = JSON.stringify(outputData, null, 4)
+
+    console.log(currentEditingMapID);
+}
+
+function createSelectPrompt(){
+    return new Promise( (resolve, reject) => {
+        let selectPromptMainDiv = document.createElement("div");
+        selectPromptMainDiv.id = "selectPromptMainDiv";
+    
+        let blackDiv = document.createElement("div");
+        blackDiv.id = "blackDiv";
+    
+        let promptDiv = document.createElement("div");
+        promptDiv.id = "promptDiv";
+        
+        let promptTitle = document.createElement("span");
+        promptTitle.id = "promptTitle"
+        promptTitle.innerText = "Choose level difficulty:"
+    
+        let promptSelect = document.createElement("select");
+        promptSelect.id = "promptSelect";
+    
+        let difficultyTypes = ["easy", "medium", "hard"];
+    
+        difficultyTypes.forEach( e => {
+            let option = document.createElement("option");
+            option.value = e;
+            option.innerText = e;
+            promptSelect.appendChild(option);
+        })
+    
+        let confirmBtn = document.createElement("button");
+        confirmBtn.id = "confirmBtn";
+        confirmBtn.innerText = "Confirm";
+    
+        promptDiv.appendChild(promptTitle);
+        promptDiv.appendChild(promptSelect);
+        promptDiv.appendChild(confirmBtn);
+    
+        selectPromptMainDiv.appendChild(blackDiv);
+        selectPromptMainDiv.appendChild(promptDiv);
+    
+        document.body.appendChild(selectPromptMainDiv);
+    
+        confirmBtn.onclick = (e) => {
+            document.body.removeChild(selectPromptMainDiv);
+            resolve(promptSelect.value);
+        }
+    })
+
+}

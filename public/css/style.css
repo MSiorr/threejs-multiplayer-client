@@ -1,0 +1,244 @@
+* {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+body {
+    background-color: rgb(34, 34, 34);
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+#title {
+    box-sizing: border-box;
+    width: 100%;
+    color: white;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 5px solid white;
+    font-size: 24px;
+}
+#main {
+    width: 100%;
+    height: calc(100% - 80px);
+    display: flex;
+}
+#left, #right {
+    width: calc(25% - 5px);
+    height: 100%;
+    background-color: rgba(255,255,255,0.05);
+}
+#left{
+    display: flex;
+    flex-direction: column;
+}
+#center {
+    width: 50%;
+    height: 100%;
+    border-left: 5px solid white;
+    border-right: 5px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#arena {
+    width: 45vw;
+    height: 45vw;
+    display: flex;
+}
+.arenaColumn {
+    height: 100%;
+    width: 10%;
+}
+.field {
+    width: 100%;
+    height: 10%;
+    box-sizing: border-box;
+    border: 1px solid white;
+    cursor: pointer;
+}
+#menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.menuButton {
+    box-sizing: border-box;
+    width: 94%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color .1s;
+}
+
+#outputTextAreaDiv{
+    width: 100%;
+    height: 50%;
+    position: relative;
+}
+
+#outputTextArea {
+    /* box-sizing: border-box; */
+    background-color: transparent;
+    color: white;
+    width: 100%;
+    border: 1px solid white;
+    height: 100%;
+    resize: none;
+    border: none;
+    padding: 10px;
+    outline: none;
+    box-sizing: border-box;
+    cursor: default;
+}
+#mapList {
+    box-sizing: border-box;
+    width: 100%;
+    height: 50%;
+    border-bottom: 5px solid white;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.mapListItem {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    margin: 2px 0;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mapListItem:hover{
+    background-color: rgba(255,255,255,0.05);
+}
+
+.leftMapListItemDiv, .rightMapListItemDiv{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mapMiniature {
+    background-color: rgba(0,0,0,0.1);
+    outline: 1px solid white;
+}
+
+.mapDifficulty {
+    font-size: 28px;
+}
+
+.diffEasy {
+    color: rgb(51, 253, 51);
+}
+
+.diffMedium {
+    color: rgb(255, 181, 44);
+}
+
+.diffHard {
+    color: rgb(255, 45, 45);
+}
+
+#copyJSONBtn {
+    background-color: transparent;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .5s;
+}
+
+#copyJSONBtn:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+#outputTextAreaDiv:hover #copyJSONBtn{
+    opacity: 1;
+}
+
+.fastTextArea {
+    white-space: normal;
+}
+
+
+/* SELECT PROMPT */
+
+#selectPromptMainDiv {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#blackDiv{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+#promptDiv {
+    box-sizing: border-box;
+    position: fixed;
+    width: 30%;
+    height: 20%;
+    left: 35%;
+    top: 40%;
+    padding: 10px;
+    background-color: rgb(34, 34, 34);
+    border: 5px solid white;
+    border-radius: 10px;
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+#promptTitle {
+    color: white;
+    font-size: 34px;
+}
+
+#promptSelect {
+    width: 50%;
+    font-size: 20px;
+    padding: 2px;
+}
+
+#confirmBtn{
+    width: 30%;
+    padding: 5px 10px;
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+}
+
+#confirmBtn:hover {
+    background-color: rgba(255,255,255,0.05);
+}
