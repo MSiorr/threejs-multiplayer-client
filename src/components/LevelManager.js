@@ -130,7 +130,7 @@ export default class LevelBuilder {
         let block = new Block(x, z);
 
         //@ts-ignore
-        let y = new Box3().setFromObject(block).getSize().y;
+        let y = new Box3().setFromObject(block).getSize(new Vector3()).y;
 
         block.position.set(x * size + size / 2, y / 2, z * size + size / 2);
 
@@ -151,7 +151,7 @@ export default class LevelBuilder {
         floor.createOutline();
 
         //@ts-ignore
-        let y = new Box3().setFromObject(floor).getSize().y;
+        let y = new Box3().setFromObject(floor).getSize(new Vector3()).y;
 
         floor.position.set(x * size + size / 2, -y / 2, z * size + size / 2);
 
@@ -171,7 +171,7 @@ export default class LevelBuilder {
         let player = new Player(x, z);
 
         //@ts-ignore
-        let y = new Box3().setFromObject(player).getSize().y;
+        let y = new Box3().setFromObject(player).getSize(new Vector3()).y;
 
         player.position.set(x * size + size / 2, y / 2, z * size + size / 2);
 
@@ -192,7 +192,7 @@ export default class LevelBuilder {
         goal.createOutline();
 
         //@ts-ignore
-        let y = new Box3().setFromObject(goal).getSize().y;
+        let y = new Box3().setFromObject(goal).getSize(new Vector3()).y;
 
         goal.position.set(x * size + size / 2, -y / 2, z * size + size / 2);
 

@@ -31,11 +31,11 @@ export default class extends Mesh {
         let mesh = new Line(geometry, material);
 
         //@ts-ignore
-        let x = new Box3().setFromObject(this).getSize().x;
+        let x = new Box3().setFromObject(this).getSize(new Vector3()).x;
         //@ts-ignore
-        let y = new Box3().setFromObject(this).getSize().y;
+        let y = new Box3().setFromObject(this).getSize(new Vector3()).y;
         //@ts-ignore
-        let z = new Box3().setFromObject(this).getSize().z;
+        let z = new Box3().setFromObject(this).getSize(new Vector3()).z;
 
         mesh.position.x -= x / 2;
         mesh.position.y += y / 2 + 1;

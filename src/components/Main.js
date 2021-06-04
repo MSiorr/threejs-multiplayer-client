@@ -33,6 +33,7 @@ export default class Main {
         this.levelManager = new LevelBuilder(this.scene);
 
         this.socket = new Socket();
+        this.socket.Add("room_assigned", this.EnterRoom.bind(this))
 
         // const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
         // this.scene.add(gridHelper);
@@ -83,12 +84,7 @@ export default class Main {
 
     render() {
         this.stats.begin()
-
-        // if (this.keyboard.moveLeft) { this.levelManager.moveLeft(); this.keyboard.moveLeft = false; this.keyboard.playersCanMove = true; }
-        // if (this.keyboard.moveRight) { this.levelManager.moveRight(); this.keyboard.moveRight = false; this.keyboard.playersCanMove = true; }
-        // if (this.keyboard.moveUp) { this.levelManager.moveUp(); this.keyboard.moveUp = false; this.keyboard.playersCanMove = true; }
-        // if (this.keyboard.moveDown) { this.levelManager.moveDown(); this.keyboard.moveDown = false; this.keyboard.playersCanMove = true; }
-
+        
         for (const player of this.levelManager.objects.playersFalling) {
             player.fall();
         }
@@ -96,13 +92,6 @@ export default class Main {
         if (this.levelManager.functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity()) {
             console.log("Bravo");
         }
-
-        // let rotationVector = new Vector3(500, 0, 500);
-        // this.sun.position.sub(rotationVector)
-        // this.sun.position.applyEuler(new Euler(0, Math.PI / 36, 0))
-        // this.sun.position.add(rotationVector);
-        // this.sun.target.position.copy(rotationVector);
-        // this.cameraHelper.update();
 
         let v = Utility.rotateVectorAroundPoint(this.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
         this.sun.position.copy(v);
@@ -112,5 +101,12 @@ export default class Main {
         this.stats.end()
 
         requestAnimationFrame(this.render.bind(this));
+    }
+
+    /**
+     * @param {String} data
+     */
+    EnterRoom(data){
+        console.log("SERVER FOUND ROOM FOR U");
     }
 }
