@@ -28,9 +28,6 @@ export default class {
 
         this.ws.onmessage = (e) => {
             console.log(e.data)
-            /**
-             * @type {{title: String, data: Function}}
-             */
             let message = JSON.parse(e.data);
             for(let title in this.socketsSubscriptions){
                 if(title == message.title){

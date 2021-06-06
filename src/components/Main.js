@@ -34,6 +34,8 @@ export default class Main {
 
         this.socket = new Socket();
         this.socket.Add("room_assigned", this.EnterRoom.bind(this))
+        this.socket.Add("forfeit", this.EnemyForfeit.bind(this))
+        this.socket.Add("new_level", this.NewLevel.bind(this))
 
         // const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
         // this.scene.add(gridHelper);
@@ -54,7 +56,7 @@ export default class Main {
 
         document.body.appendChild(this.stats.dom);
 
-        this.levelManager.load("https://progetto-stefanetto.herokuapp.com/level")
+        this.levelManager.load("https://progetto-stefanetto.herokuapp.com/level/1")
             .then(response => response.json())
             .then(data => {
                 this.levelManager.build(data)
@@ -84,7 +86,7 @@ export default class Main {
 
     render() {
         this.stats.begin()
-        
+
         for (const player of this.levelManager.objects.playersFalling) {
             player.fall();
         }
@@ -106,7 +108,22 @@ export default class Main {
     /**
      * @param {String} data
      */
-    EnterRoom(data){
+    EnterRoom(data) {
         console.log("SERVER FOUND ROOM FOR U");
+    }
+
+    /**
+     * @param {String} data
+     */
+    EnemyForfeit(data) {
+        console.log("YOUR ENEMY WAS NOOB AND HE HAS GONE AWAY BLYEAT :D");
+    }
+
+    /**
+     * @param {any} data
+     */
+    NewLevel(data) {
+        console.log("U GOTTA NEW LEVEL BRO");
+        console.log(data);
     }
 }

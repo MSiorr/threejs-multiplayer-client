@@ -213,6 +213,11 @@ export default class LevelBuilder {
                 return false;
             }
         }
+        for(const player of this.objects.players){
+            if(player.x == toX && player.z == toZ){
+                return false;
+            }
+        }
 
         return true;
     }
