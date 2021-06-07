@@ -1,3 +1,4 @@
 export default {
-    blockSize: 100
+    hostname: "fk-ms-yearly-project.herokuapp.com",
+    blockSize: 100,
 }

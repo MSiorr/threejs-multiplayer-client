@@ -20,6 +20,7 @@ import InputManager from './InputManager';
 import Sun from './Sun';
 import Utility from './Utility';
 import Socket from './Socket';
+import Config from './Config';
 
 export default class Main {
     /**
@@ -56,7 +57,7 @@ export default class Main {
 
         document.body.appendChild(this.stats.dom);
 
-        this.levelManager.load("https://progetto-stefanetto.herokuapp.com/level/1")
+        this.levelManager.load(`https://${Config.hostname}/level/1`)
             .then(response => response.json())
             .then(data => {
                 this.levelManager.build(data)

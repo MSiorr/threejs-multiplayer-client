@@ -1,9 +1,10 @@
+import Config from "./Config";
 import SocketRule from "./SocketRule";
 
 export default class {
-    constructor(){
-        this.ws = new WebSocket("wss://progetto-stefanetto.herokuapp.com/wss"); 
-        
+    constructor() {
+        this.ws = new WebSocket(`wss://${Config.hostname}/wss`);
+
         /**
          * @type {{ [title:string] : SocketRule}}
          */
@@ -12,7 +13,7 @@ export default class {
         this.AddFunctionality();
     }
 
-    AddFunctionality(){
+    AddFunctionality() {
         this.ws.onopen = () => {
             // this.ws.send("HI GUYS, I'M THERE")
         }
@@ -29,8 +30,8 @@ export default class {
         this.ws.onmessage = (e) => {
             console.log(e.data)
             let message = JSON.parse(e.data);
-            for(let title in this.socketsSubscriptions){
-                if(title == message.title){
+            for (let title in this.socketsSubscriptions) {
+                if (title == message.title) {
                     console.log("Wywołanie funkcji z tytułu " + title)
                     this.socketsSubscriptions[title].handler(message.data);
                 }
@@ -42,7 +43,7 @@ export default class {
      * @param {string} title
      * @param {Function} fun
      */
-    Add(title, fun){
+    Add(title, fun) {
         let rule = new SocketRule(fun);
 
         this.socketsSubscriptions[title] = rule;
@@ -51,7 +52,7 @@ export default class {
     /**
      * @param {any} data
      */
-    Send(data){
+    Send(data) {
         this.ws.send(JSON.stringify(data));
     }
 }
