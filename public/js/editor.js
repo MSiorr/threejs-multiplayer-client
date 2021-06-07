@@ -3,6 +3,8 @@
  * @typedef {{data: levelItem[], difficulty: "easy" | "medium" | "hard", id : number}} level
  */
 
+let hostname = "fk-ms-yearly-project.herokuapp.com";
+
 let left = document.querySelector("#left");
 let center = document.querySelector("#center");
 let right = document.querySelector("#right");
@@ -206,7 +208,7 @@ function createMenuButtons() {
                 })
 
                 if (creatingNewLevel == true) {
-                    fetch("https://progetto-stefanetto.herokuapp.com/level/", {
+                    fetch(`https://${hostname}/level/`, {
                         method: "POST",
                         headers: {
                             'Content-Type': "application/json"
@@ -224,7 +226,7 @@ function createMenuButtons() {
                 } else {
 
                     if (currentEditingMapID != null) {
-                        fetch(`https://progetto-stefanetto.herokuapp.com/level/${currentEditingMapID}`, {
+                        fetch(`https://${hostname}/level/${currentEditingMapID}`, {
                             method: "PUT",
                             headers: {
                                 'Content-Type': "application/json"
@@ -236,14 +238,14 @@ function createMenuButtons() {
                                 alert(data)
                                 createMapList();
                             })
-                    } 
+                    }
                 }
 
             }
 
-            function deleteLvl(){
+            function deleteLvl() {
                 if (currentEditingMapID != null) {
-                    fetch(`https://progetto-stefanetto.herokuapp.com/level/${currentEditingMapID}`, {
+                    fetch(`https://${hostname}/level/${currentEditingMapID}`, {
                         method: "DELETE"
                     })
                         .then(response => response.text())
@@ -307,17 +309,17 @@ function createMapList() {
         mapList.innerHTML = "";
     }
 
-    fetch("https://progetto-stefanetto.herokuapp.com/level/all", {
+    fetch(`https://${hostname}/level/all`, {
         method: "GET",
     })
         .then(response => response.json())
         .then((/** @type {level[]} */ data) => {
-            
+
             let sortedArray = [];
             let difficultyList = ["easy", "medium", "hard"];
-            difficultyList.forEach( e => {
-                data.forEach( m => {
-                    if(m.difficulty == e){
+            difficultyList.forEach(e => {
+                data.forEach(m => {
+                    if (m.difficulty == e) {
                         sortedArray.push(m);
                     }
                 })
@@ -416,46 +418,46 @@ function readLoadedData(data) {
     console.log(currentEditingMapID);
 }
 
-function createSelectPrompt(){
-    return new Promise( (resolve, reject) => {
+function createSelectPrompt() {
+    return new Promise((resolve, reject) => {
         let selectPromptMainDiv = document.createElement("div");
         selectPromptMainDiv.id = "selectPromptMainDiv";
-    
+
         let blackDiv = document.createElement("div");
         blackDiv.id = "blackDiv";
-    
+
         let promptDiv = document.createElement("div");
         promptDiv.id = "promptDiv";
-        
+
         let promptTitle = document.createElement("span");
         promptTitle.id = "promptTitle"
         promptTitle.innerText = "Choose level difficulty:"
-    
+
         let promptSelect = document.createElement("select");
         promptSelect.id = "promptSelect";
-    
+
         let difficultyTypes = ["easy", "medium", "hard"];
-    
-        difficultyTypes.forEach( e => {
+
+        difficultyTypes.forEach(e => {
             let option = document.createElement("option");
             option.value = e;
             option.innerText = e;
             promptSelect.appendChild(option);
         })
-    
+
         let confirmBtn = document.createElement("button");
         confirmBtn.id = "confirmBtn";
         confirmBtn.innerText = "Confirm";
-    
+
         promptDiv.appendChild(promptTitle);
         promptDiv.appendChild(promptSelect);
         promptDiv.appendChild(confirmBtn);
-    
+
         selectPromptMainDiv.appendChild(blackDiv);
         selectPromptMainDiv.appendChild(promptDiv);
-    
+
         document.body.appendChild(selectPromptMainDiv);
-    
+
         confirmBtn.onclick = (e) => {
             document.body.removeChild(selectPromptMainDiv);
             resolve(promptSelect.value);
