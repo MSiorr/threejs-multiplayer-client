@@ -11,6 +11,7 @@ export default class {
         this.socketsSubscriptions = {};
 
         this.AddFunctionality();
+        this.heartbeat();
     }
 
     AddFunctionality() {
@@ -50,9 +51,27 @@ export default class {
     }
 
     /**
-     * @param {any} data
+     * @param {{title: String, data: String}} data
      */
     Send(data) {
         this.ws.send(JSON.stringify(data));
+    }
+
+    /**
+     * @param {string} title
+     * @param {string} [data]
+     */
+    createMessage(title, data = "") {
+        return { title, data };
+    }
+
+    heartbeat() {
+        this.Send(this.createMessage("heartbeat"));
+
+        setTimeout(() => {
+            if (this.ws.readyState === this.ws.OPEN) {
+                this.heartbeat();
+            }
+        }, 5000);
     }
 }
