@@ -66,12 +66,12 @@ export default class {
     }
 
     heartbeat() {
-        this.Send(this.createMessage("heartbeat"));
+        if (this.ws.readyState === this.ws.OPEN) {
+            this.Send(this.createMessage("heartbeat"));
+        }
 
         setTimeout(() => {
-            if (this.ws.readyState === this.ws.OPEN) {
-                this.heartbeat();
-            }
+            this.heartbeat();
         }, 5000);
     }
 }
