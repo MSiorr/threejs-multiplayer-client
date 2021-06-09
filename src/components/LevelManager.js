@@ -11,7 +11,7 @@ import Floor from "./Floor";
 import Player from "./Player";
 import Goal from "./Goal";
 
-export default class LevelBuilder {
+export default class LevelManager {
     /**
      * @param {THREE.Scene} scene 
      */

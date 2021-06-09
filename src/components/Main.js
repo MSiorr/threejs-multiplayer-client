@@ -14,7 +14,7 @@ import {
 import Renderer from './Renderer';
 import Camera from './Camera';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
-import LevelBuilder from "./LevelManager";
+import LevelManager from "./LevelManager";
 import Keyboard from './Keyboard';
 import InputManager from './InputManager';
 import Sun from './Sun';
@@ -31,12 +31,21 @@ export default class Main {
         this.scene = new Scene();
         this.renderer = new Renderer(container);
         this.camera = new Camera(75, this.renderer);
-        this.levelManager = new LevelBuilder(this.scene);
+        this.levelManager = new LevelManager(this.scene);
 
         this.socket = new Socket();
-        this.socket.Add("room_assigned", this.EnterRoom.bind(this))
-        this.socket.Add("forfeit", this.EnemyForfeit.bind(this))
-        this.socket.Add("new_level", this.NewLevel.bind(this))
+        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
+        this.socket.Add("config", this.ReceiveConfig.bind(this));
+        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
+        this.socket.Add("new_level", this.NewLevel.bind(this));
+        this.socket.Add("wait", this.WaitForNextMap.bind(this));
+        this.socket.Add("win", this.WinBattle.bind(this));
+        this.socket.Add("lose", this.LoseBattle.bind(this));
+        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
+
+        this.playerCompleteCurrentLevel = false;
+
+        this.playerMovementRule = [true];
 
         // const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
         // this.scene.add(gridHelper);
@@ -62,7 +71,7 @@ export default class Main {
             .then(data => {
                 this.levelManager.build(data)
                     .then(() => {
-                        this.inputManager = new InputManager([true]);
+                        this.inputManager = new InputManager(this.playerMovementRule);
                         this.inputManager.RegisterEventCapture();
                         this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], false);
                         this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], false);
@@ -93,7 +102,14 @@ export default class Main {
         }
 
         if (this.levelManager.functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity()) {
-            console.log("Bravo");
+            if(this.playerCompleteCurrentLevel == false){
+                this.playerCompleteCurrentLevel = true;
+                this.playerMovementRule[0] = false;
+                console.log("LEVEL IS DONE");
+
+                this.socket.Send(this.socket.createMessage("done"));
+
+            }
         }
 
         let v = Utility.rotateVectorAroundPoint(this.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
@@ -114,6 +130,14 @@ export default class Main {
     }
 
     /**
+     * @param {any} data 
+     */
+    ReceiveConfig(data){
+        console.log("U RECEIVE NEW CONFIG");
+        console.log(data);
+    }
+
+    /**
      * @param {String} data
      */
     EnemyForfeit(data) {
@@ -126,5 +150,24 @@ export default class Main {
     NewLevel(data) {
         console.log("U GOTTA NEW LEVEL BRO");
         console.log(data);
+    }
+
+    WaitForNextMap(){
+        console.log("U WAIT FOR NEXT MAP");
+    }
+
+    WinBattle(){
+        console.log("YOU WIN MY FRIEND");
+    }
+
+    LoseBattle(){
+        console.log("YOU LOSE MY FRIEND");
+    }
+
+    /**
+     * @param {{name: String}} data 
+     */
+    PowerupTarget(data){
+        console.log("ENEMY USE POWERUP ON U");
     }
 }
