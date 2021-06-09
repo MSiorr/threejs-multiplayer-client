@@ -21,19 +21,20 @@ export default class {
 
         this.ws.onerror = (e) => {
             // @ts-ignore
-            console.log(e.message);
+            console.log("ERROR", e.message);
         }
 
         this.ws.onclose = (e) => {
-            console.log(e.code, e.reason);
+            console.log("CLOSE", e.code, e.reason);
         }
 
         this.ws.onmessage = (e) => {
-            console.log(e.data)
+            console.log("MESSAGE", e.data);
             let message = JSON.parse(e.data);
+
             for (let title in this.socketsSubscriptions) {
-                if (title == message.title) {
-                    console.log("Wywołanie funkcji z tytułu " + title)
+                if (title === message.title) {
+                    console.log("TITLE", title)
                     this.socketsSubscriptions[title].handler(message.data);
                 }
             }
@@ -68,6 +69,7 @@ export default class {
     heartbeat() {
         if (this.ws.readyState === this.ws.OPEN) {
             this.Send(this.createMessage("heartbeat"));
+            console.log("HEARTBEAT");
         }
 
         setTimeout(() => {
