@@ -15,7 +15,6 @@ import Renderer from './Renderer';
 import Camera from './Camera';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import LevelManager from "./LevelManager";
-import Keyboard from './Keyboard';
 import InputManager from './InputManager';
 import Sun from './Sun';
 import Utility from './Utility';
@@ -47,16 +46,10 @@ export default class Main {
 
         this.playerMovementRule = [true];
 
-        // const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
-        // this.scene.add(gridHelper);
-
         this.camera.position.set(500, 2000, 500);
         this.camera.lookAt(500, 0, 500);
         this.camera.far = 4096;
         this.camera.updateProjectionMatrix();
-
-        // this.ambientLight = new AmbientLight(0xffffff, 1);
-        // this.scene.add(this.ambientLight);
 
         this.stats = Stats();
         this.stats.showPanel(0);
@@ -102,7 +95,7 @@ export default class Main {
         }
 
         if (this.levelManager.functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity()) {
-            if(this.playerCompleteCurrentLevel == false){
+            if (this.playerCompleteCurrentLevel == false) {
                 this.playerCompleteCurrentLevel = true;
                 this.playerMovementRule[0] = false;
                 console.log("LEVEL IS DONE");
@@ -132,7 +125,7 @@ export default class Main {
     /**
      * @param {any} data 
      */
-    ReceiveConfig(data){
+    ReceiveConfig(data) {
         console.log("U RECEIVE NEW CONFIG");
         console.log(data);
     }
@@ -152,22 +145,22 @@ export default class Main {
         console.log(data);
     }
 
-    WaitForNextMap(){
+    WaitForNextMap() {
         console.log("U WAIT FOR NEXT MAP");
     }
 
-    WinBattle(){
+    WinBattle() {
         console.log("YOU WIN MY FRIEND");
     }
 
-    LoseBattle(){
+    LoseBattle() {
         console.log("YOU LOSE MY FRIEND");
     }
 
     /**
      * @param {{name: String}} data 
      */
-    PowerupTarget(data){
+    PowerupTarget(data) {
         console.log("ENEMY USE POWERUP ON U");
     }
 }
