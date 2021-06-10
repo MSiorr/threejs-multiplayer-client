@@ -123,9 +123,17 @@ body {
 
 .leftMapListItemDiv, .rightMapListItemDiv{
     width: 50%;
+    height: 80%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
+}
+
+.mapID {
+    font-size: 28px;
+    color: wheat;
+    font-weight: bold;
 }
 
 .mapMiniature {

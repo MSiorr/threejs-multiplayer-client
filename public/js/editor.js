@@ -18,11 +18,12 @@ let testLevel = '[{"id":15,"x":1,"z":5,"type":"floor"},{"id":16,"x":1,"z":6,"typ
 let colors = {
     "floor": "#21ae21",
     "player": "#c42121",
-    "block": "#000a31",
+    "block": "#092287",
     "goal": "#e2e225",
     "delete": "white",
     "save": "black",
     "restart": "black",
+    "test": "black",
     "deleteLvl": "black"
 }
 
@@ -33,6 +34,7 @@ let outputTextArea = null;
 let buttonsList = [
     { name: "Save/Update level on server", type: "action", value: "save" },
     { name: "Delete level from server", type: "action", value: "deleteLvl" },
+    { name: "Test", type: "action", value: "test" },
     { name: "Restart", type: "action", value: "restart" },
     { name: "Floor", type: "item", clicked: false, value: "floor" },
     { name: "Player", type: "item", clicked: false, value: "player" },
@@ -168,6 +170,10 @@ function createMenuButtons() {
                         deleteLvl();
                         break;
                     }
+                    case "test": {
+                        testCurrentLevel();
+                        break;
+                    }
                 }
             }
 
@@ -260,6 +266,15 @@ function createMenuButtons() {
                     alert("Choose map first!")
                 }
             }
+
+            function testCurrentLevel(){
+                if(currentEditingMapID != null){
+                    let a = document.createElement("a");
+                    a.href = `https://${hostname}/test/${currentEditingMapID}`;
+                    a.target = "_blank";
+                    a.click();
+                }
+            }
         }
 
         menu.appendChild(button);
@@ -341,6 +356,16 @@ function createMapList() {
 
                 let mapMiniature = createMapMiniature(data[i].data, 12);
                 leftMapListItemDiv.appendChild(mapMiniature);
+
+                // let mapInfo = document.createElement("div");
+                // mapInfo.classList.add("mapInfo");
+                // rightMapListItemDiv.ap
+
+                let mapID = document.createElement("span");
+                mapID.innerText = `${data[i].id}`
+                mapID.classList.add("mapID");
+                rightMapListItemDiv.appendChild(mapID);
+
 
                 let mapDifficulty = document.createElement("span");
                 mapDifficulty.innerText = `${data[i].difficulty[0].toUpperCase()}${data[i].difficulty.substr(1)}`;
