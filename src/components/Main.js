@@ -15,12 +15,12 @@ import Renderer from './Renderer';
 import Camera from './Camera';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import LevelManager from "./LevelManager";
-import Keyboard from './Keyboard';
 import InputManager from './InputManager';
 import Sun from './Sun';
 import Utility from './Utility';
 import Socket from './Socket';
 import Config from './Config';
+import Menu from './Menu';
 
 export default class Main {
     /**
@@ -33,36 +33,26 @@ export default class Main {
         this.camera = new Camera(75, this.renderer);
         this.levelManager = new LevelManager(this.scene);
 
-        this.socket = new Socket();
-        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
-        this.socket.Add("config", this.ReceiveConfig.bind(this));
-        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
-        this.socket.Add("new_level", this.NewLevel.bind(this));
-        this.socket.Add("wait", this.WaitForNextMap.bind(this));
-        this.socket.Add("win", this.WinBattle.bind(this));
-        this.socket.Add("lose", this.LoseBattle.bind(this));
-        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
+        this.menu = new Menu();
+        this.menu.show("title");
+        this.menu.html.startGame.addEventListener("click", this.startSearch.bind(this));
+
+        this.socket = null;
 
         this.playerCompleteCurrentLevel = false;
 
         this.playerMovementRule = [true];
 
-        // const gridHelper = new GridHelper(3000, 30, 0xff0000, 0x0000ff);
-        // this.scene.add(gridHelper);
-
-        this.camera.position.set(500, 2000, 500);
+        this.camera.position.set(500, 1000, 500);
         this.camera.lookAt(500, 0, 500);
         this.camera.far = 4096;
         this.camera.updateProjectionMatrix();
 
-        // this.ambientLight = new AmbientLight(0xffffff, 1);
-        // this.scene.add(this.ambientLight);
-
         this.stats = Stats();
         this.stats.showPanel(0);
 
-        const controls = new OrbitControls(this.camera, this.renderer.domElement);
-        this.camera.lookAt(500, 0, 500);
+        // const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        // this.camera.lookAt(500, 0, 500);
 
         document.body.appendChild(this.stats.dom);
 
@@ -102,7 +92,7 @@ export default class Main {
         }
 
         if (this.levelManager.functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity()) {
-            if(this.playerCompleteCurrentLevel == false){
+            if (this.playerCompleteCurrentLevel == false) {
                 this.playerCompleteCurrentLevel = true;
                 this.playerMovementRule[0] = false;
                 console.log("LEVEL IS DONE");
@@ -132,7 +122,7 @@ export default class Main {
     /**
      * @param {any} data 
      */
-    ReceiveConfig(data){
+    ReceiveConfig(data) {
         console.log("U RECEIVE NEW CONFIG");
         console.log(data);
     }
@@ -152,22 +142,38 @@ export default class Main {
         console.log(data);
     }
 
-    WaitForNextMap(){
+    WaitForNextMap() {
         console.log("U WAIT FOR NEXT MAP");
     }
 
-    WinBattle(){
+    WinBattle() {
         console.log("YOU WIN MY FRIEND");
     }
 
-    LoseBattle(){
+    LoseBattle() {
         console.log("YOU LOSE MY FRIEND");
     }
 
     /**
      * @param {{name: String}} data 
      */
-    PowerupTarget(data){
+    PowerupTarget(data) {
         console.log("ENEMY USE POWERUP ON U");
+    }
+
+    startSearch() {
+        this.menu.hide("title");
+        this.menu.show("lobby");
+
+        this.socket = new Socket();
+
+        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
+        this.socket.Add("config", this.ReceiveConfig.bind(this));
+        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
+        this.socket.Add("new_level", this.NewLevel.bind(this));
+        this.socket.Add("wait", this.WaitForNextMap.bind(this));
+        this.socket.Add("win", this.WinBattle.bind(this));
+        this.socket.Add("lose", this.LoseBattle.bind(this));
+        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
     }
 }
