@@ -20,6 +20,7 @@ import Sun from './Sun';
 import Utility from './Utility';
 import Socket from './Socket';
 import Config from './Config';
+import Menu from './Menu';
 
 export default class Main {
     /**
@@ -32,21 +33,17 @@ export default class Main {
         this.camera = new Camera(75, this.renderer);
         this.levelManager = new LevelManager(this.scene);
 
-        this.socket = new Socket();
-        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
-        this.socket.Add("config", this.ReceiveConfig.bind(this));
-        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
-        this.socket.Add("new_level", this.NewLevel.bind(this));
-        this.socket.Add("wait", this.WaitForNextMap.bind(this));
-        this.socket.Add("win", this.WinBattle.bind(this));
-        this.socket.Add("lose", this.LoseBattle.bind(this));
-        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
+        this.menu = new Menu();
+        this.menu.show("title");
+        this.menu.html.startGame.addEventListener("click", this.startSearch.bind(this));
+
+        this.socket = null;
 
         this.playerCompleteCurrentLevel = false;
 
         this.playerMovementRule = [true];
 
-        this.camera.position.set(500, 2000, 500);
+        this.camera.position.set(500, 1000, 500);
         this.camera.lookAt(500, 0, 500);
         this.camera.far = 4096;
         this.camera.updateProjectionMatrix();
@@ -54,8 +51,8 @@ export default class Main {
         this.stats = Stats();
         this.stats.showPanel(0);
 
-        const controls = new OrbitControls(this.camera, this.renderer.domElement);
-        this.camera.lookAt(500, 0, 500);
+        // const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        // this.camera.lookAt(500, 0, 500);
 
         document.body.appendChild(this.stats.dom);
 
@@ -162,5 +159,21 @@ export default class Main {
      */
     PowerupTarget(data) {
         console.log("ENEMY USE POWERUP ON U");
+    }
+
+    startSearch() {
+        this.menu.hide("title");
+        this.menu.show("lobby");
+
+        this.socket = new Socket();
+
+        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
+        this.socket.Add("config", this.ReceiveConfig.bind(this));
+        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
+        this.socket.Add("new_level", this.NewLevel.bind(this));
+        this.socket.Add("wait", this.WaitForNextMap.bind(this));
+        this.socket.Add("win", this.WinBattle.bind(this));
+        this.socket.Add("lose", this.LoseBattle.bind(this));
+        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
     }
 }

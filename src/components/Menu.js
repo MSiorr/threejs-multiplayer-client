@@ -1,13 +1,22 @@
+/**
+         * @typedef {{
+         * menu: HTMLElement,
+         * title: HTMLElement,
+         * lobby: HTMLElement,
+         * waiting: HTMLElement,
+         * startGame: HTMLElement}} MenuElements
+         */
 export default class Menu {
     constructor() {
         /**
-         * @type {{menu: HTMLElement, title: HTMLElement, lobby: HTMLElement, waiting: HTMLElement}}
+         * @type {MenuElements}
          */
         this.html = {
             menu: null,
             title: null,
             lobby: null,
-            waiting: null
+            waiting: null,
+            startGame: null
         };
 
         this.initHTML();
@@ -18,17 +27,18 @@ export default class Menu {
         this.html.title = document.getElementById("title");
         this.html.lobby = document.getElementById("lobby");
         this.html.waiting = document.getElementById("waiting");
+        this.html.startGame = document.getElementById("start-game");
     }
 
     /**
-     * @param {"title" | "lobby" | "waiting"} element 
+     * @param {keyof(MenuElements)} element 
      */
     show(element) {
         this.html[element].classList.add("active");
     }
 
     /**
-     * @param {"title" | "lobby" | "waiting"} element 
+     * @param {keyof(MenuElements)} element
      */
     hide(element) {
         this.html[element].classList.remove("active");
