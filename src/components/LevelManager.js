@@ -35,6 +35,9 @@ export default class LevelManager {
         this.lengthX = null;
         this.lengthZ = null;
 
+        this.countX = null;
+        this.countZ = null;
+
         /**
          * @type {Vector3}
          */
@@ -104,6 +107,9 @@ export default class LevelManager {
 
             this.lengthX = (maxX + 1) * Config.blockSize;
             this.lengthZ = (maxZ + 1) * Config.blockSize;
+
+            this.countX = maxX + 1;
+            this.countZ = maxZ + 1;
 
             this.center = new Vector3(this.lengthX / 2, 0, this.lengthZ / 2);
 
