@@ -1,6 +1,6 @@
 import InputManagerRule from "./InputManagerRule.js";
 
-export default class {
+export default class InputManager {
     /**
      * @param {Boolean[]} boolArrRef
      */

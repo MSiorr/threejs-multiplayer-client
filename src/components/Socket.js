@@ -1,7 +1,7 @@
 import Config from "./Config";
 import SocketRule from "./SocketRule";
 
-export default class {
+export default class Socket {
     constructor() {
         this.ws = new WebSocket(`wss://${Config.hostname}/wss`);
 

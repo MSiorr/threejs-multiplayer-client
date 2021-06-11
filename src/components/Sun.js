@@ -1,6 +1,6 @@
 import { DirectionalLight, DirectionalLightHelper, Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 
-export default class extends DirectionalLight {
+export default class Sun extends DirectionalLight {
     constructor() {
         super(0xffffff, 1);
 

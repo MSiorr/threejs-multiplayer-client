@@ -1,4 +1,4 @@
-export default class {
+export default class InputManagerRule {
     /**
      * @param {Function} handler
      * @param {string[]} triggers

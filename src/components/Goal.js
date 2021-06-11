@@ -2,7 +2,7 @@ import { BoxGeometry, BufferGeometry, Line, LineBasicMaterial, Mesh, MeshPhongMa
 
 import config from './Config';
 
-export default class extends Mesh {
+export default class Goal extends Mesh {
     /**
      * @param {number} x
      * @param {number} z

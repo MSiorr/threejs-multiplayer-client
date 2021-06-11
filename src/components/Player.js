@@ -2,7 +2,7 @@ import { BoxGeometry, Mesh, MeshPhongMaterial } from 'three';
 
 import config from './Config';
 
-export default class extends Mesh {
+export default class Player extends Mesh {
     /**
      * @param {Number} x
      * @param {Number} z
@@ -40,14 +40,12 @@ export default class extends Mesh {
     // }
 
     moveUp() {
-        console.log("Move up")
         this.z = this.z - 1;
 
         this.position.set(this.position.x, this.position.y, this.z * config.blockSize + config.blockSize / 2);
     }
 
     moveLeft() {
-        console.log("Move left")
         this.x = this.x - 1;
 
         this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
@@ -56,14 +54,12 @@ export default class extends Mesh {
     }
 
     moveDown() {
-        console.log("Move down")
         this.z = this.z + 1;
 
         this.position.set(this.position.x, this.position.y, this.z * config.blockSize + config.blockSize / 2);
     }
 
     moveRight() {
-        console.log("Move right")
         this.x = this.x + 1;
 
         this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);

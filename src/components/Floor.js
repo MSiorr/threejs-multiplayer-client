@@ -2,7 +2,7 @@ import { Box3, BoxGeometry, BufferAttribute, BufferGeometry, Line, LineBasicMate
 
 import config from './Config';
 
-export default class extends Mesh {
+export default class Floor extends Mesh {
     /**
      * @param {number} x
      * @param {number} z

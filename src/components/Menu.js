@@ -3,7 +3,8 @@
          * menu: HTMLElement,
          * title: HTMLElement,
          * lobby: HTMLElement,
-         * waiting: HTMLElement,
+         * startsSoon: HTMLElement,
+         * roomTransition: HTMLElement,
          * startGame: HTMLElement}} MenuElements
          */
 export default class Menu {
@@ -15,7 +16,8 @@ export default class Menu {
             menu: null,
             title: null,
             lobby: null,
-            waiting: null,
+            startsSoon: null,
+            roomTransition: null,
             startGame: null
         };
 
@@ -26,7 +28,8 @@ export default class Menu {
         this.html.menu = document.getElementById("menu");
         this.html.title = document.getElementById("title");
         this.html.lobby = document.getElementById("lobby");
-        this.html.waiting = document.getElementById("waiting");
+        this.html.startsSoon = document.getElementById("starts-soon");
+        this.html.roomTransition = document.getElementById("room-transition");
         this.html.startGame = document.getElementById("start-game");
     }
 
@@ -42,5 +45,13 @@ export default class Menu {
      */
     hide(element) {
         this.html[element].classList.remove("active");
+    }
+
+    /**
+     * @param {keyof(MenuElements)} element
+     * @param {String} content
+     */
+    edit(element, content) {
+        this.html[element].innerHTML = content;
     }
 }

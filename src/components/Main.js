@@ -41,7 +41,7 @@ export default class Main {
 
         this.playerCompleteCurrentLevel = false;
 
-        this.playerMovementRule = [true];
+        this.playerMovementRule = [false];
 
         this.camera.position.set(500, 1000, 500);
         this.camera.lookAt(500, 0, 500);
@@ -56,32 +56,12 @@ export default class Main {
 
         document.body.appendChild(this.stats.dom);
 
-        this.levelManager.load(`https://${Config.hostname}/level/1`)
-            .then(response => response.json())
-            .then(data => {
-                this.levelManager.build(data)
-                    .then(() => {
-                        this.inputManager = new InputManager(this.playerMovementRule);
-                        this.inputManager.RegisterEventCapture();
-                        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], false);
-                        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], false);
-                        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], false);
-                        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], false);
-
-                        this.sun = new Sun();
-
-                        let m = Math.min(this.levelManager.lengthX, this.levelManager.lengthZ);
-
-                        this.sun.position.set(this.levelManager.center.x, 1000, this.levelManager.center.z + m);
-                        this.sun.target.position.copy(this.levelManager.center);
-                        this.scene.add(this.sun);
-                        this.scene.add(this.sun.target);
-                        this.cameraHelper = new CameraHelper(this.sun.shadow.camera)
-                        this.scene.add(this.cameraHelper);
-
-                        this.render();
-                    })
-            })
+        this.inputManager = new InputManager(this.playerMovementRule);
+        this.inputManager.RegisterEventCapture();
+        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], false);
+        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], false);
+        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], false);
+        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], false);
     }
 
     render() {
@@ -102,14 +82,32 @@ export default class Main {
             }
         }
 
-        let v = Utility.rotateVectorAroundPoint(this.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
-        this.sun.position.copy(v);
+        if (this.levelManager.objects.sun) {
+            let v = Utility.rotateVectorAroundPoint(this.levelManager.objects.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
+            this.levelManager.objects.sun.position.copy(v);
+        }
 
         this.renderer.render(this.scene, this.camera);
 
         this.stats.end()
 
-        requestAnimationFrame(this.render.bind(this));
+        this.animationFrame = requestAnimationFrame(this.render.bind(this));
+    }
+
+    startSearch() {
+        this.menu.hide("title");
+        this.menu.show("lobby");
+
+        this.socket = new Socket();
+
+        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
+        this.socket.Add("config", this.ReceiveConfig.bind(this));
+        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
+        this.socket.Add("new_level", this.NewLevel.bind(this));
+        this.socket.Add("wait", this.WaitForNextMap.bind(this));
+        this.socket.Add("win", this.WinBattle.bind(this));
+        this.socket.Add("lose", this.LoseBattle.bind(this));
+        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
     }
 
     /**
@@ -117,10 +115,13 @@ export default class Main {
      */
     EnterRoom(data) {
         console.log("SERVER FOUND ROOM FOR U");
+        this.menu.hide("lobby");
+        this.menu.show("startsSoon");
+        this.menu.edit("startsSoon", "Get ready... </br>Game will begin shortly");
     }
 
     /**
-     * @param {any} data 
+     * @param {String} data
      */
     ReceiveConfig(data) {
         console.log("U RECEIVE NEW CONFIG");
@@ -135,11 +136,26 @@ export default class Main {
     }
 
     /**
-     * @param {any} data
+     * @param {String} data
      */
     NewLevel(data) {
         console.log("U GOTTA NEW LEVEL BRO");
-        console.log(data);
+
+        cancelAnimationFrame(this.animationFrame);
+
+        this.levelManager.empty();
+        this.levelManager.build(JSON.parse(data))
+            .then(() => {
+                this.menu.hide("startsSoon");
+
+                this.camera.position.set(this.levelManager.center.x, 1000, this.levelManager.lengthZ * 1.2);
+                this.camera.lookAt(this.levelManager.center);
+
+                this.playerMovementRule[0] = true;
+                this.playerCompleteCurrentLevel = false;
+
+                this.render();
+            })
     }
 
     WaitForNextMap() {
@@ -159,21 +175,5 @@ export default class Main {
      */
     PowerupTarget(data) {
         console.log("ENEMY USE POWERUP ON U");
-    }
-
-    startSearch() {
-        this.menu.hide("title");
-        this.menu.show("lobby");
-
-        this.socket = new Socket();
-
-        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
-        this.socket.Add("config", this.ReceiveConfig.bind(this));
-        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
-        this.socket.Add("new_level", this.NewLevel.bind(this));
-        this.socket.Add("wait", this.WaitForNextMap.bind(this));
-        this.socket.Add("win", this.WinBattle.bind(this));
-        this.socket.Add("lose", this.LoseBattle.bind(this));
-        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
     }
 }

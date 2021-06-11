@@ -30,15 +30,16 @@ body {
         left: 0;
         width: 100%;
         height: 100%;
+        overflow: hidden;
 
         &.active {
             opacity: 1;
-            z-index: 1;
+            z-index: 1000000;
         }
     }
 
     #title {
-        background-color: red;
+        background-color: rgb(17, 17, 21);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -49,10 +50,22 @@ body {
     }
 
     #lobby {
-        background-color: green;
+        background-color: rgb(77, 77, 83);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
     }
 
-    #waiting {
+    #starts-soon {
+        background-color: rgb(137, 137, 145);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
+    }
+
+    #room-transition {
         background-color: blue;
     }
 }

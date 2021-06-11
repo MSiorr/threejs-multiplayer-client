@@ -8,11 +8,11 @@ const KEYS = {
     "down": 'KeyS',
 };
 
-export default class {
+export default class Keyboard {
     /**
      * @param {Window} domElement
-     */    
-    constructor(domElement){
+     */
+    constructor(domElement) {
 
         this.domElement = domElement;
 
@@ -31,9 +31,9 @@ export default class {
      * 
      * @param {KeyboardEvent} e 
      */
-    OnKeyDown(e){
-        if(this.playersCanMove == true){
-            switch(e.code){
+    OnKeyDown(e) {
+        if (this.playersCanMove == true) {
+            switch (e.code) {
                 case KEYS.up:
                     this.playersCanMove = false;
                     this.moveUp = true;

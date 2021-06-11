@@ -3,13 +3,14 @@
  * @typedef {{data: LevelItem[], size: Number}} Level
  */
 
-import { Box3, Vector3 } from "three";
+import { Box3, CameraHelper, Vector3 } from "three";
 
 import Config from "./Config";
 import Block from "./Block";
 import Floor from "./Floor";
 import Player from "./Player";
 import Goal from "./Goal";
+import Sun from "./Sun";
 
 export default class LevelManager {
     /**
@@ -19,7 +20,7 @@ export default class LevelManager {
         this.scene = scene;
 
         /**
-         * @type {{floors: Floor[], players: Player[], blocks: Block[], goals: Goal[], playersFalling: Player[]}}
+         * @type {{floors: Floor[], players: Player[], blocks: Block[], goals: Goal[], playersFalling: Player[], sun: Sun}}
          */
 
         this.objects = {
@@ -27,7 +28,8 @@ export default class LevelManager {
             players: [],
             blocks: [],
             goals: [],
-            playersFalling: []
+            playersFalling: [],
+            sun: null
         };
 
         this.lengthX = null;
@@ -97,18 +99,45 @@ export default class LevelManager {
             this.lengthZ = (maxZ + 1) * Config.blockSize;
 
             this.center = new Vector3(this.lengthX / 2, 0, this.lengthZ / 2);
+
+            this.objects.sun = new Sun();
+
+            let m = Math.min(this.lengthX, this.lengthZ);
+
+            this.objects.sun.position.set(this.center.x, 1000, this.center.z + m);
+            this.objects.sun.target.position.copy(this.center);
+            this.scene.add(this.objects.sun);
+            this.scene.add(this.objects.sun.target);
+            // this.cameraHelper = new CameraHelper(this.objects.sun.shadow.camera)
+            // this.scene.add(this.cameraHelper);
         });
 
         return p;
     }
 
     empty() {
+        if (this.objects.sun) {
+            this.scene.remove(this.objects.sun.target);
+            // this.scene.remove(this.cameraHelper);
+        }
+
+        /**
+         * @type {(Player|Goal|Floor|Block|Sun)[]}
+         */
+        let toRemove = []
+
         this.scene.traverse(object => {
             if (object instanceof Player ||
                 object instanceof Goal ||
                 object instanceof Floor ||
-                object instanceof Block)
-                this.scene.remove(object);
+                object instanceof Block ||
+                object instanceof Sun) {
+                toRemove.push(object);
+            }
+        });
+
+        toRemove.forEach(el => {
+            this.scene.remove(el);
         });
 
         this.objects = {
@@ -116,7 +145,8 @@ export default class LevelManager {
             players: [],
             floors: [],
             goals: [],
-            playersFalling: []
+            playersFalling: [],
+            sun: null
         };
     }
 
@@ -213,8 +243,8 @@ export default class LevelManager {
                 return false;
             }
         }
-        for(const player of this.objects.players){
-            if(player.x == toX && player.z == toZ){
+        for (const player of this.objects.players) {
+            if (player.x == toX && player.z == toZ) {
                 return false;
             }
         }
