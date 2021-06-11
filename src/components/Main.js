@@ -138,6 +138,12 @@ export default class Main {
      */
     EnemyForfeit(data) {
         console.log("YOUR ENEMY WAS NOOB AND HE HAS GONE AWAY BLYEAT :D");
+
+        this.menu.hide("roomTransition");
+        this.menu.show("win");
+
+        this.playerMovementRule[0] = false;
+        cancelAnimationFrame(this.animationFrame);
     }
 
     /**
