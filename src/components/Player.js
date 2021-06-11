@@ -25,20 +25,6 @@ export default class Player extends Mesh {
         this.fallingVelocityIncrement = 0.6;
     }
 
-    // /**
-    //  * @param {number} x
-    //  * @param {number} z
-    //  */
-    // Move(x,z){
-
-    //     console.log("MOOOVE")
-
-    //     let newX = this.position.x + x * config.blockSize;
-    //     let newZ = this.position.z + z * config.blockSize;
-
-    //     this.position.set(newX, this.position.y, newZ);
-    // }
-
     moveUp() {
         this.z = this.z - 1;
 
@@ -49,8 +35,6 @@ export default class Player extends Mesh {
         this.x = this.x - 1;
 
         this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
-
-        console.log(this.position);
     }
 
     moveDown() {

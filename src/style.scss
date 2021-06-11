@@ -67,7 +67,27 @@ body {
     }
 
     #room-transition {
-        background-color: blue;
+        background-color: rgb(137, 137, 145);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
+    }
+
+    #win {
+        background-color: rgb(136, 232, 136);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
+    }
+
+    #lose {
+        background-color: rgb(232, 136, 136);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
     }
 }
 
