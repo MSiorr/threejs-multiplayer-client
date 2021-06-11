@@ -8,7 +8,8 @@ import {
     Vector3,
     Euler,
     CameraHelper,
-    DirectionalLightHelper
+    DirectionalLightHelper,
+    Vector2
 } from 'three';
 
 import Renderer from './Renderer';
@@ -71,6 +72,8 @@ export default class Main {
 
     render() {
         this.stats.begin()
+
+        this.updateCamera();
 
         for (const player of this.levelManager.objects.playersFalling) {
             player.fall();
@@ -243,5 +246,43 @@ export default class Main {
         console.log(data);
         this.gui.html.statusBars.player.style.width = `${data.you / this.gui.maxPoints * 100}%`;
         this.gui.html.statusBars.enemy.style.width = `${data.enemy / this.gui.maxPoints * 100}%`;
+    }
+    updateCamera() {
+        let lineSquareRoot = 2;
+
+        // 1. center
+        this.levelManager.center;
+
+        //2. bigger aspect
+        let biggerDimension = innerWidth * this.levelManager.lengthX >= innerHeight * this.levelManager.lengthZ ?
+            this.levelManager.lengthX : this.levelManager.lengthZ * innerWidth / innerHeight;
+
+        //3. equations
+        let eq1 = new Vector3(-Math.sqrt(lineSquareRoot), -1, this.levelManager.center.x * Math.sqrt(lineSquareRoot));
+        let eq2 = new Vector3(0, -1, biggerDimension);
+
+        //4. matrix
+        let matrix = new Vector3(
+            eq1.x * eq2.y - eq2.x * eq1.y,
+            -eq1.z * eq2.y - -eq2.z * eq1.y,
+            eq1.x * -eq2.z - eq2.x * -eq1.z
+        );
+
+        //5. camera position
+        let cameraPosition = new Vector2(matrix.y / matrix.x, matrix.z / matrix.x);
+
+        //6. camera position adjusted
+        let cameraPositionAdjusted = new Vector3(
+            this.levelManager.center.x,
+            cameraPosition.y,
+            -cameraPosition.x + this.levelManager.lengthZ
+        );
+
+        // console.log(this.levelManager.center.x, this.levelManager.center.y, this.levelManager.center.z);
+        // console.log(cameraPositionAdjusted.z);
+
+        this.camera.position.copy(cameraPositionAdjusted);
+
+        this.camera.lookAt(this.levelManager.center);
     }
 }
