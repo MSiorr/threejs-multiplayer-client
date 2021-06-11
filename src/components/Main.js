@@ -21,6 +21,7 @@ import Utility from './Utility';
 import Socket from './Socket';
 import Config from './Config';
 import Menu from './Menu';
+import GUI from './GUI';
 
 export default class Main {
     /**
@@ -36,6 +37,9 @@ export default class Main {
         this.menu = new Menu();
         this.menu.show("title");
         this.menu.html.startGame.addEventListener("click", this.startSearch.bind(this));
+
+        this.gui = new GUI();
+        this.gui.showAll();
 
         this.socket = null;
 
@@ -151,6 +155,8 @@ export default class Main {
             .then(() => {
                 this.menu.hide("startsSoon");
                 this.menu.hide("roomTransition");
+
+                this.gui.showAll();
 
                 this.camera.position.set(this.levelManager.center.x, 1000, this.levelManager.lengthZ * 1.2);
                 this.camera.lookAt(this.levelManager.center);
