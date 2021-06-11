@@ -103,23 +103,36 @@ body {
         z-index: 0;
         position: absolute;
 
-        background-color: rgba(180,180,180,0.5);
+        background-color: rgba(100,100,100,0.7);
         border: 2px solid black;
 
         &.active {
             opacity: 1;
-            z-index: 150000;
+            z-index: 15000;
         }
     }
 
     #status-bars {
         width: 800px;
-        height: 60px;
+        height: 50px;
         top: 10px;
         left: calc(50% - 400px);
+        padding: 5px 7.5px;
 
         display: flex;
         flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-start;
+
+        #player-bar {
+            background-color: rgba(59, 59, 211, 0.7);
+            height: 40%;
+        }
+
+        #enemy-bar {
+            background-color: rgba(204, 36, 36, 0.7);
+            height: 40%;
+        }
     }
 
     #options {
@@ -148,5 +161,42 @@ body {
         height: 300px;
         top: calc(50% - 150px);
         left: 10px;
+        padding: 15px 10px;
+        font-weight: bold;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        #count-info, #current-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+
+            & > * {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 1px 0;
+            }
+        }
     }
+}
+
+.diffEasy {
+    color: rgb(51, 253, 51);
+    margin-left: 20px;
+}
+
+.diffMedium {
+    color: rgb(255, 181, 44);
+    margin-left: 20px;
+}
+
+.diffHard {
+    color: rgb(255, 45, 45);
+    margin-left: 20px;
 }

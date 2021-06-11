@@ -39,7 +39,7 @@ export default class Main {
         this.menu.html.startGame.addEventListener("click", this.startSearch.bind(this));
 
         this.gui = new GUI();
-        this.gui.showAll();
+        // this.gui.showAll();
 
         this.socket = null;
 
@@ -92,11 +92,26 @@ export default class Main {
             this.levelManager.objects.sun.position.copy(v);
         }
 
+        // Update time
+        let newTime = Date.now();
+        let newDate = new Date(newTime);
+
+        this.gui.edit(this.ParseToTimeString(newDate.getHours(), newDate.getMinutes(), newDate.getSeconds()), 'gameInfo', 'time');
+
         this.renderer.render(this.scene, this.camera);
 
         this.stats.end()
 
         this.animationFrame = requestAnimationFrame(this.render.bind(this));
+    }
+
+    /**
+     * @param {Number} h
+     * @param {Number} m
+     * @param {Number} s
+     */
+    ParseToTimeString(h,m,s){
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
     }
 
     startSearch() {
@@ -113,6 +128,7 @@ export default class Main {
         this.socket.Add("win", this.WinBattle.bind(this));
         this.socket.Add("lose", this.LoseBattle.bind(this));
         this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
+        this.socket.Add("progress_bar", this.UpdateBars.bind(this));
     }
 
     /**
@@ -126,11 +142,18 @@ export default class Main {
     }
 
     /**
-     * @param {String} data
+     * @param {{easyCount: Number, mediumCount: Number, hardCount: Number, totalScore: Number, levelCount: Number}} data
      */
     ReceiveConfig(data) {
-        console.log("U RECEIVE NEW CONFIG");
-        console.log(data);
+        this.gui.totalLevels = data.levelCount;
+        this.gui.maxPoints = data.totalScore;
+
+        this.gui.edit(`<span>TOTAL: </span>${data.levelCount}`, 'gameInfo', 'mapCount');
+        this.gui.edit(`<span class='diffEasy'>EASY: </span>${data.easyCount}`, 'gameInfo', 'easyMapCount');
+        this.gui.edit(`<span class='diffMedium'>MEDIUM: </span>${data.mediumCount}`, 'gameInfo', 'mediumMapCount');
+        this.gui.edit(`<span class='diffHard'>HARD: </span>${data.hardCount}`, 'gameInfo', 'hardMapCount');
+
+        this.gui.edit('21:37:69', 'gameInfo', 'time');
     }
 
     /**
@@ -147,7 +170,7 @@ export default class Main {
     }
 
     /**
-     * @param {String} data
+     * @param {import('./LevelManager').Level} data
      */
     NewLevel(data) {
         console.log("U GOTTA NEW LEVEL BRO");
@@ -157,10 +180,16 @@ export default class Main {
         this.currentLevel = data;
 
         this.levelManager.empty();
-        this.levelManager.build(JSON.parse(data))
+        this.levelManager.build(data)
             .then(() => {
                 this.menu.hide("startsSoon");
                 this.menu.hide("roomTransition");
+
+                this.gui.currentMap++;
+                this.gui.currentMapDifficulty = data.difficulty;
+
+                this.gui.edit(`<span>CURRENT MAP: </span> ${this.gui.currentMap}/${this.gui.totalLevels}`, 'gameInfo', 'currentMapCount');
+                this.gui.edit(`CURRENT DIFFICULTY: <span class="diff${this.gui.currentMapDifficulty[0].toUpperCase()}${this.gui.currentMapDifficulty.substr(1)}">${this.gui.currentMapDifficulty.toUpperCase()}</span>`, 'gameInfo', 'currentMapDifficulty');
 
                 this.gui.showAll();
 
@@ -205,5 +234,14 @@ export default class Main {
      */
     PowerupTarget(data) {
         console.log("ENEMY USE POWERUP ON U");
+    }
+
+    /**
+     * @param {{you: Number, enemy: Number}} data 
+     */
+    UpdateBars(data) {
+        console.log(data);
+        this.gui.html.statusBars.player.style.width = `${data.you / this.gui.maxPoints * 100}%`;
+        this.gui.html.statusBars.enemy.style.width = `${data.enemy / this.gui.maxPoints * 100}%`;
     }
 }

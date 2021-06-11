@@ -1,6 +1,6 @@
 /**
  * @typedef {{id: Number, x: Number, z: Number, type: "floor" | "block" | "player" | "goal"}} LevelItem
- * @typedef {{data: LevelItem[], size: Number}} Level
+ * @typedef {{data: LevelItem[], difficulty: String, id: Number}} Level
  */
 
 import { Box3, CameraHelper, Scene, Vector3 } from "three";

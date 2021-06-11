@@ -8,6 +8,9 @@
  * @typedef {{
  * main: HTMLElement, 
  * mapCount: HTMLElement, 
+ * easyMapCount: HTMLElement, 
+ * mediumMapCount: HTMLElement, 
+ * hardMapCount: HTMLElement, 
  * currentMapCount: HTMLElement, 
  * currentMapDifficulty: HTMLElement, 
  * time: HTMLElement
@@ -40,11 +43,22 @@ export default class GUI {
             gameInfo: {
                 main: null,
                 mapCount: null,
+                easyMapCount: null,
+                mediumMapCount: null,
+                hardMapCount: null,
                 currentMapCount: null,
                 currentMapDifficulty: null,
                 time: null
             }
         }
+
+        this.totalLevels = 0;
+        this.maxPoints = null;
+        this.currentMap = 0;
+        /**
+         * @type {String | null}
+         */
+        this.currentMapDifficulty = null;
 
         this.initHTML();
     }
@@ -60,6 +74,9 @@ export default class GUI {
 
         this.html.gameInfo.main = document.getElementById("game-info");
         this.html.gameInfo.mapCount = document.getElementById("map-count");
+        this.html.gameInfo.easyMapCount = document.getElementById("easy-map-count");
+        this.html.gameInfo.mediumMapCount = document.getElementById("medium-map-count");
+        this.html.gameInfo.hardMapCount = document.getElementById("hard-map-count");
         this.html.gameInfo.currentMapCount = document.getElementById("current-map-count");
         this.html.gameInfo.currentMapDifficulty = document.getElementById("current-map-difficulty");
         this.html.gameInfo.time = document.getElementById("time");

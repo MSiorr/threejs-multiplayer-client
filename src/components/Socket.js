@@ -35,7 +35,8 @@ export default class Socket {
             for (let title in this.socketsSubscriptions) {
                 if (title === message.title) {
                     console.log("TITLE", title)
-                    this.socketsSubscriptions[title].handler(message.data);
+                    console.log("MESSAGE", message.data)
+                    this.socketsSubscriptions[title].handler(JSON.parse(message.data));
                 }
             }
         }
