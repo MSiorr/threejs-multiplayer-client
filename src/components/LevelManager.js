@@ -3,7 +3,7 @@
  * @typedef {{data: LevelItem[], size: Number}} Level
  */
 
-import { Box3, CameraHelper, Vector3 } from "three";
+import { Box3, CameraHelper, Scene, Vector3 } from "three";
 
 import Config from "./Config";
 import Block from "./Block";
@@ -14,7 +14,7 @@ import Sun from "./Sun";
 
 export default class LevelManager {
     /**
-     * @param {THREE.Scene} scene 
+     * @param {Scene} scene 
      */
     constructor(scene) {
         this.scene = scene;
@@ -39,6 +39,11 @@ export default class LevelManager {
          * @type {Vector3}
          */
         this.center = null;
+
+        /**
+         * @type {Level}
+         */
+        this.currentLevel = null;
     }
 
     /**
@@ -53,6 +58,8 @@ export default class LevelManager {
      * @param {Level} data 
      */
     build(data) {
+        this.currentLevel = data;
+
         let p = new Promise((resolve, reject) => {
             let count = data.data.length;
 
@@ -113,6 +120,13 @@ export default class LevelManager {
         });
 
         return p;
+    }
+
+    reset() {
+        if (this.functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity() === false) {
+            this.empty();
+            this.build(this.currentLevel);
+        }
     }
 
     empty() {

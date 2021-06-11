@@ -62,6 +62,7 @@ export default class Main {
         this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], false);
         this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], false);
         this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], false);
+        this.inputManager.Add("reset", this.levelManager.reset.bind(this.levelManager), ["KeyR"], false);
     }
 
     render() {
@@ -143,10 +144,13 @@ export default class Main {
 
         cancelAnimationFrame(this.animationFrame);
 
+        this.currentLevel = data;
+
         this.levelManager.empty();
         this.levelManager.build(JSON.parse(data))
             .then(() => {
                 this.menu.hide("startsSoon");
+                this.menu.hide("roomTransition");
 
                 this.camera.position.set(this.levelManager.center.x, 1000, this.levelManager.lengthZ * 1.2);
                 this.camera.lookAt(this.levelManager.center);
@@ -160,14 +164,28 @@ export default class Main {
 
     WaitForNextMap() {
         console.log("U WAIT FOR NEXT MAP");
+
+        this.menu.show("roomTransition");
     }
 
     WinBattle() {
         console.log("YOU WIN MY FRIEND");
+
+        this.menu.hide("roomTransition");
+        this.menu.show("win");
+
+        this.playerMovementRule[0] = false;
+        cancelAnimationFrame(this.animationFrame);
     }
 
     LoseBattle() {
         console.log("YOU LOSE MY FRIEND");
+
+        this.menu.hide("roomTransition");
+        this.menu.show("lose");
+
+        this.playerMovementRule[0] = false;
+        cancelAnimationFrame(this.animationFrame);
     }
 
     /**

@@ -5,6 +5,8 @@
          * lobby: HTMLElement,
          * startsSoon: HTMLElement,
          * roomTransition: HTMLElement,
+         * win: HTMLElement,
+         * lose: HTMLElement,
          * startGame: HTMLElement}} MenuElements
          */
 export default class Menu {
@@ -18,7 +20,9 @@ export default class Menu {
             lobby: null,
             startsSoon: null,
             roomTransition: null,
-            startGame: null
+            startGame: null,
+            win: null,
+            lose: null
         };
 
         this.initHTML();
@@ -31,6 +35,8 @@ export default class Menu {
         this.html.startsSoon = document.getElementById("starts-soon");
         this.html.roomTransition = document.getElementById("room-transition");
         this.html.startGame = document.getElementById("start-game");
+        this.html.win = document.getElementById("win");
+        this.html.lose = document.getElementById("lose");
     }
 
     /**
