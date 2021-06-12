@@ -51,9 +51,8 @@ export default class Player extends Object3D {
     /**
      * @param {number} delta
      * @param {InputManager} inputManager
-     * @param {LevelManager} levelManager
      */
-    Update(delta, inputManager, levelManager){
+    Update(delta, inputManager){
         if (this.mixer) this.mixer.update(delta)
         
         // console.log(this.needMove);
