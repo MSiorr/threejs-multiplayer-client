@@ -11,6 +11,7 @@ import Floor from "./Floor";
 import Player from "./Player";
 import Goal from "./Goal";
 import Sun from "./Sun";
+import TextureLibrary from "./Library";
 
 export default class LevelManager {
     /**
@@ -47,6 +48,8 @@ export default class LevelManager {
          * @type {Level}
          */
         this.currentLevel = null;
+
+        this.library = new TextureLibrary();
     }
 
     /**
@@ -197,7 +200,7 @@ export default class LevelManager {
      * @returns {Floor}
      */
     _createFloor(x, z, size) {
-        let floor = new Floor(x, z);
+        let floor = new Floor(x, z, this.library.materials.grassMaterial);
         floor.createOutline();
 
         //@ts-ignore
