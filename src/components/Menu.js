@@ -1,6 +1,7 @@
 /**
          * @typedef {{
          * menu: HTMLElement,
+         * sceneCanvas: HTMLCanvasElement,
          * title: HTMLElement,
          * lobby: HTMLElement,
          * startsSoon: HTMLElement,
@@ -16,6 +17,7 @@ export default class Menu {
          */
         this.html = {
             menu: null,
+            sceneCanvas: null,
             title: null,
             lobby: null,
             startsSoon: null,
@@ -30,6 +32,7 @@ export default class Menu {
 
     initHTML() {
         this.html.menu = document.getElementById("menu");
+        this.html.sceneCanvas = document.querySelector("#menu canvas");
         this.html.title = document.getElementById("title");
         this.html.lobby = document.getElementById("lobby");
         this.html.startsSoon = document.getElementById("starts-soon");
