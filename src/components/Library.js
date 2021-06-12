@@ -10,6 +10,14 @@ import grass_512_dis from "../resources/textures/grass/grass_512_dis.png";
 import grass_512_normal from "../resources/textures/grass/grass_512_normal.png";
 //@ts-ignore
 import grass_512_rough from "../resources/textures/grass/grass_512_rough.png";
+//@ts-ignore
+import playerModel from "../models/player.fbx";
+//@ts-ignore
+import playerWalk from "../models/player@walk.fbx";
+//@ts-ignore
+import playerIdle from "../models/player@idle.fbx";
+
+import { FBXLoader } from "three/examples/jsm/loaders/fbxloader";
 
 export default class Library {
     constructor() {
@@ -21,6 +29,12 @@ export default class Library {
             grass_512_rough: new TextureLoader().load(grass_512_rough)
         }
 
+        this.models = {
+            playerModel: null,
+            playerIdle: null,
+            playerWalk: null
+        }
+
         this.materials = {
             grassMaterial: new MeshPhongMaterial({
                 aoMap: this.textures.grass_512_ao,
@@ -30,5 +44,23 @@ export default class Library {
                 bumpMap: this.textures.grass_512_rough
             })
         }
+
+        this.LoadModels();
+    }
+
+    LoadModels(){
+        let fbxLoader = new FBXLoader();
+        fbxLoader.load(playerModel, (object) => {
+            object.scale.set(.5, .5, .5)
+            this.models.playerModel = object;
+        })
+        fbxLoader.load(playerIdle, (object) => {
+            object.scale.set(.5, .5, .5)
+            this.models.playerIdle = object;
+        })
+        fbxLoader.load(playerWalk, (object) => {
+            object.scale.set(.5, .5, .5)
+            this.models.playerWalk = object;
+        })
     }
 }

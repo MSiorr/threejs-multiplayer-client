@@ -41,7 +41,7 @@ module.exports = {
                 ],
             },
             {
-                test: /\.(md2)$/i,
+                test: /\.(fbx)$/i,
                 type: 'asset/resource',
             }
         ]

@@ -221,12 +221,17 @@ export default class LevelManager {
      * @returns {Player}
      */
     _createPlayer(x, z, size) {
-        let player = new Player(x, z);
+        let playerModels = {
+            model: this.library.models.playerModel,
+            idle: this.library.models.playerIdle,
+            walk: this.library.models.playerWalk
+        }
+        let player = new Player(x, z, playerModels);
 
         //@ts-ignore
-        let y = new Box3().setFromObject(player).getSize(new Vector3()).y;
+        let y = new Box3().setFromObject(player.model).getSize(new Vector3()).y;
 
-        player.position.set(x * size + size / 2, y / 2, z * size + size / 2);
+        player.position.set(x * size + size / 2, y / 2 - 55, z * size + size / 2);
 
         this.scene.add(player);
         this.objects.players.push(player);

@@ -9,7 +9,8 @@ import {
     Euler,
     CameraHelper,
     DirectionalLightHelper,
-    Vector2
+    Vector2,
+    Clock
 } from 'three';
 
 import Renderer from './Renderer';
@@ -44,6 +45,8 @@ export default class Main {
 
         this.socket = null;
 
+        this.clock = new Clock();
+
         this.playerCompleteCurrentLevel = false;
 
         this.playerMovementRule = [false];
@@ -72,6 +75,7 @@ export default class Main {
 
     render() {
         this.stats.begin()
+        let delta = this.clock.getDelta();
 
         this.updateCamera();
 
@@ -94,6 +98,11 @@ export default class Main {
             let v = Utility.rotateVectorAroundPoint(this.levelManager.objects.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
             this.levelManager.objects.sun.position.copy(v);
         }
+        // Update Players Anim
+        this.levelManager.objects.players.forEach( e => {
+            e.Update(delta);
+        })
+
 
         // Update time
         let newTime = Date.now();
