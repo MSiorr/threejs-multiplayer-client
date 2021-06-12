@@ -100,13 +100,13 @@ export default class Main {
         }
         let canMove = true;
         // Update Players Anim
-        this.levelManager.objects.players.forEach( e => {
+        this.levelManager.objects.players.forEach(e => {
             e.Update(delta, this.inputManager);
-            if(e.needMove == true){
+            if (e.needMove == true) {
                 canMove = false;
             }
         })
-        this.levelManager.objects.playersFalling.forEach( e => {
+        this.levelManager.objects.playersFalling.forEach(e => {
             e.Update(delta, this.inputManager);
         })
         this.playerMovementRule[0] = canMove;
@@ -131,7 +131,7 @@ export default class Main {
      * @param {Number} m
      * @param {Number} s
      */
-    ParseToTimeString(h,m,s){
+    ParseToTimeString(h, m, s) {
         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
     }
 

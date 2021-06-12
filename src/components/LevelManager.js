@@ -210,7 +210,7 @@ export default class LevelManager {
      * @returns {Floor}
      */
     _createFloor(x, z, size) {
-        let floor = new Floor(x, z, this.library.materials.grassMaterial);
+        let floor = new Floor(x, z, this.library.materials.grass001);
         floor.createOutline();
 
         //@ts-ignore
@@ -257,7 +257,7 @@ export default class LevelManager {
      * @returns {Goal}
      */
     _createGoal(x, z, size) {
-        let goal = new Goal(x, z);
+        let goal = new Goal(x, z, this.library.materials.metal007);
         goal.createOutline();
 
         //@ts-ignore

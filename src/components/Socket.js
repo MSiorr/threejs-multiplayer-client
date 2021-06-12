@@ -29,13 +29,11 @@ export default class Socket {
         }
 
         this.ws.onmessage = (e) => {
-            console.log("MESSAGE", e.data);
             let message = JSON.parse(e.data);
+            console.log(message.title, message.data);
 
             for (let title in this.socketsSubscriptions) {
                 if (title === message.title) {
-                    console.log("TITLE", title)
-                    console.log("MESSAGE", message.data)
                     this.socketsSubscriptions[title].handler(JSON.parse(message.data));
                 }
             }

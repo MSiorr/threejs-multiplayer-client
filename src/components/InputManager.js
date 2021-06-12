@@ -6,6 +6,10 @@ export default class InputManager {
      */
     constructor(boolArrRef) {
         this.boolArrRef = boolArrRef;
+
+        /**
+         * @type {{[x: string]: InputManagerRule}}
+         */
         this.rules = {};
     }
 

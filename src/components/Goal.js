@@ -1,4 +1,4 @@
-import { BoxGeometry, BufferGeometry, Line, LineBasicMaterial, Mesh, MeshPhongMaterial, Vector3, Box3 } from 'three';
+import { BoxGeometry, BufferGeometry, Line, LineBasicMaterial, Mesh, MeshPhongMaterial, Vector3, Box3, Material } from 'three';
 
 import config from './Config';
 
@@ -6,13 +6,12 @@ export default class Goal extends Mesh {
     /**
      * @param {number} x
      * @param {number} z
+     * @param {Material} material
      */
-    constructor(x, z) {
+    constructor(x, z, material) {
         super(
             new BoxGeometry(config.blockSize, config.blockSize / 5, config.blockSize),
-            new MeshPhongMaterial({
-                color: 0xffff00
-            })
+            material.clone()
         )
 
         this.receiveShadow = true;

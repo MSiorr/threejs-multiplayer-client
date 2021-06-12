@@ -15,7 +15,7 @@ export default class Player extends Object3D {
         super()
         this.model = this.CloneModel(modelObj.model);
         this.add(this.model);
-        this.model.position.set(0,0,0);
+        this.model.position.set(0, 0, 0);
 
         this.velocity = config.playerVelocity;
 
@@ -34,8 +34,8 @@ export default class Player extends Object3D {
         this.animationActions = {
 
         };
-        for(let anim in modelObj){
-            if(anim != 'model'){
+        for (let anim in modelObj) {
+            if (anim != 'model') {
                 console.log(modelObj[anim]);
                 let action = this.mixer.clipAction(modelObj[anim].animations[0]);
                 this.animationActions[anim] = action;
@@ -47,16 +47,16 @@ export default class Player extends Object3D {
 
         this.moveBtn = null;
     }
-    
+
     /**
      * @param {number} delta
      * @param {InputManager} inputManager
      */
     Update(delta, inputManager){
         if (this.mixer) this.mixer.update(delta)
-        
+
         // console.log(this.needMove);
-        if(this.needMove){
+        if (this.needMove) {
             // if(this.position.x != this.toX){
             //     this.position.x += Math.sign(this.toX - this.position.x) * Math.min(Math.abs(this.toX - this.position.x), this.velocity * delta);
             // } else if(this.position.z != this.toZ){
@@ -65,7 +65,7 @@ export default class Player extends Object3D {
 
             let currentVel = this.velocity * delta;
 
-            switch(this.moveBtn){
+            switch (this.moveBtn) {
                 case 'left': {
                     this.position.x += -1 * Math.min(Math.abs(this.toX - this.position.x), currentVel);
                     break;
@@ -85,8 +85,8 @@ export default class Player extends Object3D {
             }
 
             // if(this.inputManager.rules['left'].task !== null)
-            
-            if(this.toX == this.position.x && this.toZ == this.position.z){
+
+            if (this.toX == this.position.x && this.toZ == this.position.z) {
                 this.needMove = false;
                 this.moveBtn = null;
                 this.SetAction(this.animationActions['idle']);
@@ -98,10 +98,10 @@ export default class Player extends Object3D {
      * @param {AnimationAction} toAction 
      */
     SetAction(toAction) {
-        if(this.activeAction != toAction){
+        if (this.activeAction != toAction) {
             this.lastAction = this.activeAction;
             this.activeAction = toAction;
-            if(this.lastAction != null){
+            if (this.lastAction != null) {
                 this.lastAction.fadeOut(.1);
             }
             this.activeAction.reset();
@@ -119,30 +119,30 @@ export default class Player extends Object3D {
         this.moveBtn = 'up';
         this.SetAction(this.animationActions['walk'])
     }
-    
+
     moveLeft() {
         this.x = this.x - 1;
-        
+
         this.toX = this.x * config.blockSize + config.blockSize / 2;
         // this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
         this.needMove = true;
         this.moveBtn = 'left';
         this.SetAction(this.animationActions['walk'])
     }
-    
+
     moveDown() {
         this.z = this.z + 1;
-        
+
         this.toZ = this.z * config.blockSize + config.blockSize / 2;
         // this.position.set(this.position.x, this.position.y, this.z * config.blockSize + config.blockSize / 2);
         this.needMove = true;
         this.moveBtn = 'down';
         this.SetAction(this.animationActions['walk'])
     }
-    
+
     moveRight() {
         this.x = this.x + 1;
-        
+
         this.toX = this.x * config.blockSize + config.blockSize / 2;
         // this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
         this.needMove = true;
@@ -158,7 +158,7 @@ export default class Player extends Object3D {
     /**
      * @param {Mesh} model 
      */
-    CloneModel(model){
+    CloneModel(model) {
         let clone = SkeletonUtils.clone(model);
         clone.animations = model.animations;
 
