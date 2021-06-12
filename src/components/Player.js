@@ -36,7 +36,6 @@ export default class Player extends Object3D {
         };
         for (let anim in modelObj) {
             if (anim != 'model') {
-                console.log(modelObj[anim]);
                 let action = this.mixer.clipAction(modelObj[anim].animations[0]);
                 this.animationActions[anim] = action;
             }
@@ -50,9 +49,8 @@ export default class Player extends Object3D {
 
     /**
      * @param {number} delta
-     * @param {InputManager} inputManager
      */
-    Update(delta, inputManager){
+    Update(delta){
         if (this.mixer) this.mixer.update(delta)
 
         // console.log(this.needMove);

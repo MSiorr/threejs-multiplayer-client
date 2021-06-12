@@ -19,9 +19,13 @@ import metal034_512_normal from "../resources/textures/metal034/metal034_512_nor
 import metal034_512_rough from "../resources/textures/metal034/metal034_512_rough.png";
 
 import playerModel from "../models/player.fbx";
-import playerWalk from "../models/player@walkVFast2.fbx";
+import playerWalk from "../models/player@walk.fbx";
 import playerIdle from "../models/player@idle.fbx";
 import playerFall from "../models/player@fall.fbx";
+import playerBored from "../models/player@bored.fbx";
+import playerReady from "../models/player@ready.fbx";
+import playerSad from "../models/player@sad.fbx";
+import playerVictory from "../models/player@victory.fbx";
 
 import { FBXLoader } from "three/examples/jsm/loaders/fbxloader";
 
@@ -51,7 +55,11 @@ export default class Library {
             playerModel: null,
             playerIdle: null,
             playerWalk: null,
-            playerFall: null
+            playerFall: null,
+            playerBored: null,
+            playerReady: null,
+            playerSad: null,
+            playerVictory: null
         }
 
         /**
@@ -109,6 +117,22 @@ export default class Library {
         fbxLoader.load(playerFall, (object) => {
             object.scale.set(.5, .5, .5)
             this.models.playerFall = object;
+        })
+        fbxLoader.load(playerBored, (object) => {
+            object.scale.set(.5, .5, .5)
+            this.models.playerBored = object;
+        })
+        fbxLoader.load(playerReady, (object) => {
+            object.scale.set(.5, .5, .5)
+            this.models.playerReady = object;
+        })
+        fbxLoader.load(playerSad, (object) => {
+            object.scale.set(.5, .5, .5)
+            this.models.playerSad = object;
+        })
+        fbxLoader.load(playerVictory, (object) => {
+            object.scale.set(.5, .5, .5)
+            this.models.playerVictory = object;
         })
     }
 

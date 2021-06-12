@@ -24,6 +24,8 @@ import Socket from './Socket';
 import Config from './Config';
 import Menu from './Menu';
 import GUI from './GUI';
+import Player from './Player';
+import LobbyScene from './LobbyScene';
 
 export default class Main {
     /**
@@ -35,6 +37,13 @@ export default class Main {
         this.renderer = new Renderer(container);
         this.camera = new Camera(75, this.renderer);
         this.levelManager = new LevelManager(this.scene);
+
+        this.lobbyScene = new LobbyScene(document.getElementById("root2"), this.levelManager.library);
+
+        /**
+         * @type {'lobby' | 'game'}
+         */
+        this.currentRender = 'lobby'
 
         this.menu = new Menu();
         this.menu.show("title");
@@ -53,7 +62,6 @@ export default class Main {
 
         this.camera.position.set(500, 1000, 500);
         this.camera.lookAt(500, 0, 500);
-        this.camera.far = 4096;
         this.camera.updateProjectionMatrix();
 
         this.stats = Stats();
@@ -101,13 +109,13 @@ export default class Main {
         let canMove = true;
         // Update Players Anim
         this.levelManager.objects.players.forEach(e => {
-            e.Update(delta, this.inputManager);
+            e.Update(delta);
             if (e.needMove == true) {
                 canMove = false;
             }
         })
         this.levelManager.objects.playersFalling.forEach(e => {
-            e.Update(delta, this.inputManager);
+            e.Update(delta);
         })
         this.playerMovementRule[0] = canMove;
 
@@ -150,6 +158,9 @@ export default class Main {
         this.socket.Add("lose", this.LoseBattle.bind(this));
         this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
         this.socket.Add("progress_bar", this.UpdateBars.bind(this));
+
+        this.lobbyScene.addPlayerWarrior();
+        this.lobbyScene.Show();
     }
 
     /**
@@ -160,6 +171,7 @@ export default class Main {
         this.menu.hide("lobby");
         this.menu.show("startsSoon");
         this.menu.edit("startsSoon", "Get ready... </br>Game will begin shortly");
+        this.lobbyScene.addEnemyWarrior();
     }
 
     /**
@@ -205,6 +217,7 @@ export default class Main {
             .then(() => {
                 this.menu.hide("startsSoon");
                 this.menu.hide("roomTransition");
+                this.lobbyScene.Hide();
 
                 this.gui.currentMap++;
                 this.gui.currentMapDifficulty = data.difficulty;
@@ -228,6 +241,7 @@ export default class Main {
         console.log("U WAIT FOR NEXT MAP");
 
         this.menu.show("roomTransition");
+        this.lobbyScene.Show({player: 'victory', enemy: 'sad'});
     }
 
     WinBattle() {

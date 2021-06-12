@@ -4,12 +4,16 @@ export default class Renderer extends WebGLRenderer {
     /**
      * @param {HTMLDivElement} container 
      */
-    constructor(container) {
-        super({ antialias: true });
+    constructor(container, lobby = false) {
+        super({ antialias: true, alpha: true });
 
         this.container = container;
 
-        this.setClearColor(0x87ceeb);
+        if(lobby == true){
+            this.setClearColor(0x000000, 0);
+        } else {
+            this.setClearColor(0x87ceeb, 1);
+        }
         this.shadowMap.enabled = true;
         this.shadowMap.type = PCFSoftShadowMap;
 

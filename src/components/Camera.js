@@ -14,7 +14,7 @@ export default class Camera extends PerspectiveCamera {
         super(fov, width / height);
 
         this.updateSize(renderer);
-        this.far = 50000;
+        this.far = 4096;
 
         window.addEventListener('resize', () => this.updateSize(renderer), false);
     }
