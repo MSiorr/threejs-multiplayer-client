@@ -3,7 +3,7 @@
  * @typedef {{data: LevelItem[], difficulty: String, id: Number}} Level
  */
 
-import { Box3, CameraHelper, Scene, Vector3 } from "three";
+import { Box3, CameraHelper, Euler, Scene, Vector3 } from "three";
 
 import Config from "./Config";
 import Block from "./Block";
@@ -12,6 +12,7 @@ import Player from "./Player";
 import Goal from "./Goal";
 import Sun from "./Sun";
 import TextureLibrary from "./Library";
+import Utility from "./Utility";
 
 export default class LevelManager {
     /**
@@ -52,10 +53,10 @@ export default class LevelManager {
         this.library = new TextureLibrary();
     }
 
-    Update(){
+    Update() {
         let tablToDel = []
-        this.objects.players.forEach( e => {
-            if(this.ShouldFall(e) && e.needMove == false){
+        this.objects.players.forEach(e => {
+            if (this.ShouldFall(e) && e.needMove == false) {
                 tablToDel.push(e);
             }
         })
@@ -131,6 +132,10 @@ export default class LevelManager {
             let m = Math.min(this.lengthX, this.lengthZ);
 
             this.objects.sun.position.set(this.center.x, 1000, this.center.z + m);
+
+            let v = Utility.rotateVectorAroundPoint(this.objects.sun.position, this.center, new Euler(0, Math.random() * Math.PI * 2, 0));
+            this.objects.sun.position.copy(v);
+
             this.objects.sun.target.position.copy(this.center);
             this.scene.add(this.objects.sun);
             this.scene.add(this.objects.sun.target);
@@ -190,12 +195,13 @@ export default class LevelManager {
      * @returns {Block}
      */
     _createBlock(x, z, size) {
-        let block = new Block(x, z);
+        let block = new Block(x, z, this.library.models.rock);
 
         //@ts-ignore
         let y = new Box3().setFromObject(block).getSize(new Vector3()).y;
 
-        block.position.set(x * size + size / 2, y / 2, z * size + size / 2);
+        block.position.set(x * size + size / 2, 0, z * size + size / 2);
+        block.rotateOnWorldAxis(new Vector3(0, 1, 0), Math.random() * Math.PI * 2);
 
         this.scene.add(block);
         this.objects.blocks.push(block);
@@ -299,7 +305,7 @@ export default class LevelManager {
         let tabToDel = [];
 
         for (const player of this.objects.players) {
-            player.rotation.set(0, 3/2 * Math.PI, 0);
+            player.rotation.set(0, 3 / 2 * Math.PI, 0);
             if (this.canMove(player.x - 1, player.z)) {
                 player.moveLeft();
             }
@@ -314,20 +320,20 @@ export default class LevelManager {
         let tabToDel = [];
 
         for (const player of this.objects.players) {
-            player.rotation.set(0, 1/2 * Math.PI, 0);
+            player.rotation.set(0, 1 / 2 * Math.PI, 0);
             if (this.canMove(player.x + 1, player.z)) {
                 player.moveRight();
             }
         }
     }
-    
+
     moveUp() {
         this.objects.players.sort((a, b) => {
             return a.z - b.z
         });
-        
+
         let tabToDel = [];
-        
+
         for (const player of this.objects.players) {
             player.rotation.set(0, Math.PI, 0)
             if (this.canMove(player.x, player.z - 1)) {

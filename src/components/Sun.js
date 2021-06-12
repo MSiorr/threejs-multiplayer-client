@@ -19,9 +19,9 @@ export default class Sun extends DirectionalLight {
         this.shadow.bias = -0.001;
 
 
-        this.add(new Mesh(
-            new SphereGeometry(20, 20, 20),
-            new MeshBasicMaterial({ color: 0xff0000, wireframe: true })
-        ))
+        // this.add(new Mesh(
+        //     new SphereGeometry(20, 20, 20),
+        //     new MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+        // ))
     }
 }
