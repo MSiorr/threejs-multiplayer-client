@@ -66,10 +66,10 @@ export default class Main {
 
         this.inputManager = new InputManager(this.playerMovementRule);
         this.inputManager.RegisterEventCapture();
-        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], true, 50);
-        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], true, 50);
-        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], true, 50);
-        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], true, 50);
+        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], true, 20);
+        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], true, 20);
+        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], true, 20);
+        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], true, 20);
         this.inputManager.Add("reset", this.levelManager.reset.bind(this.levelManager), ["KeyR"], false);
     }
 
@@ -95,7 +95,7 @@ export default class Main {
         }
 
         if (this.levelManager.objects.sun) {
-            let v = Utility.rotateVectorAroundPoint(this.levelManager.objects.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
+            let v = Utility.rotateVectorAroundPoint(this.levelManager.objects.sun.position, this.levelManager.center, new Euler(0, Math.PI / 3600, 0));
             this.levelManager.objects.sun.position.copy(v);
         }
         let canMove = true;
@@ -300,6 +300,7 @@ export default class Main {
         // console.log(cameraPositionAdjusted.z);
 
         this.camera.position.copy(cameraPositionAdjusted);
+        // this.camera.position.set(this.levelManager.center.x, 0, this.levelManager.lengthZ * 1.5);
 
         this.camera.lookAt(this.levelManager.center);
     }
