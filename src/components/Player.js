@@ -27,8 +27,8 @@ export default class Player extends Object3D {
         this.needMove = false;
 
         this.fallingVelocity = 0;
-        this.fallingVelocityCap = 30;
-        this.fallingVelocityIncrement = 0.6;
+        this.fallingVelocityCap = 1300;
+        this.fallingVelocityIncrement = 700;
 
         this.mixer = new AnimationMixer(this.model);
         this.animationActions = {
@@ -52,7 +52,7 @@ export default class Player extends Object3D {
      * @param {number} delta
      * @param {InputManager} inputManager
      */
-    Update(delta, inputManager){
+    Update(delta, inputManager) {
         if (this.mixer) this.mixer.update(delta)
 
         // console.log(this.needMove);
@@ -147,12 +147,15 @@ export default class Player extends Object3D {
         // this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
         this.needMove = true;
         this.moveBtn = 'right';
-        this.SetAction(this.animationActions['walk'])
+        this.SetAction(this.animationActions['walk']);
     }
 
-    fall() {
-        this.fallingVelocity = Math.min(this.fallingVelocity + this.fallingVelocityIncrement, this.fallingVelocityCap);
-        this.position.y -= this.fallingVelocity;
+    /**
+     * @param {Number} delta 
+     */
+    fall(delta) {
+        this.fallingVelocity = Math.min(this.fallingVelocity + this.fallingVelocityIncrement * delta, this.fallingVelocityCap);
+        this.position.y -= this.fallingVelocity * delta;
     }
 
     /**

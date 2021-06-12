@@ -77,10 +77,8 @@ export default class Main {
         this.stats.begin()
         let delta = this.clock.getDelta();
 
-        this.updateCamera();
-
         for (const player of this.levelManager.objects.playersFalling) {
-            player.fall();
+            player.fall(delta);
         }
 
         if (this.levelManager.functionThatChecksIfThePlayerWonTheLevelByCheckingIfEveryGoalIsOccupiedByAPlayerEntity()) {
@@ -93,6 +91,8 @@ export default class Main {
 
             }
         }
+
+        // this.camera.rotateOnAxis(new Vector3(1, 0, 0), Math.PI / 180);
 
         if (this.levelManager.objects.sun) {
             let v = Utility.rotateVectorAroundPoint(this.levelManager.objects.sun.position, this.levelManager.center, new Euler(0, Math.PI / 3600, 0));
@@ -220,6 +220,8 @@ export default class Main {
                 this.playerMovementRule[0] = true;
                 this.playerCompleteCurrentLevel = false;
 
+                this.updateCamera();
+
                 this.render();
             })
     }
@@ -273,7 +275,7 @@ export default class Main {
 
         //2. bigger aspect
         let biggerDimension = innerWidth * this.levelManager.lengthX >= innerHeight * this.levelManager.lengthZ ?
-            this.levelManager.lengthX : this.levelManager.lengthZ * innerWidth / innerHeight;
+            this.levelManager.lengthX : this.levelManager.lengthZ * innerHeight / innerWidth;
 
         //3. equations
         let eq1 = new Vector3(-Math.sqrt(lineSquareRoot), -1, this.levelManager.center.x * Math.sqrt(lineSquareRoot));
@@ -302,6 +304,8 @@ export default class Main {
         this.camera.position.copy(cameraPositionAdjusted);
         // this.camera.position.set(this.levelManager.center.x, 0, this.levelManager.lengthZ * 1.5);
 
-        this.camera.lookAt(this.levelManager.center);
+        // this.camera.lookAt(this.levelManager.center);
+        this.camera.rotation.set(0, 0, 0);
+        this.camera.rotateX(- Math.PI / 3);
     }
 }
