@@ -13,7 +13,7 @@ import grass_512_rough from "../resources/textures/grass/grass_512_rough.png";
 //@ts-ignore
 import playerModel from "../models/player.fbx";
 //@ts-ignore
-import playerWalk from "../models/player@walkFast.fbx";
+import playerWalk from "../models/player@walkVFast2.fbx";
 // import playerWalk from "../models/player@walkSlow.fbx";
 //@ts-ignore
 import playerIdle from "../models/player@idle.fbx";
@@ -55,6 +55,13 @@ export default class Library {
     LoadModels(){
         let fbxLoader = new FBXLoader();
         fbxLoader.load(playerModel, (object) => {
+            object.traverse( (child) => {
+                // @ts-ignore
+                if(child.isMesh){
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            })
             object.scale.set(.5, .5, .5)
             this.models.playerModel = object;
         })

@@ -66,10 +66,10 @@ export default class Main {
 
         this.inputManager = new InputManager(this.playerMovementRule);
         this.inputManager.RegisterEventCapture();
-        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], false);
-        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], false);
-        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], false);
-        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], false);
+        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], true, 50);
+        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], true, 50);
+        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], true, 50);
+        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], true, 50);
         this.inputManager.Add("reset", this.levelManager.reset.bind(this.levelManager), ["KeyR"], false);
     }
 
@@ -101,13 +101,13 @@ export default class Main {
         let canMove = true;
         // Update Players Anim
         this.levelManager.objects.players.forEach( e => {
-            e.Update(delta);
+            e.Update(delta, this.inputManager);
             if(e.needMove == true){
                 canMove = false;
             }
         })
         this.levelManager.objects.playersFalling.forEach( e => {
-            e.Update(delta);
+            e.Update(delta, this.inputManager);
         })
         this.playerMovementRule[0] = canMove;
 
