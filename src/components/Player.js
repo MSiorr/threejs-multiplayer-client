@@ -46,15 +46,25 @@ export default class Player extends Object3D {
         this.lastAction = null;
         this.SetAction(this.animationActions['idle']);
     }
-
+    
     /**
      * @param {number} delta
      */
     Update(delta){
         if (this.mixer) this.mixer.update(delta)
-
+        
+        // console.log(this.needMove);
         if(this.needMove){
-
+            if(this.position.x != this.toX){
+                this.position.x += Math.sign(this.toX - this.position.x) * Math.min(Math.abs(this.toX - this.position.x), this.velocity * delta);
+            } else if(this.position.z != this.toZ){
+                this.position.z += Math.sign(this.toZ - this.position.z) * Math.min(Math.abs(this.toZ - this.position.z), this.velocity * delta);
+            }
+            
+            if(this.toX == this.position.x && this.toZ == this.position.z){
+                this.needMove = false;
+                this.SetAction(this.animationActions['idle']);
+            }
         }
     }
 
@@ -66,10 +76,10 @@ export default class Player extends Object3D {
             this.lastAction = this.activeAction;
             this.activeAction = toAction;
             if(this.lastAction != null){
-                this.lastAction.fadeOut(.5);
+                this.lastAction.fadeOut(.1);
             }
             this.activeAction.reset();
-            this.activeAction.fadeIn(.5);
+            this.activeAction.fadeIn(.1);
             this.activeAction.play();
         }
     }
@@ -77,37 +87,37 @@ export default class Player extends Object3D {
     moveUp() {
         this.z = this.z - 1;
 
-        // this.toZ = this.z * config.blockSize + config.blockSize / 2;
-        this.position.set(this.position.x, this.position.y, this.z * config.blockSize + config.blockSize / 2);
-        this.rotation.set(0, Math.PI, 0)
+        this.toZ = this.z * config.blockSize + config.blockSize / 2;
+        // this.position.set(this.position.x, this.position.y, this.z * config.blockSize + config.blockSize / 2);
         this.needMove = true;
+        this.SetAction(this.animationActions['walk'])
     }
     
     moveLeft() {
         this.x = this.x - 1;
         
-        // this.toX = this.x * config.blockSize + config.blockSize / 2;
-        this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
-        this.rotation.set(0, 3/2 * Math.PI, 0)
+        this.toX = this.x * config.blockSize + config.blockSize / 2;
+        // this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
         this.needMove = true;
+        this.SetAction(this.animationActions['walk'])
     }
     
     moveDown() {
         this.z = this.z + 1;
         
-        // this.toZ = this.z * config.blockSize + config.blockSize / 2;
-        this.position.set(this.position.x, this.position.y, this.z * config.blockSize + config.blockSize / 2);
-        this.rotation.set(0, 0, 0)
+        this.toZ = this.z * config.blockSize + config.blockSize / 2;
+        // this.position.set(this.position.x, this.position.y, this.z * config.blockSize + config.blockSize / 2);
         this.needMove = true;
+        this.SetAction(this.animationActions['walk'])
     }
     
     moveRight() {
         this.x = this.x + 1;
         
-        // this.toX = this.x * config.blockSize + config.blockSize / 2;
-        this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
-        this.rotation.set(0, 1/2 * Math.PI, 0)
+        this.toX = this.x * config.blockSize + config.blockSize / 2;
+        // this.position.set(this.x * config.blockSize + config.blockSize / 2, this.position.y, this.position.z);
         this.needMove = true;
+        this.SetAction(this.animationActions['walk'])
     }
 
     fall() {

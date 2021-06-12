@@ -52,6 +52,16 @@ export default class LevelManager {
         this.library = new TextureLibrary();
     }
 
+    Update(){
+        let tablToDel = []
+        this.objects.players.forEach( e => {
+            if(this.ShouldFall(e) && e.needMove == false){
+                tablToDel.push(e);
+            }
+        })
+        this.MakeFall(tablToDel);
+    }
+
     /**
      * @param {String} url 
      * @returns {Promise<Response>}
@@ -224,7 +234,8 @@ export default class LevelManager {
         let playerModels = {
             model: this.library.models.playerModel,
             idle: this.library.models.playerIdle,
-            walk: this.library.models.playerWalk
+            walk: this.library.models.playerWalk,
+            fall: this.library.models.playerFall
         }
         let player = new Player(x, z, playerModels);
 
@@ -288,15 +299,11 @@ export default class LevelManager {
         let tabToDel = [];
 
         for (const player of this.objects.players) {
+            player.rotation.set(0, 3/2 * Math.PI, 0);
             if (this.canMove(player.x - 1, player.z)) {
                 player.moveLeft();
-                if (this.ShouldFall(player)) {
-                    tabToDel.push(player);
-                }
             }
         }
-
-        this.MakeFall(tabToDel);
     }
 
     moveRight() {
@@ -307,34 +314,26 @@ export default class LevelManager {
         let tabToDel = [];
 
         for (const player of this.objects.players) {
+            player.rotation.set(0, 1/2 * Math.PI, 0);
             if (this.canMove(player.x + 1, player.z)) {
                 player.moveRight();
-                if (this.ShouldFall(player)) {
-                    tabToDel.push(player);
-                }
             }
         }
-
-        this.MakeFall(tabToDel);
     }
-
+    
     moveUp() {
         this.objects.players.sort((a, b) => {
             return a.z - b.z
         });
-
+        
         let tabToDel = [];
-
+        
         for (const player of this.objects.players) {
+            player.rotation.set(0, Math.PI, 0)
             if (this.canMove(player.x, player.z - 1)) {
                 player.moveUp();
-                if (this.ShouldFall(player)) {
-                    tabToDel.push(player);
-                }
             }
         }
-
-        this.MakeFall(tabToDel);
     }
 
     moveDown() {
@@ -345,15 +344,11 @@ export default class LevelManager {
         let tabToDel = [];
 
         for (const player of this.objects.players) {
+            player.rotation.set(0, 0, 0)
             if (this.canMove(player.x, player.z + 1)) {
                 player.moveDown();
-                if (this.ShouldFall(player)) {
-                    tabToDel.push(player);
-                }
             }
         }
-
-        this.MakeFall(tabToDel);
     }
 
     /**
@@ -382,6 +377,7 @@ export default class LevelManager {
         for (let player of tab) {
             this.objects.players.splice(this.objects.players.indexOf(player), 1);
             this.objects.playersFalling.push(player);
+            player.SetAction(player.animationActions['fall'])
         }
     }
 
@@ -397,7 +393,7 @@ export default class LevelManager {
             let isOnGoal = false;
 
             for (const goal of this.objects.goals) {
-                if (player.x == goal.x && player.z == goal.z) {
+                if (player.x == goal.x && player.z == goal.z && player.needMove == false) {
                     isOnGoal = true;
                 }
             }

@@ -98,11 +98,20 @@ export default class Main {
             let v = Utility.rotateVectorAroundPoint(this.levelManager.objects.sun.position, this.levelManager.center, new Euler(0, Math.PI / 72000, 0));
             this.levelManager.objects.sun.position.copy(v);
         }
+        let canMove = true;
         // Update Players Anim
         this.levelManager.objects.players.forEach( e => {
             e.Update(delta);
+            if(e.needMove == true){
+                canMove = false;
+            }
         })
+        this.levelManager.objects.playersFalling.forEach( e => {
+            e.Update(delta);
+        })
+        this.playerMovementRule[0] = canMove;
 
+        this.levelManager.Update();
 
         // Update time
         let newTime = Date.now();
