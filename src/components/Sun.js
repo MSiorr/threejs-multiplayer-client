@@ -2,7 +2,7 @@ import { DirectionalLight, DirectionalLightHelper, Mesh, MeshBasicMaterial, Sphe
 
 export default class Sun extends DirectionalLight {
     constructor() {
-        super(0xffffff, 1);
+        super(0xffffff, 1.3);
 
         this.castShadow = true;
 
