@@ -1,4 +1,6 @@
-import { BoxGeometry, Mesh, MeshPhongMaterial } from 'three';
+import { AnimationMixer, BoxGeometry, Mesh, MeshPhongMaterial } from 'three';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+
 
 import config from './Config';
 
@@ -23,6 +25,28 @@ export default class Player extends Mesh {
         this.fallingVelocity = 0;
         this.fallingVelocityCap = 30;
         this.fallingVelocityIncrement = 0.6;
+
+        this.mixer = null;
+        this.animationActions = [];
+        this.activeAction = null;
+        this.lastAction = null;
+    }
+
+    Load(){
+        const loader = new FBXLoader();
+
+            loader.load("../models/player.fbx", (object) => {
+
+                this.mixer = new AnimationMixer(object);
+                console.log("animacje modelu",object.animations)
+
+                const action = this.mixer.clipAction(object.animations[0]);
+                this.animationActions.push(action);
+                this.activeAction = this.animationActions[0];
+                action.play();
+
+                this.model = object
+            });
     }
 
     moveUp() {
