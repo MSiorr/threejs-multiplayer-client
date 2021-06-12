@@ -18,18 +18,14 @@ import metal034_512_metal from "../resources/textures/metal034/metal034_512_meta
 import metal034_512_normal from "../resources/textures/metal034/metal034_512_normal.png";
 import metal034_512_rough from "../resources/textures/metal034/metal034_512_rough.png";
 
-import playerModel from "../models/player.fbx";
-import playerWalk from "../models/player@walk.fbx";
-import playerIdle from "../models/player@idle.fbx";
-import playerFall from "../models/player@fall.fbx";
-import playerBored from "../models/player@bored.fbx";
-import playerReady from "../models/player@ready.fbx";
-import playerSad from "../models/player@sad.fbx";
-import playerVictory from "../models/player@victory.fbx";
-import playerModel from "../resources/models/player/player.fbx";
-import playerWalk from "../resources/models/player/player@walkVFast2.fbx";
-import playerIdle from "../resources/models/player/player@idle.fbx";
-import playerFall from "../resources/models/player/player@fall.fbx";
+import playerModel from "../resources/models/player.fbx";
+import playerWalk from "../resources/models/player@walk.fbx";
+import playerIdle from "../resources/models/player@idle.fbx";
+import playerFall from "../resources/models/player@fall.fbx";
+import playerBored from "../resources/models/player@bored.fbx";
+import playerReady from "../resources/models/player@ready.fbx";
+import playerSad from "../resources/models/player@sad.fbx";
+import playerVictory from "../resources/models/player@victory.fbx";
 
 import rock from "../resources/models/rock/Rock3.fbx";
 
