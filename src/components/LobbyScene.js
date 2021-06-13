@@ -32,9 +32,12 @@ export default class LobbyScene {
         }
 
         this.myCameraMove = false;
+        this.myCameraRotate = false;
 
         this.myCameraSpeed = 200;
         this.myCameraLookAt = new Vector3(0, 120, 0);
+
+        this.newCameraLookAt = new Vector3(0, 120, 0);
 
         // let fastAxes = new AxesHelper(500);
         // this.scene.add(fastAxes);
@@ -84,7 +87,7 @@ export default class LobbyScene {
         this.myPlayerStatus = 'bored';
         this.enemyPlayerStatus = 'ready';
 
-        const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        // const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         this.Hide();
         this.render();
@@ -99,32 +102,34 @@ export default class LobbyScene {
             player.Update(delta)
         })
 
-        if(this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z){
-            this.myCameraMove = false;
-        } else {
-            this.myCameraMove = true;
+        if(this.camera){
+            if(this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z){
+                this.myCameraMove = false;
+            } else {
+                this.myCameraMove = true;
+            }
         }
-
-        this.camera.lookAt(this.myCameraLookAt);
-
         if(this.myCameraMove == true){
-            // let moveVector = new Vector3();
-            // if(this.camera.position.x != this.myCameraTarget.x){
-            //     moveVector.x = 1;
-            // }
-            // if(this.camera.position.y != this.myCameraTarget.y){
-            //     moveVector.y = 1;
-            // }
-            // if(this.camera.position.z != this.myCameraTarget.z){
-            //     moveVector.z = 1;
-            // }
-
-            this.camera.position.x += Math.sign(this.myCameraTarget.x - this.camera.position.x) * Math.min(Math.abs(this.myCameraTarget.x - this.camera.position.x), this.myCameraSpeed * delta);
-            this.camera.position.y += Math.sign(this.myCameraTarget.y - this.camera.position.y) * Math.min(Math.abs(this.myCameraTarget.y - this.camera.position.y), this.myCameraSpeed * delta);
-            this.camera.position.z += Math.sign(this.myCameraTarget.z - this.camera.position.z) * Math.min(Math.abs(this.myCameraTarget.z - this.camera.position.z), this.myCameraSpeed * delta);
-
+            let target = new Vector3(this.myCameraTarget.x, this.myCameraTarget.y, this.myCameraTarget.z).sub(this.camera.position).normalize();
+            this.camera.position.x += Math.sign(this.myCameraTarget.x - this.camera.position.x) * Math.min(Math.abs(this.myCameraTarget.x - this.camera.position.x), this.myCameraSpeed * delta * Math.abs(target.x));
+            this.camera.position.y += Math.sign(this.myCameraTarget.y - this.camera.position.y) * Math.min(Math.abs(this.myCameraTarget.y - this.camera.position.y), this.myCameraSpeed * delta * Math.abs(target.y));
+            this.camera.position.z += Math.sign(this.myCameraTarget.z - this.camera.position.z) * Math.min(Math.abs(this.myCameraTarget.z - this.camera.position.z), this.myCameraSpeed * delta * Math.abs(target.z)) ;
         }
-
+        if(this.camera){
+            if(this.myCameraLookAt.x == this.newCameraLookAt.x && this.myCameraLookAt.y == this.newCameraLookAt.y && this.myCameraLookAt.z == this.newCameraLookAt.z){
+                this.myCameraRotate = false;
+            } else {
+                this.myCameraRotate = true;
+            }
+        }
+        if(this.myCameraRotate == true){
+            let target = new Vector3(this.newCameraLookAt.x, this.newCameraLookAt.y, this.newCameraLookAt.z).sub(this.myCameraLookAt).normalize();
+            this.myCameraLookAt.x += Math.sign(this.newCameraLookAt.x - this.myCameraLookAt.x) * Math.min(Math.abs(this.newCameraLookAt.x - this.myCameraLookAt.x), this.myCameraSpeed * delta * Math.abs(target.x));
+            this.myCameraLookAt.y += Math.sign(this.newCameraLookAt.y - this.myCameraLookAt.y) * Math.min(Math.abs(this.newCameraLookAt.y - this.myCameraLookAt.y), this.myCameraSpeed * delta * Math.abs(target.y));
+            this.myCameraLookAt.z += Math.sign(this.newCameraLookAt.z - this.myCameraLookAt.z) * Math.min(Math.abs(this.newCameraLookAt.z - this.myCameraLookAt.z), this.myCameraSpeed * delta * Math.abs(target.z)) ;
+        }
+        
+        this.camera.lookAt(this.myCameraLookAt);
 
 
         requestAnimationFrame(this.render.bind(this));
@@ -132,7 +137,7 @@ export default class LobbyScene {
 
     EndGameCutscene(player){
         this.myCameraTarget.x = -50;
-        this.myCameraLookAt.x = -100;
+        this.newCameraLookAt.x = -1100;
 
         this.playerWarriors.forEach( e => {
             if(player == true){
@@ -146,7 +151,7 @@ export default class LobbyScene {
             this.myCameraTarget.x = -1100;
             this.myCameraTarget.y = 70;
             this.myCameraTarget.z = 900;
-            this.myCameraLookAt = this.playerCastle.position;
+            this.newCameraLookAt = this.playerCastle.position.clone();
         }, 5000 )
     }
 
