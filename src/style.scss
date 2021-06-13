@@ -58,7 +58,7 @@ body {
 
     #lobby {
         // background-color: rgb(77, 77, 83);
-        background: linear-gradient(90deg, rgb(112,176,226) 50%,rgb(239,79,89) 50%);
+        background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -75,7 +75,7 @@ body {
 
     #starts-soon {
         background-color: rgb(137, 137, 145);
-        background: linear-gradient(90deg, rgb(112,176,226) 50%,rgb(239,79,89) 50%);
+        background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -84,7 +84,7 @@ body {
     }
 
     #room-transition {
-        background: linear-gradient(90deg, rgb(112,176,226) 50%,rgb(239,79,89) 50%);
+        background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -121,7 +121,7 @@ body {
         z-index: 0;
         position: absolute;
 
-        background-color: rgba(100,100,100,0.7);
+        background-color: rgba(100, 100, 100, 0.7);
         border: 2px solid black;
 
         &.active {
@@ -187,7 +187,8 @@ body {
         justify-content: space-between;
         align-items: center;
 
-        #count-info, #current-info {
+        #count-info,
+        #current-info {
             display: flex;
             flex-direction: column;
             justify-content: center;
