@@ -25,6 +25,17 @@ export default class LobbyScene {
         this.camera.lookAt(new Vector3(0,120,0));
         this.camera.updateProjectionMatrix();
 
+        this.myCameraTarget = {
+            x: 220,
+            y: 120,
+            z: 0
+        }
+
+        this.myCameraMove = false;
+
+        this.myCameraSpeed = 200;
+        this.myCameraLookAt = new Vector3(0, 120, 0);
+
         // let fastAxes = new AxesHelper(500);
         // this.scene.add(fastAxes);
 
@@ -59,13 +70,21 @@ export default class LobbyScene {
          * @type {Player[]}
          */
         this.players = [];
+        /**
+         * @type {Player[]}
+         */
+        this.playerWarriors = [];
+        /**
+         * @type {Player[]}
+         */
+        this.enemyWarriors = []
 
         this.clock = new Clock();
 
         this.myPlayerStatus = 'bored';
         this.enemyPlayerStatus = 'ready';
 
-        // const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         this.Hide();
         this.render();
@@ -80,7 +99,75 @@ export default class LobbyScene {
             player.Update(delta)
         })
 
+        if(this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z){
+            this.myCameraMove = false;
+        } else {
+            this.myCameraMove = true;
+        }
+
+        this.camera.lookAt(this.myCameraLookAt);
+
+        if(this.myCameraMove == true){
+            // let moveVector = new Vector3();
+            // if(this.camera.position.x != this.myCameraTarget.x){
+            //     moveVector.x = 1;
+            // }
+            // if(this.camera.position.y != this.myCameraTarget.y){
+            //     moveVector.y = 1;
+            // }
+            // if(this.camera.position.z != this.myCameraTarget.z){
+            //     moveVector.z = 1;
+            // }
+
+            this.camera.position.x += Math.sign(this.myCameraTarget.x - this.camera.position.x) * Math.min(Math.abs(this.myCameraTarget.x - this.camera.position.x), this.myCameraSpeed * delta);
+            this.camera.position.y += Math.sign(this.myCameraTarget.y - this.camera.position.y) * Math.min(Math.abs(this.myCameraTarget.y - this.camera.position.y), this.myCameraSpeed * delta);
+            this.camera.position.z += Math.sign(this.myCameraTarget.z - this.camera.position.z) * Math.min(Math.abs(this.myCameraTarget.z - this.camera.position.z), this.myCameraSpeed * delta);
+
+        }
+
+
+
         requestAnimationFrame(this.render.bind(this));
+    }
+
+    EndGameCutscene(player){
+        this.myCameraTarget.x = -50;
+        this.myCameraLookAt.x = -100;
+
+        this.playerWarriors.forEach( e => {
+            if(player == true){
+                e.SetAction(e.animationActions['victory'])
+            } else {
+                e.SetAction(e.animationActions['sad'])
+            }
+        })
+
+        setTimeout( () => {
+            this.myCameraTarget.x = -1100;
+            this.myCameraTarget.y = 70;
+            this.myCameraTarget.z = 900;
+            this.myCameraLookAt = this.playerCastle.position;
+        }, 5000 )
+    }
+
+    CreatePlayerWarriors(){
+        let modelObj = {
+            model: this.library.models.playerModel,
+            idle: this.library.models.playerIdle,
+            ready: this.library.models.playerReady,
+            sad: this.library.models.playerSad,
+            victory: this.library.models.playerVictory
+        }
+        for(let i = 0; i < 5; i++){
+            let player = new Player(0,0,modelObj);
+            player.SetAction(player.animationActions['ready'])
+            player.position.set(-995 + (i * -50), 37 + Math.min(i, 4 - i) * 1, 1050 - Math.min(i, 4 - i) * 25);
+            player.scale.set(.25, .25, .25)
+            player.lookAt(player.position.x, player.position.y, 0);
+            this.scene.add(player);
+            this.players.push(player);
+            this.playerWarriors.push(player);
+        }
     }
 
     CreateIslands(){
@@ -95,12 +182,12 @@ export default class LobbyScene {
         
         let playerCastleIsland = SkeletonUtils.clone(this.library.models.island);
         playerCastleIsland.scale.set(1,1,1);
-        playerCastleIsland.position.set(-1000, -250, 1200);
+        playerCastleIsland.position.set(-1100, -250, 1200);
         this.scene.add(playerCastleIsland);
         
         let enemyCastleIsland = SkeletonUtils.clone(this.library.models.island);
         enemyCastleIsland.scale.set(1,1,1);
-        enemyCastleIsland.position.set(-1000, -250, -1200);
+        enemyCastleIsland.position.set(-1100, -250, -1200);
         enemyCastleIsland.scale.z = -1 * enemyCastleIsland.scale.z;
         this.scene.add(enemyCastleIsland);
     }
@@ -108,27 +195,27 @@ export default class LobbyScene {
     CreatePlayerCastle(){
         this.playerCastle = this.library.models.castle.clone();
         console.log(this.playerCastle);
-        this.playerCastle.position.set(-1000, 48, 1250);
+        this.playerCastle.position.set(-1100, 48, 1250);
         this.playerCastle.rotation.z = -Math.PI / 2;
         this.scene.add(this.playerCastle);
     }
 
     CreateEnemyCastle(){
-        this.playerCastle = this.library.models.castle.clone();
-        this.playerCastle.position.set(-1000, 48, -1250);
-        this.playerCastle.rotation.z = Math.PI / 2;
-        this.scene.add(this.playerCastle);
+        this.enemyCastle = this.library.models.castle.clone();
+        this.enemyCastle.position.set(-1100, 48, -1250);
+        this.enemyCastle.rotation.z = Math.PI / 2;
+        this.scene.add(this.enemyCastle);
     }
 
     CreatePlayerCannon(){
         this.playerCannon = this.library.models.cannon.clone();
-        this.playerCannon.position.set(-1000, 40, 1120);
+        this.playerCannon.position.set(-1100, 40, 1120);
         this.scene.add(this.playerCannon);
     }
 
     CreateEnemyCannon(){
         this.enemyCannon = this.library.models.cannon.clone();
-        this.enemyCannon.position.set(-1000, 40, -1120);
+        this.enemyCannon.position.set(-1100, 40, -1120);
         this.enemyCannon.rotation.y = Math.PI;
         this.scene.add(this.enemyCannon);
     }

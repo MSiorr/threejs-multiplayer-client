@@ -262,19 +262,27 @@ export default class Main {
 
         this.lobbyScene.Show({player: 'victory', enemy: 'sad'});
         this.lobbyScene.CreatePlayerCannon();
-
+        this.lobbyScene.CreatePlayerWarriors();
+        setTimeout( () => {
+            this.lobbyScene.EndGameCutscene(true);
+        }, 5000)
+        
         this.playerMovementRule[0] = false;
         cancelAnimationFrame(this.animationFrame);
     }
-
+    
     LoseBattle() {
         console.log("YOU LOSE MY FRIEND");
-
+        
         this.menu.hide("roomTransition");
         this.menu.show("lose");
-
+        
         this.lobbyScene.Show({player: 'sad', enemy: 'victory'});
         this.lobbyScene.CreateEnemyCannon();
+        this.lobbyScene.CreatePlayerWarriors();
+        setTimeout( () => {
+            this.lobbyScene.EndGameCutscene(false);
+        }, 5000)
 
         this.playerMovementRule[0] = false;
         cancelAnimationFrame(this.animationFrame);
