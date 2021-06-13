@@ -18,4 +18,21 @@ export default class Utility {
 
         return v;
     }
+
+    /**
+     * @param {number} v
+     * @param {number} min
+     * @param {number} max
+     */
+    static clamp(v, min, max) {
+        return Math.min(Math.max(v, min), max);
+    }
+
+    /**
+     * @param {0|1|2|3|4} v
+     * @param {number} x
+     */
+    static michal(v, x) {
+        return Math.min(v, 4 - v) * x;
+    }
 }

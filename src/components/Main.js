@@ -39,9 +39,11 @@ export default class Main {
         this.camera = new Camera(75, this.renderer);
         this.levelManager = new LevelManager(this.scene);
         this.levelManager.LoadLibrary()
-            .then( () => {
+            .then(() => {
                 this.menu.show('startGame');
             })
+        this.powerupManager = new PowerupManager();
+        this.powerupManager.randomPowerup(1).randomPowerup(2).randomPowerup(3);
 
         this.lobbyScene = new LobbyScene(document.getElementById("root2"), this.levelManager.library);
 
@@ -55,10 +57,11 @@ export default class Main {
         this.menu.hide("startGame");
         this.menu.html.startGame.addEventListener("click", this.startSearch.bind(this));
 
-        this.gui = new GUI();
-        // this.gui.showAll();
-
         this.socket = null;
+
+        this.gui = new GUI();
+        this.gui.powerups = this.powerupManager.current;
+        // this.gui.showAll();
 
         this.clock = new Clock();
 
@@ -73,6 +76,8 @@ export default class Main {
         this.stats = Stats();
         this.stats.showPanel(0);
 
+        this.currentLevel = null;
+
         // const controls = new OrbitControls(this.camera, this.renderer.domElement);
         // this.camera.lookAt(500, 0, 500);
 
@@ -85,8 +90,6 @@ export default class Main {
         this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW"], true, 20);
         this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS"], true, 20);
         this.inputManager.Add("reset", this.levelManager.reset.bind(this.levelManager), ["KeyR"], false);
-
-        this.powerupManager = new PowerupManager();
     }
 
     render() {
@@ -134,6 +137,7 @@ export default class Main {
         let newDate = new Date(newTime);
 
         this.gui.edit(this.ParseToTimeString(newDate.getHours(), newDate.getMinutes(), newDate.getSeconds()), 'gameInfo', 'time');
+        this.gui.renderPowerups();
 
         this.updateCamera(delta);
 
@@ -158,6 +162,7 @@ export default class Main {
         this.menu.show("lobby");
 
         this.socket = new Socket();
+        this.gui.socket = this.socket;
 
         this.socket.Add("room_assigned", this.EnterRoom.bind(this));
         this.socket.Add("config", this.ReceiveConfig.bind(this));
@@ -220,6 +225,12 @@ export default class Main {
 
         cancelAnimationFrame(this.animationFrame);
 
+        if (this.currentLevel === null) {
+            this.powerupManager.current.tier1.use();
+            this.powerupManager.current.tier2.use();
+            this.powerupManager.current.tier3.use();
+        }
+
         this.currentLevel = data;
 
         this.levelManager.empty();
@@ -260,7 +271,7 @@ export default class Main {
         this.menu.hide("roomTransition");
         this.menu.show("win");
 
-        this.lobbyScene.Show({player: 'victory', enemy: 'sad'});
+        this.lobbyScene.Show({ player: 'victory', enemy: 'sad' });
         this.lobbyScene.CreatePlayerCannon();
 
         this.playerMovementRule[0] = false;
@@ -273,7 +284,7 @@ export default class Main {
         this.menu.hide("roomTransition");
         this.menu.show("lose");
 
-        this.lobbyScene.Show({player: 'sad', enemy: 'victory'});
+        this.lobbyScene.Show({ player: 'sad', enemy: 'victory' });
         this.lobbyScene.CreateEnemyCannon();
 
         this.playerMovementRule[0] = false;
@@ -284,7 +295,13 @@ export default class Main {
      * @param {{name: String}} data 
      */
     PowerupTarget(data) {
-        console.log("ENEMY USE POWERUP ON U");
+        console.log("ENEMY USE POWERUP ON U", data);
+
+        this.powerupManager.states[data.name] = true;
+
+        setTimeout(() => {
+            this.powerupManager.states[data.name] = false;
+        }, 15000);
     }
 
     /**
