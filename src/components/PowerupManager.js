@@ -8,47 +8,64 @@
 
 import PowerupItem from "./PowerupItem";
 
+import inverted_keyboard from "../resources/icons/powerups/inverted_keyboard.png";
+import camera_shake from "../resources/icons/powerups/camera_shake.png";
+import camera_rotation from "../resources/icons/powerups/camera_rotation.png";
+
 export default class PowerupManager {
     constructor() {
         /**
          * @type {Powerups}
          */
         this.powerups = {
-            "inverted_keyboard": new PowerupItem("inverted_keyboard", null, 1),
-            "camera_shake": new PowerupItem("camera_shake", null, 2),
-            "camera_rotation": new PowerupItem("camera_rotation", null, 3),
+            "inverted_keyboard": new PowerupItem("inverted_keyboard", inverted_keyboard, 1),
+            "camera_shake": new PowerupItem("camera_shake", camera_shake, 2),
+            "camera_rotation": new PowerupItem("camera_rotation", camera_rotation, 3),
         };
 
         /**
          * @type {{[key in keyof Powerups]: Boolean}}
          */
-        //@ts-ignore
-        this.states = {};
+        this.states = {
+            "camera_rotation": false,
+            "camera_shake": false,
+            "inverted_keyboard": false,
+        };
 
-        let keys = Object.keys(this.powerups);
-        keys.forEach((key) => {
-            this.states[key] = false;
-        });
+        this.currentTier1 = null;
+        this.currentTier2 = null;
+        this.currentTier3 = null;
+
+        this.cameraRotation = 0;
     }
 
     get tier1() {
         const arr = Object.entries(this.powerups);
-        const tier1 = arr.filter(([key, value]) => value.tier === 1);
+        const tier1 = arr.filter(([_, value]) => value.tier === 1);
 
         return Object.fromEntries(tier1);
     }
 
     get tier2() {
         const arr = Object.entries(this.powerups);
-        const tier1 = arr.filter(([key, value]) => value.tier === 2);
+        const tier1 = arr.filter(([_, value]) => value.tier === 2);
 
         return Object.fromEntries(tier1);
     }
 
     get tier3() {
         const arr = Object.entries(this.powerups);
-        const tier1 = arr.filter(([key, value]) => value.tier === 3);
+        const tier1 = arr.filter(([_, value]) => value.tier === 3);
 
         return Object.fromEntries(tier1);
+    }
+
+    /**
+     * @param {1 | 2 | 3} tier
+     */
+    randomPowerup(tier) {
+        let t = `tier${tier}`;
+        let ct = `currentTier${tier}`;
+        this[ct] = this[t][Object.keys(this[t])[Math.floor(Object.keys(this[t]).length * Math.random())]]
     }
 }

@@ -26,6 +26,7 @@ import Menu from './Menu';
 import GUI from './GUI';
 import Player from './Player';
 import LobbyScene from './LobbyScene';
+import PowerupManager from './PowerupManager';
 
 export default class Main {
     /**
@@ -79,11 +80,13 @@ export default class Main {
 
         this.inputManager = new InputManager(this.playerMovementRule);
         this.inputManager.RegisterEventCapture();
-        this.inputManager.Add("left", this.levelManager.moveLeft.bind(this.levelManager), ["KeyA"], true, 20);
-        this.inputManager.Add("right", this.levelManager.moveRight.bind(this.levelManager), ["KeyD"], true, 20);
-        this.inputManager.Add("up", this.levelManager.moveUp.bind(this.levelManager), ["KeyW"], true, 20);
-        this.inputManager.Add("down", this.levelManager.moveDown.bind(this.levelManager), ["KeyS"], true, 20);
+        this.inputManager.Add("left", this.moveLeft.bind(this), ["KeyA"], true, 20);
+        this.inputManager.Add("right", this.moveRight.bind(this), ["KeyD"], true, 20);
+        this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW"], true, 20);
+        this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS"], true, 20);
         this.inputManager.Add("reset", this.levelManager.reset.bind(this.levelManager), ["KeyR"], false);
+
+        this.powerupManager = new PowerupManager();
     }
 
     render() {
@@ -131,6 +134,8 @@ export default class Main {
         let newDate = new Date(newTime);
 
         this.gui.edit(this.ParseToTimeString(newDate.getHours(), newDate.getMinutes(), newDate.getSeconds()), 'gameInfo', 'time');
+
+        this.updateCamera(delta);
 
         this.renderer.render(this.scene, this.camera);
 
@@ -238,8 +243,6 @@ export default class Main {
                 this.playerMovementRule[0] = true;
                 this.playerCompleteCurrentLevel = false;
 
-                this.updateCamera();
-
                 this.render();
             })
     }
@@ -248,7 +251,7 @@ export default class Main {
         console.log("U WAIT FOR NEXT MAP");
 
         this.menu.show("roomTransition");
-        this.lobbyScene.Show({player: 'victory', enemy: 'sad'});
+        this.lobbyScene.Show({ player: 'victory', enemy: 'sad' });
     }
 
     WinBattle() {
@@ -292,7 +295,12 @@ export default class Main {
         this.gui.html.statusBars.player.style.width = `${data.you / this.gui.maxPoints * 100}%`;
         this.gui.html.statusBars.enemy.style.width = `${data.enemy / this.gui.maxPoints * 100}%`;
     }
-    updateCamera() {
+
+
+    /**
+     * @param {Number} delta
+     */
+    updateCamera(delta) {
         let lineSquareRoot = 2;
 
         // 1. center
@@ -332,5 +340,36 @@ export default class Main {
         // this.camera.lookAt(this.levelManager.center);
         this.camera.rotation.set(0, 0, 0);
         this.camera.rotateX(- Math.PI / 3);
+
+        if (this.powerupManager.states["camera_rotation"]) {
+            this.powerupManager.cameraRotation += Math.PI / 3 * delta;
+
+            let v = Utility.rotateVectorAroundPoint(this.camera.position, this.levelManager.center, new Euler(0, this.powerupManager.cameraRotation, 0));
+            this.camera.position.copy(v);
+
+            this.camera.lookAt(this.levelManager.center);
+        }
+
+        if (this.powerupManager.states["camera_shake"]) {
+            this.camera.rotation.x += (Math.random() - 0.5) / 16;
+            this.camera.rotation.y += (Math.random() - 0.5) / 16;
+            this.camera.rotation.z += (Math.random() - 0.5) / 16;
+        }
+    }
+
+    moveLeft() {
+        this.levelManager.moveLeft.call(this.levelManager, this.powerupManager.states["inverted_keyboard"]);
+    }
+
+    moveRight() {
+        this.levelManager.moveRight.call(this.levelManager, this.powerupManager.states["inverted_keyboard"]);
+    }
+
+    moveUp() {
+        this.levelManager.moveUp.call(this.levelManager, this.powerupManager.states["inverted_keyboard"]);
+    }
+
+    moveDown() {
+        this.levelManager.moveDown.call(this.levelManager, this.powerupManager.states["inverted_keyboard"]);
     }
 }
