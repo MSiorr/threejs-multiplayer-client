@@ -36,13 +36,21 @@ export default class LobbyScene {
         this.scene.add(this.sun);
         this.scene.add(this.sun.target);
 
-        this.sun2 = new Sun();
-        this.sun2.intensity = 2;
-        this.sun2.position.set(-800, 500, 0);
-        this.sun2.target.position.set(-1000, 0, 1200);
+        this.sunToCastle1 = new Sun();
+        this.sunToCastle1.intensity = 1;
+        this.sunToCastle1.position.set(-800, 500, 0);
+        this.sunToCastle1.target.position.set(-1000, 0, 1200);
 
-        this.scene.add(this.sun2);
-        this.scene.add(this.sun2.target);
+        this.scene.add(this.sunToCastle1);
+        this.scene.add(this.sunToCastle1.target);
+
+        this.sunToCastle2 = new Sun();
+        this.sunToCastle2.intensity = 1;
+        this.sunToCastle2.position.set(-800, 500, 0);
+        this.sunToCastle2.target.position.set(-1000, 0, -1200);
+
+        this.scene.add(this.sunToCastle2);
+        this.scene.add(this.sunToCastle2.target);
 
         // this.ambientLight = new AmbientLight(0xffffff, 3);
         // this.scene.add(this.ambientLight);
@@ -99,14 +107,22 @@ export default class LobbyScene {
 
     CreatePlayerCastle(){
         this.playerCastle = SkeletonUtils.clone(this.library.models.castle);
-        this.playerCastle.position.set(-1000, 50, 1250);
+        this.playerCastle.position.set(-1000, 48, 1250);
         this.playerCastle.rotation.y = Math.PI / 2;
+        this.scene.add(this.playerCastle);
+    }
+
+    CreateEnemyCastle(){
+        this.playerCastle = SkeletonUtils.clone(this.library.models.castle);
+        this.playerCastle.position.set(-1000, 48, -1250);
+        this.playerCastle.rotation.y = -Math.PI / 2;
         this.scene.add(this.playerCastle);
     }
 
     addPlayerWarrior(){
         this.CreateIslands();
         this.CreatePlayerCastle();
+        this.CreateEnemyCastle();
 
         let playerModels = {
             model: this.library.models.playerModel,

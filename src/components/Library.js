@@ -33,6 +33,7 @@ import island from "../resources/models/island/island.fbx";
 import castle from "../resources/models/castle/castle.fbx";
 
 import { FBXLoader } from "three/examples/jsm/loaders/fbxloader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 export default class Library {
     constructor() {
@@ -103,6 +104,7 @@ export default class Library {
 
     LoadModels() {
         let fbxLoader = new FBXLoader();
+        let gltfLoader = new GLTFLoader();
         fbxLoader.load(playerModel, (object) => {
             object.traverse((child) => {
                 // @ts-ignore
@@ -170,16 +172,16 @@ export default class Library {
             this.models.island = object
         })
 
-        fbxLoader.load(castle, (object) => {
-            object.scale.set(.15, .15, .15);
-            object.traverse((child) => {
+        gltfLoader.load(castle, (object) => {
+            object.scene.scale.set(.15, .15, .15);
+            object.scene.traverse((child) => {
                 // @ts-ignore
                 if (child.isMesh) {
                     child.receiveShadow = true;
                     child.castShadow = true;
                 }
             })
-            this.models.castle = object
+            this.models.castle = object.scene
         })
     }
 

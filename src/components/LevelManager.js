@@ -137,6 +137,7 @@ export default class LevelManager {
             this.objects.sun.position.copy(v);
 
             this.objects.sun.target.position.copy(this.center);
+            this.objects.sun.intensity = 1.5;
             this.scene.add(this.objects.sun);
             this.scene.add(this.objects.sun.target);
             // this.cameraHelper = new CameraHelper(this.objects.sun.shadow.camera)
