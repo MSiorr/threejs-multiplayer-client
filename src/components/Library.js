@@ -29,6 +29,9 @@ import playerVictory from "../resources/models/player/player@victory.fbx";
 
 import rock from "../resources/models/rock/Rock3.fbx";
 
+import island from "../resources/models/island/island.fbx";
+import castle from "../resources/models/castle/castle.fbx";
+
 import { FBXLoader } from "three/examples/jsm/loaders/fbxloader";
 
 export default class Library {
@@ -62,7 +65,9 @@ export default class Library {
             playerReady: null,
             playerSad: null,
             playerVictory: null,
-            rock: null
+            rock: null,
+            island: null,
+            castle: null
         }
 
         /**
@@ -138,18 +143,7 @@ export default class Library {
             this.models.playerVictory = object;
         })
 
-        let rockManager = new LoadingManager();
-        // pedestalManager.setURLModifier((url) => {
-        //     if (url === "http://localhost:8080/DSC_3802.JPG") {
-        //         console.log(pedestalTexture);
-        //         return pedestalTexture;
-        //     }
-
-        //     return url;
-        // })
-        let rockLoader = new FBXLoader(rockManager);
-
-        rockLoader.load(rock, (object) => {
+        fbxLoader.load(rock, (object) => {
             object.scale.set(.08, .1, .08);
 
             object.traverse((child) => {
@@ -162,6 +156,31 @@ export default class Library {
 
             this.models.rock = object;
         });
+
+        fbxLoader.load(island, (object) => {
+            object.scale.set(.25, .25, .25);
+            object.traverse((child) => {
+                // @ts-ignore
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.material.shininess = 2;
+                    // child.castShadow = true;
+                }
+            })
+            this.models.island = object
+        })
+
+        fbxLoader.load(castle, (object) => {
+            object.scale.set(.15, .15, .15);
+            object.traverse((child) => {
+                // @ts-ignore
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            })
+            this.models.castle = object
+        })
     }
 
     repeatMaterials() {

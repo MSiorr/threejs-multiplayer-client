@@ -4,6 +4,8 @@ import Renderer from "./Renderer";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Library from "./Library";
 import Player from "./Player";
+import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
+import Sun from "./Sun";
 
 export default class LobbyScene {
     /**
@@ -26,8 +28,24 @@ export default class LobbyScene {
         // let fastAxes = new AxesHelper(500);
         // this.scene.add(fastAxes);
 
-        this.ambientLight = new AmbientLight(0xffffff, 1);
-        this.scene.add(this.ambientLight);
+        this.sun = new Sun();
+        this.sun.intensity = 2;
+        this.sun.position.set(200, 500, 0);
+        this.sun.target.position.set(0,0,0);
+
+        this.scene.add(this.sun);
+        this.scene.add(this.sun.target);
+
+        this.sun2 = new Sun();
+        this.sun2.intensity = 2;
+        this.sun2.position.set(-800, 500, 0);
+        this.sun2.target.position.set(-1000, 0, 1200);
+
+        this.scene.add(this.sun2);
+        this.scene.add(this.sun2.target);
+
+        // this.ambientLight = new AmbientLight(0xffffff, 3);
+        // this.scene.add(this.ambientLight);
 
         /**
          * @type {Player[]}
@@ -39,7 +57,7 @@ export default class LobbyScene {
         this.myPlayerStatus = 'bored';
         this.enemyPlayerStatus = 'ready';
 
-        // const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         this.Hide();
         this.render();
@@ -57,7 +75,39 @@ export default class LobbyScene {
         requestAnimationFrame(this.render.bind(this));
     }
 
+    CreateIslands(){
+        let playerIsland = SkeletonUtils.clone(this.library.models.island);
+        playerIsland.position.set(0, -72, 114);
+        this.scene.add(playerIsland);
+
+        let enemyIsland = SkeletonUtils.clone(this.library.models.island);
+        enemyIsland.position.set(0, -72, -114);
+        enemyIsland.scale.z = -1 * enemyIsland.scale.z;
+        this.scene.add(enemyIsland);
+        
+        let playerCastleIsland = SkeletonUtils.clone(this.library.models.island);
+        playerCastleIsland.scale.set(1,1,1);
+        playerCastleIsland.position.set(-1000, -250, 1200);
+        this.scene.add(playerCastleIsland);
+        
+        let enemyCastleIsland = SkeletonUtils.clone(this.library.models.island);
+        enemyCastleIsland.scale.set(1,1,1);
+        enemyCastleIsland.position.set(-1000, -250, -1200);
+        enemyCastleIsland.scale.z = -1 * enemyCastleIsland.scale.z;
+        this.scene.add(enemyCastleIsland);
+    }
+
+    CreatePlayerCastle(){
+        this.playerCastle = SkeletonUtils.clone(this.library.models.castle);
+        this.playerCastle.position.set(-1000, 50, 1250);
+        this.playerCastle.rotation.y = Math.PI / 2;
+        this.scene.add(this.playerCastle);
+    }
+
     addPlayerWarrior(){
+        this.CreateIslands();
+        this.CreatePlayerCastle();
+
         let playerModels = {
             model: this.library.models.playerModel,
             idle: this.library.models.playerIdle,
