@@ -52,6 +52,10 @@ export default class GUI {
             }
         }
 
+        this.powerupTier1 = null;
+        this.powerupTier2 = null;
+        this.powerupTier3 = null;
+
         this.totalLevels = 0;
         this.maxPoints = null;
         this.currentMap = 0;
@@ -86,8 +90,8 @@ export default class GUI {
      * @param {keyof(GUIElements) } element 
      * @param {keyof(statusElements) | keyof(gameInfoElements) | null} innerElement
      */
-    show(element, innerElement=null) {
-        if(innerElement == null){
+    show(element, innerElement = null) {
+        if (innerElement == null) {
             // @ts-ignore
             this.html[element].classList.add("active");
         } else {
@@ -100,7 +104,7 @@ export default class GUI {
      * @param {keyof(statusElements) | keyof(gameInfoElements) | null} innerElement
      */
     hide(element, innerElement) {
-        if(innerElement == null){
+        if (innerElement == null) {
             // @ts-ignore
             this.html[element].classList.remove("active");
         } else {
@@ -108,7 +112,7 @@ export default class GUI {
         }
     }
 
-    showAll(){
+    showAll() {
         this.html.options.classList.add("active");
         this.html.activeEffects.classList.add("active");
         this.html.powerups.classList.add("active");
@@ -117,7 +121,7 @@ export default class GUI {
         this.html.gameInfo.main.classList.add("active");
     }
 
-    hideAll(){
+    hideAll() {
         this.html.options.classList.remove("active");
         this.html.activeEffects.classList.remove("active");
         this.html.powerups.classList.remove("active");
@@ -132,7 +136,7 @@ export default class GUI {
      * @param {keyof(statusElements) | keyof(gameInfoElements) | null} innerElement
      */
     edit(content, element, innerElement) {
-        if(innerElement == null){
+        if (innerElement == null) {
             // @ts-ignore
             this.html[element].innerHTML = content;
         } else {

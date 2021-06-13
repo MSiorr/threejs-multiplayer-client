@@ -307,12 +307,14 @@ export default class LevelManager {
         return true;
     }
 
-    moveLeft() {
+    moveLeft(inverted = false) {
+        if (inverted) {
+            return this.moveRight();
+        }
+
         this.objects.players.sort((a, b) => {
             return a.x - b.x
         });
-
-        let tabToDel = [];
 
         for (const player of this.objects.players) {
             player.rotation.set(0, 3 / 2 * Math.PI, 0);
@@ -322,12 +324,15 @@ export default class LevelManager {
         }
     }
 
-    moveRight() {
+    moveRight(inverted = false) {
+        if (inverted) {
+            return this.moveLeft();
+        }
+
+
         this.objects.players.sort((a, b) => {
             return - (a.x - b.x)
         });
-
-        let tabToDel = [];
 
         for (const player of this.objects.players) {
             player.rotation.set(0, 1 / 2 * Math.PI, 0);
@@ -337,12 +342,14 @@ export default class LevelManager {
         }
     }
 
-    moveUp() {
+    moveUp(inverted = false) {
+        if (inverted) {
+            return this.moveDown();
+        }
+
         this.objects.players.sort((a, b) => {
             return a.z - b.z
         });
-
-        let tabToDel = [];
 
         for (const player of this.objects.players) {
             player.rotation.set(0, Math.PI, 0)
@@ -352,12 +359,14 @@ export default class LevelManager {
         }
     }
 
-    moveDown() {
+    moveDown(inverted = false) {
+        if (inverted) {
+            return this.moveUp();
+        }
+
         this.objects.players.sort((a, b) => {
             return - (a.z - b.z)
         });
-
-        let tabToDel = [];
 
         for (const player of this.objects.players) {
             player.rotation.set(0, 0, 0)
