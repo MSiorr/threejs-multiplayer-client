@@ -18,9 +18,9 @@ export default class PowerupManager {
          * @type {Powerups}
          */
         this.powerups = {
-            "inverted_keyboard": new PowerupItem("inverted_keyboard", inverted_keyboard, 1),
-            "camera_shake": new PowerupItem("camera_shake", camera_shake, 2),
-            "camera_rotation": new PowerupItem("camera_rotation", camera_rotation, 3),
+            "inverted_keyboard": new PowerupItem("inverted_keyboard", inverted_keyboard, 1, 30),
+            "camera_shake": new PowerupItem("camera_shake", camera_shake, 2, 60),
+            "camera_rotation": new PowerupItem("camera_rotation", camera_rotation, 3, 90),
         };
 
         /**
@@ -32,9 +32,14 @@ export default class PowerupManager {
             "inverted_keyboard": false,
         };
 
-        this.currentTier1 = null;
-        this.currentTier2 = null;
-        this.currentTier3 = null;
+        /**
+         * @type {{tier1: PowerupItem, tier2: PowerupItem, tier3: PowerupItem}}
+         */
+        this.current = {
+            tier1: null,
+            tier2: null,
+            tier3: null
+        }
 
         this.cameraRotation = 0;
     }
@@ -62,10 +67,12 @@ export default class PowerupManager {
 
     /**
      * @param {1 | 2 | 3} tier
+     * @returns {PowerupManager}
      */
     randomPowerup(tier) {
         let t = `tier${tier}`;
-        let ct = `currentTier${tier}`;
-        this[ct] = this[t][Object.keys(this[t])[Math.floor(Object.keys(this[t]).length * Math.random())]]
+        this.current[t] = this[t][Object.keys(this[t])[Math.floor(Object.keys(this[t]).length * Math.random())]]
+
+        return this;
     }
 }
