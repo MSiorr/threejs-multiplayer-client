@@ -41,7 +41,7 @@ module.exports = {
                 ],
             },
             {
-                test: /\.(fbx)$/i,
+                test: /\.(fbx|gltf)$/i,
                 type: 'asset/resource',
             }
         ]

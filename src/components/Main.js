@@ -37,6 +37,10 @@ export default class Main {
         this.renderer = new Renderer(container);
         this.camera = new Camera(75, this.renderer);
         this.levelManager = new LevelManager(this.scene);
+        this.levelManager.LoadLibrary()
+            .then( () => {
+                this.menu.show('startGame');
+            })
 
         this.lobbyScene = new LobbyScene(document.getElementById("root2"), this.levelManager.library);
 
@@ -47,6 +51,7 @@ export default class Main {
 
         this.menu = new Menu();
         this.menu.show("title");
+        this.menu.hide("startGame");
         this.menu.html.startGame.addEventListener("click", this.startSearch.bind(this));
 
         this.gui = new GUI();
@@ -252,6 +257,9 @@ export default class Main {
         this.menu.hide("roomTransition");
         this.menu.show("win");
 
+        this.lobbyScene.Show({player: 'victory', enemy: 'sad'});
+        this.lobbyScene.CreatePlayerCannon();
+
         this.playerMovementRule[0] = false;
         cancelAnimationFrame(this.animationFrame);
     }
@@ -261,6 +269,9 @@ export default class Main {
 
         this.menu.hide("roomTransition");
         this.menu.show("lose");
+
+        this.lobbyScene.Show({player: 'sad', enemy: 'victory'});
+        this.lobbyScene.CreateEnemyCannon();
 
         this.playerMovementRule[0] = false;
         cancelAnimationFrame(this.animationFrame);

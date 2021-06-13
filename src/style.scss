@@ -51,8 +51,14 @@ body {
         justify-content: center;
         align-items: center;
 
-        #startGame {
+        #start-game {
             cursor: pointer;
+            width: 200px;
+            height: 100px;
+
+            &:not(.active) {
+                opacity: 0;
+            }
         }
     }
 

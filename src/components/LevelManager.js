@@ -53,6 +53,15 @@ export default class LevelManager {
         this.library = new TextureLibrary();
     }
 
+    LoadLibrary(){
+        return new Promise( (resolve, reject) => {
+            this.library.Load()
+                .then( () => {
+                    resolve();
+                })
+        })
+    }
+
     Update() {
         let tablToDel = []
         this.objects.players.forEach(e => {

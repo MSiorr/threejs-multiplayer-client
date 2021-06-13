@@ -65,7 +65,7 @@ export default class LobbyScene {
         this.myPlayerStatus = 'bored';
         this.enemyPlayerStatus = 'ready';
 
-        const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        // const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         this.Hide();
         this.render();
@@ -106,23 +106,36 @@ export default class LobbyScene {
     }
 
     CreatePlayerCastle(){
-        this.playerCastle = SkeletonUtils.clone(this.library.models.castle);
+        this.playerCastle = this.library.models.castle.clone();
+        console.log(this.playerCastle);
         this.playerCastle.position.set(-1000, 48, 1250);
-        this.playerCastle.rotation.y = Math.PI / 2;
+        this.playerCastle.rotation.z = -Math.PI / 2;
         this.scene.add(this.playerCastle);
     }
 
     CreateEnemyCastle(){
-        this.playerCastle = SkeletonUtils.clone(this.library.models.castle);
+        this.playerCastle = this.library.models.castle.clone();
         this.playerCastle.position.set(-1000, 48, -1250);
-        this.playerCastle.rotation.y = -Math.PI / 2;
+        this.playerCastle.rotation.z = Math.PI / 2;
         this.scene.add(this.playerCastle);
+    }
+
+    CreatePlayerCannon(){
+        this.playerCannon = this.library.models.cannon.clone();
+        this.playerCannon.position.set(-1000, 40, 1120);
+        this.scene.add(this.playerCannon);
+    }
+
+    CreateEnemyCannon(){
+        this.enemyCannon = this.library.models.cannon.clone();
+        this.enemyCannon.position.set(-1000, 40, -1120);
+        this.enemyCannon.rotation.y = Math.PI;
+        this.scene.add(this.enemyCannon);
     }
 
     addPlayerWarrior(){
         this.CreateIslands();
         this.CreatePlayerCastle();
-        this.CreateEnemyCastle();
 
         let playerModels = {
             model: this.library.models.playerModel,
@@ -141,6 +154,8 @@ export default class LobbyScene {
     }
 
     addEnemyWarrior() {
+        this.CreateEnemyCastle();
+
         let playerModels = {
             model: this.library.models.playerModel,
             idle: this.library.models.playerIdle,
