@@ -1,4 +1,4 @@
-import { AmbientLight, AxesHelper, Clock, Scene, Vector3 } from "three";
+import { AmbientLight, AxesHelper, Box3, BoxGeometry, BufferGeometry, Clock, DoubleSide, Group, Material, Mesh, MeshBasicMaterial, Plane, PlaneGeometry, PlaneHelper, Scene, Vector3 } from "three";
 import Camera from "./Camera";
 import Renderer from "./Renderer";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -66,6 +66,12 @@ export default class LobbyScene {
         this.scene.add(this.sunToCastle2);
         this.scene.add(this.sunToCastle2.target);
 
+        this.playerCastleBuildStatusPercent = 0;
+        this.enemyCastleBuildStatusPercent = 0;
+
+        this.castleMin = 35;
+        this.castleMax = 110;
+
         // this.ambientLight = new AmbientLight(0xffffff, 3);
         // this.scene.add(this.ambientLight);
 
@@ -89,6 +95,8 @@ export default class LobbyScene {
 
         // const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
+        // this.camera.position.set(-1100, 70, 900);
+        // this.camera.lookAt(new Vector3(-1100, 48, 1250))
         this.Hide();
         this.render();
     }
@@ -101,6 +109,11 @@ export default class LobbyScene {
         this.players.forEach( player => {
             player.Update(delta)
         })
+
+        if(this.playerCastleBuildPlane){
+            // this.playerCastleBuildPlane.constant = 72 + Math.sin(Date.now() / 2000) * 36;
+            console.log(this.playerCastleBuildPlane.constant);
+        }
 
         if(this.camera){
             if(this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z){
@@ -146,12 +159,23 @@ export default class LobbyScene {
                 e.SetAction(e.animationActions['sad'])
             }
         })
+        this.enemyWarriors.forEach( e => {
+            if(player == true){
+                e.SetAction(e.animationActions['sad'])
+            } else {
+                e.SetAction(e.animationActions['victory'])
+            }
+        })
 
         setTimeout( () => {
             this.myCameraTarget.x = -1100;
             this.myCameraTarget.y = 70;
             this.myCameraTarget.z = 900;
             this.newCameraLookAt = this.playerCastle.position.clone();
+            // this.myCameraTarget.x = -1100;
+            // this.myCameraTarget.y = 70;
+            // this.myCameraTarget.z = -900;
+            // this.newCameraLookAt = this.enemyCastle.position.clone();
         }, 5000 )
     }
 
@@ -172,6 +196,26 @@ export default class LobbyScene {
             this.scene.add(player);
             this.players.push(player);
             this.playerWarriors.push(player);
+        }
+    }
+
+    CreateEnemyWarriors(){
+        let modelObj = {
+            model: this.library.models.playerModel,
+            idle: this.library.models.playerIdle,
+            ready: this.library.models.playerReady,
+            sad: this.library.models.playerSad,
+            victory: this.library.models.playerVictory
+        }
+        for(let i = 0; i < 5; i++){
+            let player = new Player(0,0,modelObj);
+            player.SetAction(player.animationActions['ready'])
+            player.position.set(-1000 + (i * -50), 37 + Math.min(i, 4 - i) * 1, -1050 + Math.min(i, 4 - i) * 25);
+            player.scale.set(.25, .25, .25)
+            player.lookAt(player.position.x, player.position.y, 0);
+            this.scene.add(player);
+            this.players.push(player);
+            this.enemyWarriors.push(player);
         }
     }
 
@@ -198,11 +242,27 @@ export default class LobbyScene {
     }
 
     CreatePlayerCastle(){
+        /**
+         * @type {Group}
+         */
         this.playerCastle = this.library.models.castle.clone();
-        console.log(this.playerCastle);
         this.playerCastle.position.set(-1100, 48, 1250);
         this.playerCastle.rotation.z = -Math.PI / 2;
         this.scene.add(this.playerCastle);
+
+        this.playerCastleBuildPlane = new Plane(new Vector3(0,-1,0), 35);
+        let helper = new PlaneHelper(this.playerCastleBuildPlane, 1000, 0xffff00)
+        this.scene.add(helper);
+        // min 35, max 110
+
+        // @ts-ignore
+        this.playerCastle.traverse( (/** @type {Mesh<BufferGeometry, Material>} */object) => {
+            if(object instanceof Mesh){
+                object.material.clippingPlanes = [this.playerCastleBuildPlane];
+                object.material.clipIntersection = false;
+            }
+        })
+
     }
 
     CreateEnemyCastle(){
@@ -210,6 +270,17 @@ export default class LobbyScene {
         this.enemyCastle.position.set(-1100, 48, -1250);
         this.enemyCastle.rotation.z = Math.PI / 2;
         this.scene.add(this.enemyCastle);
+
+        this.enemyCastleBuildPlane = new Plane(new Vector3(0,-1,0), 35);
+        // min 35, max 110
+
+        // @ts-ignore
+        this.enemyCastle.traverse( (/** @type {Mesh<BufferGeometry, Material>} */object) => {
+            if(object instanceof Mesh){
+                object.material.clippingPlanes = [this.enemyCastleBuildPlane];
+                object.material.clipIntersection = false;
+            }
+        })
     }
 
     CreatePlayerCannon(){
@@ -230,6 +301,7 @@ export default class LobbyScene {
         this.CreatePlayerCastle();
         // this.CreateEnemyCastle();
         // this.CreatePlayerWarriors();
+        // this.CreateEnemyWarriors();
         // this.EndGameCutscene(true);
 
         let playerModels = {
@@ -280,7 +352,6 @@ export default class LobbyScene {
         this.container.style.zIndex = "30000"
 
         if(statusList != null && this.myPlayer && this.enemyPlayer){
-            console.log("?")
             this.myPlayerStatus = statusList.player;
             this.enemyPlayerStatus = statusList.enemy
             
@@ -293,12 +364,30 @@ export default class LobbyScene {
         this.container.style.zIndex = "-1"
         
         if(this.myPlayer && this.enemyPlayer){
-            console.log("?")
             this.myPlayerStatus = 'ready';
             this.enemyPlayerStatus = 'ready';
     
             this.myPlayer.SetAction(this.myPlayer.animationActions[this.myPlayerStatus]);
             this.enemyPlayer.SetAction(this.enemyPlayer.animationActions[this.enemyPlayerStatus]);
+        }
+    }
+
+    /**
+     * @param {'player' | 'enemy'} who
+     * @param {Number} percent
+     */
+    BuildCastle(who, percent) {
+        if(who == 'player'){
+            this.playerCastleBuildStatusPercent = percent;
+            this.playerCastleBuildPlane.constant = this.castleMin + (percent * (this.castleMax - this.castleMin));
+            // console.log('playerCastle: ');
+            // console.log(percent);
+            // console.log((this.castleMax - this.castleMin))
+            // console.log(this.castleMin + (percent * (this.castleMax - this.castleMin)))
+            // console.log(this.playerCastleBuildPlane.constant)
+        } else {
+            this.enemyCastleBuildStatusCount = percent;
+            this.enemyCastleBuildPlane.constant = this.castleMin + (percent * (this.castleMax - this.castleMin));
         }
     }
 }

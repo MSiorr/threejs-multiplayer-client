@@ -49,8 +49,9 @@ export default class Player extends Object3D {
 
     /**
      * @param {number} delta
+     * @param {InputManager | null} inputManager
      */
-    Update(delta) {
+    Update(delta, inputManager = null) {
         if (this.mixer) this.mixer.update(delta)
 
         // console.log(this.needMove);
@@ -85,9 +86,15 @@ export default class Player extends Object3D {
             // if(this.inputManager.rules['left'].task !== null)
 
             if (this.toX == this.position.x && this.toZ == this.position.z) {
+                if(inputManager){
+                    if(inputManager.rules[this.moveBtn].task === null){
+                        this.SetAction(this.animationActions['idle']);
+                    }
+                } else {
+                    this.SetAction(this.animationActions['idle']);
+                }
                 this.needMove = false;
                 this.moveBtn = null;
-                this.SetAction(this.animationActions['idle']);
             }
         }
     }

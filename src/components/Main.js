@@ -85,10 +85,10 @@ export default class Main {
 
         this.inputManager = new InputManager(this.playerMovementRule);
         this.inputManager.RegisterEventCapture();
-        this.inputManager.Add("left", this.moveLeft.bind(this), ["KeyA"], true, 20);
-        this.inputManager.Add("right", this.moveRight.bind(this), ["KeyD"], true, 20);
-        this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW"], true, 20);
-        this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS"], true, 20);
+        this.inputManager.Add("left", this.moveLeft.bind(this), ["KeyA"], true, 10);
+        this.inputManager.Add("right", this.moveRight.bind(this), ["KeyD"], true, 10);
+        this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW"], true, 10);
+        this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS"], true, 10);
         this.inputManager.Add("reset", this.levelManager.reset.bind(this.levelManager), ["KeyR"], false);
     }
 
@@ -120,7 +120,7 @@ export default class Main {
         let canMove = true;
         // Update Players Anim
         this.levelManager.objects.players.forEach(e => {
-            e.Update(delta);
+            e.Update(delta, this.inputManager);
             if (e.needMove == true) {
                 canMove = false;
             }
@@ -319,6 +319,9 @@ export default class Main {
         console.log(data);
         this.gui.html.statusBars.player.style.width = `${data.you / this.gui.maxPoints * 100}%`;
         this.gui.html.statusBars.enemy.style.width = `${data.enemy / this.gui.maxPoints * 100}%`;
+
+        this.lobbyScene.BuildCastle('player',  data.you / this.gui.maxPoints)
+        this.lobbyScene.BuildCastle('enemy',  data.enemy / this.gui.maxPoints)
     }
 
 
