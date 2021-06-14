@@ -16,6 +16,7 @@ export default class Renderer extends WebGLRenderer {
         }
         this.shadowMap.enabled = true;
         this.shadowMap.type = PCFSoftShadowMap;
+        this.localClippingEnabled = true;
 
         this.container.appendChild(this.domElement);
 

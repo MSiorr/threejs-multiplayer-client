@@ -320,6 +320,8 @@ export default class LevelManager {
             player.rotation.set(0, 3 / 2 * Math.PI, 0);
             if (this.canMove(player.x - 1, player.z)) {
                 player.moveLeft();
+            } else {
+                player.SetAction(player.animationActions['idle'])
             }
         }
     }
@@ -338,6 +340,8 @@ export default class LevelManager {
             player.rotation.set(0, 1 / 2 * Math.PI, 0);
             if (this.canMove(player.x + 1, player.z)) {
                 player.moveRight();
+            } else {
+                player.SetAction(player.animationActions['idle'])
             }
         }
     }
@@ -355,6 +359,8 @@ export default class LevelManager {
             player.rotation.set(0, Math.PI, 0)
             if (this.canMove(player.x, player.z - 1)) {
                 player.moveUp();
+            } else {
+                player.SetAction(player.animationActions['idle'])
             }
         }
     }
@@ -372,6 +378,8 @@ export default class LevelManager {
             player.rotation.set(0, 0, 0)
             if (this.canMove(player.x, player.z + 1)) {
                 player.moveDown();
+            } else {
+                player.SetAction(player.animationActions['idle'])
             }
         }
     }

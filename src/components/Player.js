@@ -51,8 +51,9 @@ export default class Player extends Object3D {
     /**
      * @param {number} delta
      * @param {PowerupManager} powerupManager
+     * @param {InputManager} inputManager
      */
-    Update(delta, powerupManager) {
+    Update(delta, powerupManager = null, inputManager = null) {
         if (this.mixer) this.mixer.update(delta)
 
         // console.log(this.needMove);
@@ -66,9 +67,11 @@ export default class Player extends Object3D {
             let currentVel = this.velocity * delta;
             this.mixer.timeScale = 1;
 
-            if (powerupManager.states["slow_movement"]) {
-                currentVel /= 2.5;
-                this.mixer.timeScale /= 2.5;
+            if (powerupManager) {
+                if (powerupManager.states["slow_movement"]) {
+                    currentVel /= 2.5;
+                    this.mixer.timeScale /= 2.5;
+                }
             }
 
             switch (this.moveBtn) {
@@ -93,9 +96,15 @@ export default class Player extends Object3D {
             // if(this.inputManager.rules['left'].task !== null)
 
             if (this.toX == this.position.x && this.toZ == this.position.z) {
+                if (inputManager) {
+                    if (inputManager.rules[this.moveBtn].task === null) {
+                        this.SetAction(this.animationActions['idle']);
+                    }
+                } else {
+                    this.SetAction(this.animationActions['idle']);
+                }
                 this.needMove = false;
                 this.moveBtn = null;
-                this.SetAction(this.animationActions['idle']);
             }
         }
     }
