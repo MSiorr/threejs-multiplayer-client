@@ -4,6 +4,7 @@ import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
 import config from './Config';
 import InputManager from './InputManager';
 import LevelManager from './LevelManager';
+import PowerupManager from './PowerupManager';
 
 export default class Player extends Object3D {
     /**
@@ -49,8 +50,9 @@ export default class Player extends Object3D {
 
     /**
      * @param {number} delta
+     * @param {PowerupManager} powerupManager
      */
-    Update(delta) {
+    Update(delta, powerupManager) {
         if (this.mixer) this.mixer.update(delta)
 
         // console.log(this.needMove);
@@ -62,6 +64,12 @@ export default class Player extends Object3D {
             // }
 
             let currentVel = this.velocity * delta;
+            this.mixer.timeScale = 1;
+
+            if (powerupManager.states["slow_movement"]) {
+                currentVel /= 2.5;
+                this.mixer.timeScale /= 2.5;
+            }
 
             switch (this.moveBtn) {
                 case 'left': {

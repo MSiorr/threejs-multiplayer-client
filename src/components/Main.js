@@ -10,7 +10,9 @@ import {
     CameraHelper,
     DirectionalLightHelper,
     Vector2,
-    Clock
+    Clock,
+    MeshStandardMaterial,
+    SkinnedMesh
 } from 'three';
 
 import Renderer from './Renderer';
@@ -85,11 +87,11 @@ export default class Main {
 
         this.inputManager = new InputManager(this.playerMovementRule);
         this.inputManager.RegisterEventCapture();
-        this.inputManager.Add("left", this.moveLeft.bind(this), ["KeyA"], true, 20);
-        this.inputManager.Add("right", this.moveRight.bind(this), ["KeyD"], true, 20);
-        this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW"], true, 20);
-        this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS"], true, 20);
-        this.inputManager.Add("reset", this.levelManager.reset.bind(this.levelManager), ["KeyR"], false);
+        this.inputManager.Add("left", this.moveLeft.bind(this), ["KeyA", "ArrowLeft"], true, 20);
+        this.inputManager.Add("right", this.moveRight.bind(this), ["KeyD", "ArrowRight"], true, 20);
+        this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW", "ArrowUp"], true, 20);
+        this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS", "ArrowDown"], true, 20);
+        this.inputManager.Add("reset", this.reset.bind(this), ["KeyR"], false);
     }
 
     render() {
@@ -120,13 +122,13 @@ export default class Main {
         let canMove = true;
         // Update Players Anim
         this.levelManager.objects.players.forEach(e => {
-            e.Update(delta);
+            e.Update(delta, this.powerupManager);
             if (e.needMove == true) {
                 canMove = false;
             }
         })
         this.levelManager.objects.playersFalling.forEach(e => {
-            e.Update(delta);
+            e.Update(delta, this.powerupManager);
         })
         this.playerMovementRule[0] = canMove;
 
@@ -140,6 +142,8 @@ export default class Main {
         this.gui.renderPowerups();
 
         this.updateCamera(delta);
+
+        this.powerupEffects(delta);
 
         this.renderer.render(this.scene, this.camera);
 
@@ -254,6 +258,8 @@ export default class Main {
                 this.playerMovementRule[0] = true;
                 this.playerCompleteCurrentLevel = false;
 
+                this.powerupManager.resetPowerupVariables();
+
                 this.render();
             })
     }
@@ -309,7 +315,7 @@ export default class Main {
 
         setTimeout(() => {
             this.powerupManager.states[data.name] = false;
-        }, 15000);
+        }, this.powerupManager.powerups[data.name].duration);
     }
 
     /**
@@ -365,21 +371,6 @@ export default class Main {
         // this.camera.lookAt(this.levelManager.center);
         this.camera.rotation.set(0, 0, 0);
         this.camera.rotateX(- Math.PI / 3);
-
-        if (this.powerupManager.states["camera_rotation"]) {
-            this.powerupManager.cameraRotation += Math.PI / 3 * delta;
-
-            let v = Utility.rotateVectorAroundPoint(this.camera.position, this.levelManager.center, new Euler(0, this.powerupManager.cameraRotation, 0));
-            this.camera.position.copy(v);
-
-            this.camera.lookAt(this.levelManager.center);
-        }
-
-        if (this.powerupManager.states["camera_shake"]) {
-            this.camera.rotation.x += (Math.random() - 0.5) / 16;
-            this.camera.rotation.y += (Math.random() - 0.5) / 16;
-            this.camera.rotation.z += (Math.random() - 0.5) / 16;
-        }
     }
 
     moveLeft() {
@@ -396,5 +387,124 @@ export default class Main {
 
     moveDown() {
         this.levelManager.moveDown.call(this.levelManager, this.powerupManager.states["inverted_keyboard"]);
+    }
+
+    /**
+     * @param {number} delta
+     */
+    powerupEffects(delta) {
+        if (this.powerupManager.states["camera_rotation"]) {
+            this.powerupManager.cameraRotation += Math.PI / 3 * delta;
+
+            let v = Utility.rotateVectorAroundPoint(this.camera.position, this.levelManager.center, new Euler(0, this.powerupManager.cameraRotation, 0));
+            this.camera.position.copy(v);
+
+            this.camera.lookAt(this.levelManager.center);
+        } else {
+            this.powerupManager.cameraRotation = 0;
+        }
+
+        if (this.powerupManager.states["camera_shake"]) {
+            this.camera.rotation.x += (Math.random() - 0.5) / 16;
+            this.camera.rotation.y += (Math.random() - 0.5) / 16;
+            this.camera.rotation.z += (Math.random() - 0.5) / 16;
+        }
+
+        if (this.powerupManager.states["dark_screen"]) {
+            this.renderer.setClearColor(0x111114);
+
+            this.powerupManager.lightIntensity += Math.PI / 2.5 * delta;
+
+            if (this.levelManager.objects.sun) {
+                this.levelManager.objects.sun.intensity = Math.pow(Utility.clamp(Math.sin(this.powerupManager.lightIntensity), 0, 1), 31) * Config.sunIntensity;
+            }
+        } else {
+            this.renderer.setClearColor(0x87ceeb);
+
+            this.levelManager.objects.sun.intensity = Config.sunIntensity;
+            this.powerupManager.lightIntensity = 0;
+        }
+
+        if (this.powerupManager.states["random_holes"] && this.powerupManager.randomHolesActivated === false) {
+            this.powerupManager.randomHolesActivated = true;
+
+            this.levelManager.objects.floors.forEach(floor => {
+                if (Math.random() < 0.15) {
+                    if (floor.material instanceof MeshStandardMaterial) {
+                        floor.material.transparent = true;
+                        floor.material.opacity = 0;
+                        floor.removeOutline();
+                    }
+                }
+            });
+        } else if (this.powerupManager.states["random_holes"] === false && this.powerupManager.randomHolesActivated === true) {
+            this.powerupManager.randomHolesActivated = false;
+
+            this.levelManager.objects.floors.forEach(floor => {
+                if (floor.material instanceof MeshStandardMaterial) {
+                    floor.material.transparent = false;
+                    floor.material.opacity = 1;
+                    floor.showOutline();
+                }
+            });
+        }
+
+        if (this.powerupManager.states["switch_goal_to_floor"] && this.powerupManager.switchGoalToFloorActivated === false) {
+            this.powerupManager.switchGoalToFloorActivated = true;
+
+            this.levelManager.objects.goals.forEach(goal => {
+                if (goal.material instanceof MeshStandardMaterial) {
+                    goal.material = this.levelManager.library.materials["grass001"].clone();
+                }
+            });
+        } else if (this.powerupManager.states["switch_goal_to_floor"] === false && this.powerupManager.switchGoalToFloorActivated === true) {
+            this.powerupManager.switchGoalToFloorActivated = false;
+
+            this.levelManager.objects.goals.forEach(goal => {
+                if (goal.material instanceof MeshStandardMaterial) {
+                    goal.material = this.levelManager.library.materials["metal007"].clone();
+                }
+            });
+        }
+
+        if (this.powerupManager.states["invisible_player"] && this.powerupManager.invisiblePlayerActivated === false) {
+            this.powerupManager.invisiblePlayerActivated = true;
+
+            this.levelManager.objects.players.forEach(player => {
+                let c = player.children[0].children[1];
+
+                if (c instanceof SkinnedMesh) {
+                    c.material.transparent = true;
+                    c.material.opacity = 0;
+                    c.castShadow = false;
+                    c.receiveShadow = false;
+                }
+            });
+        } else if (this.powerupManager.states["invisible_player"] === false && this.powerupManager.invisiblePlayerActivated === true) {
+            this.powerupManager.invisiblePlayerActivated = false;
+
+            this.levelManager.objects.players.forEach(player => {
+                let c = player.children[0].children[1];
+
+                if (c instanceof SkinnedMesh) {
+                    c.material.transparent = false;
+                    c.material.opacity = 1;
+                    c.castShadow = true;
+                    c.receiveShadow = true;
+                }
+            });
+        }
+
+        if (this.powerupManager.states["reset_level"] && this.powerupManager.resetLevelActivated === false) {
+            this.powerupManager.resetLevelActivated = true;
+        } else if (this.powerupManager.states["reset_level"] === false && this.powerupManager.resetLevelActivated === true) {
+            this.powerupManager.resetLevelActivated = false;
+            this.reset();
+        }
+    }
+
+    reset() {
+        this.powerupManager.resetPowerupVariables();
+        this.levelManager.reset();
     }
 }

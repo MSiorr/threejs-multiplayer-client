@@ -75,7 +75,11 @@ export default class Library {
         }
 
         /**
-         * @type {{[x: string]: MeshStandardMaterial}}
+         * @typedef {"grass001" | "metal007" | "metal034"} Materials
+         */
+
+        /**
+         * @type {{[x in Materials]: MeshStandardMaterial}}
          */
         this.materials = {
             grass001: null,
@@ -84,14 +88,14 @@ export default class Library {
         }
     }
 
-    Load(){
-        return new Promise( (resolve, reject) => {
+    Load() {
+        return new Promise((resolve, reject) => {
             this.LoadTextures();
             this.repeatMaterials();
             this.LoadModels()
-                .then( () => {
+                .then(() => {
                     resolve();
-                } )
+                })
         })
     }
 
@@ -156,42 +160,42 @@ export default class Library {
                 })
                 object.scale.set(.5, .5, .5)
                 this.models.playerModel = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             });
             fbxLoader.load(playerIdle, (object) => {
                 object.scale.set(.5, .5, .5)
                 this.models.playerIdle = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             });
             fbxLoader.load(playerWalk, (object) => {
                 object.scale.set(.5, .5, .5)
                 this.models.playerWalk = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             });
             fbxLoader.load(playerFall, (object) => {
                 object.scale.set(.5, .5, .5)
                 this.models.playerFall = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
             fbxLoader.load(playerBored, (object) => {
                 object.scale.set(.5, .5, .5)
                 this.models.playerBored = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
             fbxLoader.load(playerReady, (object) => {
                 object.scale.set(.5, .5, .5)
                 this.models.playerReady = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
             fbxLoader.load(playerSad, (object) => {
                 object.scale.set(.5, .5, .5)
                 this.models.playerSad = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
             fbxLoader.load(playerVictory, (object) => {
                 object.scale.set(.5, .5, .5)
                 this.models.playerVictory = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
 
             fbxLoader.load(rock, (object) => {
@@ -206,7 +210,7 @@ export default class Library {
                 })
 
                 this.models.rock = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             });
 
             fbxLoader.load(island, (object) => {
@@ -220,7 +224,7 @@ export default class Library {
                     }
                 })
                 this.models.island = object;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
 
             gltfLoader.load(castle, (object) => {
@@ -233,7 +237,7 @@ export default class Library {
                     }
                 })
                 this.models.castle = object.scene.children[0];
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
 
             gltfLoader.load(cannon, (object) => {
@@ -246,7 +250,7 @@ export default class Library {
                     }
                 })
                 this.models.cannon = object.scene;
-                if(--counter == 0) {resolve()};
+                if (--counter == 0) { resolve() };
             })
         })
     }

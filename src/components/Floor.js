@@ -18,9 +18,18 @@ export default class Floor extends Mesh {
 
         this.x = x;
         this.z = z;
+
+        /**
+         * @type {Line}
+         */
+        this.outline = null;
     }
 
     createOutline() {
+        if (this.outline) {
+            this.remove(this.outline);
+        }
+
         let v1 = this.position.clone();
         let v2 = this.position.clone().add(new Vector3(config.blockSize, 0, 0));
         let v3 = this.position.clone().add(new Vector3(config.blockSize, 0, config.blockSize));
@@ -28,6 +37,7 @@ export default class Floor extends Mesh {
         let geometry = new BufferGeometry().setFromPoints([v1, v2, v3, v4, v1]);
         let material = new LineBasicMaterial({ color: 0x000000 });
         let mesh = new Line(geometry, material);
+        this.outline = mesh;
 
         //@ts-ignore
         let x = new Box3().setFromObject(this).getSize(new Vector3()).x;
@@ -39,6 +49,15 @@ export default class Floor extends Mesh {
         mesh.position.x -= x / 2;
         mesh.position.y += y / 2 + 1;
         mesh.position.z -= z / 2;
-        this.add(mesh);
+
+        this.showOutline();
+    }
+
+    showOutline() {
+        this.add(this.outline);
+    }
+
+    removeOutline() {
+        this.remove(this.outline);
     }
 }

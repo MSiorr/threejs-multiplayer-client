@@ -198,9 +198,10 @@ export default class GUI {
         let d = Utility.clamp(t - Date.now(), 0, Number.MAX_SAFE_INTEGER);
 
         if (d === 0) {
-            this.powerups[`tier${n}`].use();
             let m = this.socket.createMessage("powerup_use", JSON.stringify({ name: this.powerups[`tier${n}`].name }));
             this.socket.Send(m);
+
+            this.powerups[`tier${n}`].use();
         }
     }
 }

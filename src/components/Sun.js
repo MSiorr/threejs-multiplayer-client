@@ -1,8 +1,9 @@
 import { DirectionalLight, DirectionalLightHelper, Mesh, MeshBasicMaterial, SphereGeometry } from "three";
+import Config from "./Config";
 
 export default class Sun extends DirectionalLight {
     constructor() {
-        super(0xffffff, 1.3);
+        super(0xffffff, Config.sunIntensity);
 
         this.castShadow = true;
 
