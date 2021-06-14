@@ -166,7 +166,7 @@ export default class LobbyScene {
         for(let i = 0; i < 5; i++){
             let player = new Player(0,0,modelObj);
             player.SetAction(player.animationActions['ready'])
-            player.position.set(-995 + (i * -50), 37 + Math.min(i, 4 - i) * 1, 1050 - Math.min(i, 4 - i) * 25);
+            player.position.set(-1000 + (i * -50), 37 + Math.min(i, 4 - i) * 1, 1050 - Math.min(i, 4 - i) * 25);
             player.scale.set(.25, .25, .25)
             player.lookAt(player.position.x, player.position.y, 0);
             this.scene.add(player);
@@ -228,6 +228,9 @@ export default class LobbyScene {
     addPlayerWarrior(){
         this.CreateIslands();
         this.CreatePlayerCastle();
+        // this.CreateEnemyCastle();
+        // this.CreatePlayerWarriors();
+        // this.EndGameCutscene(true);
 
         let playerModels = {
             model: this.library.models.playerModel,
