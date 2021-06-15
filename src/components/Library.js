@@ -34,7 +34,7 @@ import castle from "../resources/models/castle/castle.gltf";
 
 import cannon from "../resources/models/cannon/cannon.gltf";
 
-import playerFlag from "../resources/models/flags/playerFlag2.fbx";
+import playerFlag from "../resources/models/flags/playerFlag.fbx";
 import enemyFlag from "../resources/models/flags/enemyFlag.fbx";
 
 import { FBXLoader } from "three/examples/jsm/loaders/fbxloader";
