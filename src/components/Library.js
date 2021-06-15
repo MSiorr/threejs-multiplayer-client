@@ -1,4 +1,4 @@
-import { LoadingManager, Material, MeshPhongMaterial, MeshStandardMaterial, Object3D, RepeatWrapping, TextureLoader } from "three";
+import { DoubleSide, LoadingManager, Material, MeshPhongMaterial, MeshStandardMaterial, Object3D, RepeatWrapping, TextureLoader } from "three";
 
 import grass001_512_ao from "../resources/textures/grass001/grass001_512_ao.png";
 import grass001_512_color from "../resources/textures/grass001/grass001_512_color.png";
@@ -33,6 +33,9 @@ import island from "../resources/models/island/island.fbx";
 import castle from "../resources/models/castle/castle.gltf";
 
 import cannon from "../resources/models/cannon/cannon.gltf";
+
+import playerFlag from "../resources/models/flags/playerFlag2.fbx";
+import enemyFlag from "../resources/models/flags/enemyFlag.fbx";
 
 import { FBXLoader } from "three/examples/jsm/loaders/fbxloader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -70,8 +73,11 @@ export default class Library {
             playerVictory: null,
             rock: null,
             island: null,
-            castle: null,
-            cannon: null
+            playerCastle: null,
+            enemyCastle: null,
+            cannon: null,
+            playerFlag: null,
+            enemyFlag: null
         }
 
         /**
@@ -236,7 +242,20 @@ export default class Library {
                         child.castShadow = true;
                     }
                 })
-                this.models.castle = object.scene.children[0];
+                this.models.playerCastle = object.scene.children[0];
+                if (--counter == 0) { resolve() };
+            })
+
+            gltfLoader.load(castle, (object) => {
+                object.scene.children[0].scale.set(.1, .1, .1);
+                object.scene.children[0].traverse((child) => {
+                    // @ts-ignore
+                    if (child.isMesh) {
+                        child.receiveShadow = true;
+                        child.castShadow = true;
+                    }
+                })
+                this.models.enemyCastle = object.scene.children[0];
                 if (--counter == 0) { resolve() };
             })
 
@@ -252,6 +271,48 @@ export default class Library {
                 this.models.cannon = object.scene;
                 if (--counter == 0) { resolve() };
             })
+
+            fbxLoader.load(playerFlag, (object) => {
+                object.scale.set(.5,.5,.5);
+
+                object.traverse((child) => {
+                    // @ts-ignore
+                    if (child.isMesh) {
+                        child.receiveShadow = true;
+                        child.castShadow = true;
+                        child.material.forEach( material => {
+                            if(material instanceof MeshPhongMaterial){
+                                material.shininess = 1;
+                                material.side = DoubleSide;
+                            }
+                        })
+                    }
+                })
+
+                this.models.playerFlag = object;
+                if (--counter == 0) { resolve() };
+            });
+
+            fbxLoader.load(enemyFlag, (object) => {
+                object.scale.set(.5,.5,.5);
+
+                object.traverse((child) => {
+                    // @ts-ignore
+                    if (child.isMesh) {
+                        child.receiveShadow = true;
+                        child.castShadow = true;
+                        child.material.forEach( material => {
+                            if(material instanceof MeshPhongMaterial){
+                                material.shininess = 1;
+                                material.side = DoubleSide;
+                            }
+                        })
+                    }
+                })
+
+                this.models.enemyFlag = object;
+                if (--counter == 0) { resolve() };
+            });
         })
     }
 

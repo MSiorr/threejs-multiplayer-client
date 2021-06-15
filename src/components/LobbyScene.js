@@ -1,4 +1,4 @@
-import { AmbientLight, AxesHelper, Box3, BoxGeometry, BufferGeometry, Clock, DoubleSide, Group, Material, Mesh, MeshBasicMaterial, Plane, PlaneGeometry, PlaneHelper, Scene, Vector3 } from "three";
+import { AmbientLight, AxesHelper, Box3, BoxGeometry, BufferGeometry, CameraHelper, Clock, DoubleSide, Group, Material, Mesh, MeshBasicMaterial, Plane, PlaneGeometry, PlaneHelper, Scene, Vector3 } from "three";
 import Camera from "./Camera";
 import Renderer from "./Renderer";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -69,7 +69,8 @@ export default class LobbyScene {
         this.playerCastleBuildStatusPercent = 0;
         this.enemyCastleBuildStatusPercent = 0;
 
-        this.castleMin = 35;
+        // this.castleMin = 110;
+        this.castleMin = 33;
         this.castleMax = 110;
 
         // this.ambientLight = new AmbientLight(0xffffff, 3);
@@ -109,11 +110,6 @@ export default class LobbyScene {
         this.players.forEach( player => {
             player.Update(delta)
         })
-
-        if(this.playerCastleBuildPlane){
-            // this.playerCastleBuildPlane.constant = 72 + Math.sin(Date.now() / 2000) * 36;
-            console.log(this.playerCastleBuildPlane.constant);
-        }
 
         if(this.camera){
             if(this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z){
@@ -245,12 +241,12 @@ export default class LobbyScene {
         /**
          * @type {Group}
          */
-        this.playerCastle = this.library.models.castle.clone();
+        this.playerCastle = this.library.models.playerCastle.clone();
         this.playerCastle.position.set(-1100, 48, 1250);
         this.playerCastle.rotation.z = -Math.PI / 2;
         this.scene.add(this.playerCastle);
 
-        this.playerCastleBuildPlane = new Plane(new Vector3(0,-1,0), 35);
+        this.playerCastleBuildPlane = new Plane(new Vector3(0,-1,0), this.castleMin);
         let helper = new PlaneHelper(this.playerCastleBuildPlane, 1000, 0xffff00)
         this.scene.add(helper);
         // min 35, max 110
@@ -260,27 +256,49 @@ export default class LobbyScene {
             if(object instanceof Mesh){
                 object.material.clippingPlanes = [this.playerCastleBuildPlane];
                 object.material.clipIntersection = false;
+                object.material.clipShadows = true;
             }
         })
 
-    }
+        let flag1 = this.library.models.playerFlag.clone();
+        flag1.scale.set(.1,.1,.1)
+        flag1.position.set(-1075, 35, 1125);
+        this.scene.add(flag1);
 
+        let flag2 = this.library.models.playerFlag.clone();
+        flag2.scale.set(-.1,.1,.1)
+        flag2.position.set(-1120, 35, 1125);
+        this.scene.add(flag2);
+        
+    }
+    
     CreateEnemyCastle(){
-        this.enemyCastle = this.library.models.castle.clone();
+        this.enemyCastle = this.library.models.enemyCastle.clone(true);
         this.enemyCastle.position.set(-1100, 48, -1250);
         this.enemyCastle.rotation.z = Math.PI / 2;
         this.scene.add(this.enemyCastle);
-
-        this.enemyCastleBuildPlane = new Plane(new Vector3(0,-1,0), 35);
+        
+        this.enemyCastleBuildPlane = new Plane(new Vector3(0,-1,0), this.castleMin);
         // min 35, max 110
-
+        
         // @ts-ignore
         this.enemyCastle.traverse( (/** @type {Mesh<BufferGeometry, Material>} */object) => {
             if(object instanceof Mesh){
                 object.material.clippingPlanes = [this.enemyCastleBuildPlane];
                 object.material.clipIntersection = false;
+                object.material.clipShadows = true;
             }
         })
+
+        let flag1 = this.library.models.enemyFlag.clone();
+        flag1.scale.set(.1,.1,-.1)
+        flag1.position.set(-1080, 35, -1125);
+        this.scene.add(flag1);
+
+        let flag2 = this.library.models.enemyFlag.clone();
+        flag2.scale.set(-.1,.1,-.1)
+        flag2.position.set(-1125, 35, -1125);
+        this.scene.add(flag2);
     }
 
     CreatePlayerCannon(){
@@ -302,6 +320,7 @@ export default class LobbyScene {
         // this.CreateEnemyCastle();
         // this.CreatePlayerWarriors();
         // this.CreateEnemyWarriors();
+        // this.CreatePlayerCannon();
         // this.EndGameCutscene(true);
 
         let playerModels = {
@@ -318,6 +337,12 @@ export default class LobbyScene {
         this.myPlayer.SetAction(this.myPlayer.animationActions[this.myPlayerStatus]);
         this.scene.add(this.myPlayer);
         this.players.push(this.myPlayer);
+
+        let playerFlag = this.library.models.playerFlag.clone();
+        playerFlag.position.set(-50,-2,155);
+        playerFlag.scale.set(.25, .3, .25)
+        playerFlag.rotation.y = -Math.PI / 6
+        this.scene.add(playerFlag);
     }
 
     addEnemyWarrior() {
@@ -342,6 +367,12 @@ export default class LobbyScene {
 
         this.scene.add(this.enemyPlayer);
         this.players.push(this.enemyPlayer);
+        
+        let enemyFlag = this.library.models.enemyFlag.clone();
+        enemyFlag.position.set(-50,-2,-155);
+        enemyFlag.scale.set(.25, .3, -.25);
+        enemyFlag.rotation.y = Math.PI / 6;
+        this.scene.add(enemyFlag);
     }
 
 

@@ -217,6 +217,13 @@ export default class Main {
         this.menu.hide("roomTransition");
         this.menu.show("win");
 
+        this.lobbyScene.Show({ player: 'victory', enemy: 'sad' });
+        this.lobbyScene.CreatePlayerCannon();
+        this.lobbyScene.CreatePlayerWarriors();
+        setTimeout(() => {
+            this.lobbyScene.EndGameCutscene(true);
+        }, 5000)
+
         this.playerMovementRule[0] = false;
         cancelAnimationFrame(this.animationFrame);
     }
