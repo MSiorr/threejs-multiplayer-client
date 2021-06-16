@@ -67,8 +67,13 @@ export default class Main {
 
         this.socket = null;
 
+        this.shadowsEnabled = true;
+
         this.gui = new GUI();
         this.gui.powerups = this.powerupManager.current;
+        this.gui.html.options.addEventListener("click", () => {
+            this.manageShadows();
+        });
         // this.gui.showAll();
 
         this.clock = new Clock();
@@ -159,11 +164,20 @@ export default class Main {
 
         this.powerupEffects(delta);
 
+        if (this.levelManager.objects.sun) { this.levelManager.objects.sun.castShadow = this.shadowsEnabled; }
+        if (this.lobbyScene.sun) { this.lobbyScene.sun.castShadow = this.shadowsEnabled; }
+        if (this.lobbyScene.sunToCastle1) { this.lobbyScene.sunToCastle1.castShadow = this.shadowsEnabled; }
+        if (this.lobbyScene.sunToCastle2) { this.lobbyScene.sunToCastle2.castShadow = this.shadowsEnabled; }
+
         this.renderer.render(this.scene, this.camera);
 
         this.stats.end()
 
         this.animationFrame = requestAnimationFrame(this.render.bind(this));
+    }
+
+    manageShadows() {
+        this.shadowsEnabled = !this.shadowsEnabled;
     }
 
     /**
@@ -176,24 +190,26 @@ export default class Main {
     }
 
     startSearch() {
-        this.menu.hide("title");
-        this.menu.show("lobby");
+        if (this.levelManager.libraryLoaded === true) {
+            this.menu.hide("title");
+            this.menu.show("lobby");
 
-        this.socket = new Socket();
-        this.gui.socket = this.socket;
+            this.socket = new Socket();
+            this.gui.socket = this.socket;
 
-        this.socket.Add("room_assigned", this.EnterRoom.bind(this));
-        this.socket.Add("config", this.ReceiveConfig.bind(this));
-        this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
-        this.socket.Add("new_level", this.NewLevel.bind(this));
-        this.socket.Add("wait", this.WaitForNextMap.bind(this));
-        this.socket.Add("win", this.WinBattle.bind(this));
-        this.socket.Add("lose", this.LoseBattle.bind(this));
-        this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
-        this.socket.Add("progress_bar", this.UpdateBars.bind(this));
+            this.socket.Add("room_assigned", this.EnterRoom.bind(this));
+            this.socket.Add("config", this.ReceiveConfig.bind(this));
+            this.socket.Add("forfeit", this.EnemyForfeit.bind(this));
+            this.socket.Add("new_level", this.NewLevel.bind(this));
+            this.socket.Add("wait", this.WaitForNextMap.bind(this));
+            this.socket.Add("win", this.WinBattle.bind(this));
+            this.socket.Add("lose", this.LoseBattle.bind(this));
+            this.socket.Add("powerup_target", this.PowerupTarget.bind(this));
+            this.socket.Add("progress_bar", this.UpdateBars.bind(this));
 
-        this.lobbyScene.addPlayerWarrior();
-        this.lobbyScene.Show();
+            this.lobbyScene.addPlayerWarrior();
+            this.lobbyScene.Show();
+        }
     }
 
     /**
