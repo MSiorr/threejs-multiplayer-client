@@ -12,7 +12,9 @@ import {
     Vector2,
     Clock,
     MeshStandardMaterial,
-    SkinnedMesh
+    SkinnedMesh,
+    Texture,
+    RepeatWrapping
 } from 'three';
 
 import Renderer from './Renderer';
@@ -43,6 +45,10 @@ export default class Main {
         this.levelManager.LoadLibrary()
             .then(() => {
                 this.menu.show('startGame');
+                this.scene.background = this.levelManager.library.textures.clouds;
+                this.scene.background.offset.set(0, 0);
+                this.scene.background.wrapS = this.scene.background.wrapT = RepeatWrapping;
+                this.scene.background.repeat.set(0.5, 1);
             })
         this.powerupManager = new PowerupManager();
         this.powerupManager.randomPowerup(1).randomPowerup(2).randomPowerup(3);
@@ -87,16 +93,23 @@ export default class Main {
 
         this.inputManager = new InputManager(this.playerMovementRule);
         this.inputManager.RegisterEventCapture();
-        this.inputManager.Add("left", this.moveLeft.bind(this), ["KeyA", "ArrowLeft"], true, 10);
-        this.inputManager.Add("right", this.moveRight.bind(this), ["KeyD", "ArrowRight"], true, 10);
-        this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW", "ArrowUp"], true, 10);
-        this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS", "ArrowDown"], true, 10);
+        this.inputManager.Add("left", this.moveLeft.bind(this), ["KeyA", "ArrowLeft"], false);
+        this.inputManager.Add("right", this.moveRight.bind(this), ["KeyD", "ArrowRight"], false);
+        this.inputManager.Add("up", this.moveUp.bind(this), ["KeyW", "ArrowUp"], false);
+        this.inputManager.Add("down", this.moveDown.bind(this), ["KeyS", "ArrowDown"], false);
         this.inputManager.Add("reset", this.reset.bind(this), ["KeyR"], false);
     }
 
     render() {
         this.stats.begin()
         let delta = this.clock.getDelta();
+
+        /**
+         * @type {Texture}
+         */
+        //@ts-ignore
+        let b = this.scene.background;
+        b.offset.x += 0.015 * delta;
 
         for (const player of this.levelManager.objects.playersFalling) {
             player.fall(delta);
@@ -140,6 +153,7 @@ export default class Main {
 
         this.gui.edit(this.ParseToTimeString(newDate.getHours(), newDate.getMinutes(), newDate.getSeconds()), 'gameInfo', 'time');
         this.gui.renderPowerups();
+        this.gui.renderUsedPowerups();
 
         this.updateCamera(delta);
 
@@ -313,16 +327,34 @@ export default class Main {
     }
 
     /**
-     * @param {{name: String}} data 
+     * @param {{name: keyof import('./PowerupManager').Powerups}} data 
      */
     PowerupTarget(data) {
         console.log("ENEMY USE POWERUP ON U", data);
 
-        this.powerupManager.states[data.name] = true;
+        let powerup = this.powerupManager.powerups[data.name];
 
-        setTimeout(() => {
-            this.powerupManager.states[data.name] = false;
-        }, this.powerupManager.powerups[data.name].duration);
+        this.gui.addUsedPowerup(powerup, this.OnPowerupActivation.bind(this), this.OnPowerupDeactivation.bind(this));
+
+        // this.powerupManager.states[data.name] = true;
+
+        // setTimeout(() => {
+        //     this.powerupManager.states[data.name] = false;
+        // }, this.powerupManager.powerups[data.name].duration);
+    }
+
+    /**
+     * @param {keyof import('./PowerupManager').Powerups} name
+     */
+    OnPowerupActivation(name) {
+        this.powerupManager.states[name] = true;
+    }
+
+    /**
+     * @param {keyof import('./PowerupManager').Powerups} name
+     */
+    OnPowerupDeactivation(name) {
+        this.powerupManager.states[name] = false;
     }
 
     /**

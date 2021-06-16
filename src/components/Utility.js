@@ -24,7 +24,7 @@ export default class Utility {
      * @param {number} min
      * @param {number} max
      */
-    static clamp(v, min, max) {
+    static clamp(v, min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER) {
         return Math.min(Math.max(v, min), max);
     }
 

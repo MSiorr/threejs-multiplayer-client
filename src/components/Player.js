@@ -1,5 +1,6 @@
-import { AnimationAction, AnimationMixer, BoxGeometry, Mesh, MeshPhongMaterial, Object3D, Skeleton } from 'three';
+import { AnimationAction, AnimationMixer, BoxGeometry, Color, Light, Mesh, MeshPhongMaterial, Object3D, PointLight, Skeleton } from 'three';
 import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
+import Config from './Config';
 
 import config from './Config';
 import InputManager from './InputManager';
@@ -58,6 +59,7 @@ export default class Player extends Object3D {
 
         // console.log(this.needMove);
         if (this.needMove) {
+
             // if(this.position.x != this.toX){
             //     this.position.x += Math.sign(this.toX - this.position.x) * Math.min(Math.abs(this.toX - this.position.x), this.velocity * delta);
             // } else if(this.position.z != this.toZ){

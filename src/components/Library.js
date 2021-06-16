@@ -1,4 +1,4 @@
-import { DoubleSide, LoadingManager, Material, MeshPhongMaterial, MeshStandardMaterial, Object3D, RepeatWrapping, TextureLoader } from "three";
+import { DoubleSide, MeshPhongMaterial, MeshStandardMaterial, RepeatWrapping, Texture, TextureLoader } from "three";
 
 import grass001_512_ao from "../resources/textures/grass001/grass001_512_ao.png";
 import grass001_512_color from "../resources/textures/grass001/grass001_512_color.png";
@@ -18,6 +18,8 @@ import metal034_512_metal from "../resources/textures/metal034/metal034_512_meta
 import metal034_512_normal from "../resources/textures/metal034/metal034_512_normal.png";
 import metal034_512_rough from "../resources/textures/metal034/metal034_512_rough.png";
 
+import clouds from "../resources/textures/clouds/clouds.png";
+
 import playerModel from "../resources/models/player/player.fbx";
 import playerWalk from "../resources/models/player/player@walk.fbx";
 import playerIdle from "../resources/models/player/player@idle.fbx";
@@ -27,10 +29,10 @@ import playerReady from "../resources/models/player/player@ready.fbx";
 import playerSad from "../resources/models/player/player@sad.fbx";
 import playerVictory from "../resources/models/player/player@victory.fbx";
 
-import rock from "../resources/models/rock/Rock3.fbx";
+import rock from "../resources/models/rock/Rock-compressed.fbx";
 
-import island from "../resources/models/island/island.fbx";
-import castle from "../resources/models/castle/castle.gltf";
+import island from "../resources/models/island/island_compressed.fbx";
+import castle from "../resources/models/castle/castle_compressed.gltf";
 
 import cannon from "../resources/models/cannon/cannon.gltf";
 
@@ -60,6 +62,11 @@ export default class Library {
             metal034_512_metal: null,
             metal034_512_normal: null,
             metal034_512_rough: null,
+
+            /**
+             * @type {Texture}
+             */
+            clouds: null,
         }
 
         this.models = {
@@ -124,6 +131,8 @@ export default class Library {
             this.textures.metal034_512_metal = new TextureLoader().load(metal034_512_metal),
             this.textures.metal034_512_normal = new TextureLoader().load(metal034_512_normal),
             this.textures.metal034_512_rough = new TextureLoader().load(metal034_512_rough),
+
+            this.textures.clouds = new TextureLoader().load(clouds),
 
 
             this.materials.grass001 = new MeshStandardMaterial({
@@ -273,15 +282,15 @@ export default class Library {
             })
 
             fbxLoader.load(playerFlag, (object) => {
-                object.scale.set(.5,.5,.5);
+                object.scale.set(.5, .5, .5);
 
                 object.traverse((child) => {
                     // @ts-ignore
                     if (child.isMesh) {
                         child.receiveShadow = true;
                         child.castShadow = true;
-                        child.material.forEach( material => {
-                            if(material instanceof MeshPhongMaterial){
+                        child.material.forEach(material => {
+                            if (material instanceof MeshPhongMaterial) {
                                 material.shininess = 1;
                                 material.side = DoubleSide;
                             }
@@ -294,15 +303,15 @@ export default class Library {
             });
 
             fbxLoader.load(enemyFlag, (object) => {
-                object.scale.set(.5,.5,.5);
+                object.scale.set(.5, .5, .5);
 
                 object.traverse((child) => {
                     // @ts-ignore
                     if (child.isMesh) {
                         child.receiveShadow = true;
                         child.castShadow = true;
-                        child.material.forEach( material => {
-                            if(material instanceof MeshPhongMaterial){
+                        child.material.forEach(material => {
+                            if (material instanceof MeshPhongMaterial) {
                                 material.shininess = 1;
                                 material.side = DoubleSide;
                             }
