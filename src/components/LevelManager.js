@@ -51,12 +51,14 @@ export default class LevelManager {
         this.currentLevel = null;
 
         this.library = new TextureLibrary();
+        this.libraryLoaded = false;
     }
 
-    LoadLibrary(){
-        return new Promise( (resolve, reject) => {
+    LoadLibrary() {
+        return new Promise((resolve, reject) => {
             this.library.Load()
-                .then( () => {
+                .then(() => {
+                    this.libraryLoaded = true;
                     resolve();
                 })
         })
@@ -137,6 +139,7 @@ export default class LevelManager {
             this.center = new Vector3(this.lengthX / 2, 0, this.lengthZ / 2);
 
             this.objects.sun = new Sun();
+            // this.objects.sun.intensity = 30;
 
             let m = Math.min(this.lengthX, this.lengthZ);
 

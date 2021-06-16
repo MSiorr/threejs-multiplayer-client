@@ -48,8 +48,8 @@ import castle from "../resources/models/castle/castle_compressed.gltf";
 
 import cannon from "../resources/models/cannon/cannon.gltf";
 
-import playerFlag from "../resources/models/flags/playerFlag.fbx";
-import enemyFlag from "../resources/models/flags/enemyFlag.fbx";
+import playerFlag from "../resources/models/flags/playerFlag2.fbx";
+import enemyFlag from "../resources/models/flags/enemyFlag2.fbx";
 
 import { FBXLoader } from "three/examples/jsm/loaders/fbxloader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -361,7 +361,7 @@ export default class Library {
                         child.castShadow = true;
                         child.material.forEach(material => {
                             if (material instanceof MeshPhongMaterial) {
-                                material.shininess = 1;
+                                material.shininess = 0;
                                 material.side = DoubleSide;
                             }
                         })

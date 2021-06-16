@@ -1,4 +1,4 @@
-import { PCFSoftShadowMap, WebGLRenderer } from 'three';
+import { ACESFilmicToneMapping, CineonToneMapping, LinearToneMapping, PCFSoftShadowMap, ReinhardToneMapping, WebGLRenderer } from 'three';
 
 export default class Renderer extends WebGLRenderer {
     /**
@@ -9,14 +9,21 @@ export default class Renderer extends WebGLRenderer {
 
         this.container = container;
 
-        if(lobby == true){
-            this.setClearColor(0x000000, 0);
-        } else {
-            this.setClearColor(0x87ceeb, 1);
-        }
+        this.setClearColor(0x87ceeb, 1);
+
         this.shadowMap.enabled = true;
         this.shadowMap.type = PCFSoftShadowMap;
         this.localClippingEnabled = true;
+        // this.toneMapping = LinearToneMapping;
+        // this.toneMapping = ReinhardToneMapping;
+        // this.toneMapping = CineonToneMapping;
+        if (lobby === false) {
+            this.toneMapping = ACESFilmicToneMapping;
+            this.toneMappingExposure = 1;
+        } else {
+            this.toneMapping = ACESFilmicToneMapping;
+            this.toneMappingExposure = 0.7;
+        }
 
         this.container.appendChild(this.domElement);
 
