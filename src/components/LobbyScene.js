@@ -1,4 +1,4 @@
-import { AmbientLight, AxesHelper, Box3, BoxGeometry, BufferGeometry, CameraHelper, Clock, DoubleSide, Group, Material, Mesh, MeshBasicMaterial, Plane, PlaneGeometry, PlaneHelper, Scene, Vector3 } from "three";
+import { AmbientLight, AxesHelper, Box3, BoxGeometry, BufferGeometry, CameraHelper, Clock, DoubleSide, Group, Material, Mesh, MeshBasicMaterial, Plane, PlaneGeometry, PlaneHelper, RepeatWrapping, Scene, Vector3 } from "three";
 import Camera from "./Camera";
 import Renderer from "./Renderer";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -100,6 +100,13 @@ export default class LobbyScene {
 
         // this.camera.position.set(-1100, 70, 900);
         // this.camera.lookAt(new Vector3(-1100, 48, 1250))
+
+        this.scene.background = this.library.textures.clouds;
+        this.scene.background.offset.set(0, 0);
+        this.scene.background.wrapS = this.scene.background.wrapT = RepeatWrapping;
+        this.scene.background.repeat.set(0.5, 1);
+
+
         this.Hide();
         this.render();
     }
@@ -113,6 +120,10 @@ export default class LobbyScene {
             this.players.forEach(player => {
                 player.Update(delta)
             })
+
+            let b = this.scene.background;
+            // @ts-ignore
+            b.offset.x += 0.015 * delta;
 
             if (this.camera) {
                 if (this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z) {
