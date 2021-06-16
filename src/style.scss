@@ -354,6 +354,10 @@ body {
 
         #time {
             font-size: 24px;
+
+            & .kremowka {
+                color: rgb(221, 50, 50);
+            }
         }
     }
 }
