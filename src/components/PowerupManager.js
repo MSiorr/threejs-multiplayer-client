@@ -32,17 +32,17 @@ export default class PowerupManager {
          * @type {Powerups}
          */
         this.powerups = {
-            "inverted_keyboard": new PowerupItem("inverted_keyboard", inverted_keyboard, 1, 3, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
-            "slow_movement": new PowerupItem("slow_movement", slow_movement, 1, 3, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
-            "switch_goal_to_floor": new PowerupItem("switch_goal_to_floor", switch_goal_to_floor, 1, 3, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "inverted_keyboard": new PowerupItem("inverted_keyboard", inverted_keyboard, 1, 3, 10, 30, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "slow_movement": new PowerupItem("slow_movement", slow_movement, 1, 3, 10, 30, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "switch_goal_to_floor": new PowerupItem("switch_goal_to_floor", switch_goal_to_floor, 1, 3, 10, 30, this.onUse.bind(this), this.globalCooldown.bind(this)),
 
-            "camera_shake": new PowerupItem("camera_shake", camera_shake, 2, 6, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
-            "dark_screen": new PowerupItem("dark_screen", dark_screen, 2, 6, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
-            "invisible_player": new PowerupItem("invisible_player", invisible_player, 2, 6, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "camera_shake": new PowerupItem("camera_shake", camera_shake, 2, 3, 15, 60, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "dark_screen": new PowerupItem("dark_screen", dark_screen, 2, 3, 15, 60, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "invisible_player": new PowerupItem("invisible_player", invisible_player, 2, 3, 15, 60, this.onUse.bind(this), this.globalCooldown.bind(this)),
 
-            "camera_rotation": new PowerupItem("camera_rotation", camera_rotation, 3, 9, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
-            "random_holes": new PowerupItem("random_holes", random_holes, 3, 9, 15, this.onUse.bind(this), this.globalCooldown.bind(this)),
-            "reset_level": new PowerupItem("reset_level", reset_level, 3, 9, 5, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "camera_rotation": new PowerupItem("camera_rotation", camera_rotation, 3, 3, 20, 90, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "random_holes": new PowerupItem("random_holes", random_holes, 3, 3, 20, 90, this.onUse.bind(this), this.globalCooldown.bind(this)),
+            "reset_level": new PowerupItem("reset_level", reset_level, 3, 15, 0.1, 90, this.onUse.bind(this), this.globalCooldown.bind(this)),
         };
 
         /**
@@ -79,7 +79,7 @@ export default class PowerupManager {
         this.invisiblePlayerActivated = false;
         this.resetLevelActivated = false;
 
-        this.globalCooldownTime = 5000;
+        this.globalCooldownTime = 10000;
     }
 
     get tier1() {
