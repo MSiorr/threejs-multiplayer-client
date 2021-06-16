@@ -178,6 +178,13 @@ export default class Main {
 
     manageShadows() {
         this.shadowsEnabled = !this.shadowsEnabled;
+        if(this.shadowsEnabled == true) {
+            this.gui.html.options.classList.remove("off");
+            this.gui.html.options.classList.add("on");
+        } else {
+            this.gui.html.options.classList.add("off");
+            this.gui.html.options.classList.remove("on");
+        }
     }
 
     /**
