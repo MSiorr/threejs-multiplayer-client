@@ -43,6 +43,17 @@ module.exports = {
             {
                 test: /\.(fbx|gltf)$/i,
                 type: 'asset/resource',
+            },
+            {
+                test: /\.(ttf)$/i,
+                use: [
+                  {
+                    loader: 'file-loader',
+                    options: {
+                      name: '[name].[ext]',
+                    }
+                  }
+                ]
             }
         ]
     },

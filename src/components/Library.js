@@ -23,9 +23,21 @@ import playerWalk from "../resources/models/player/player@walk.fbx";
 import playerIdle from "../resources/models/player/player@idle.fbx";
 import playerFall from "../resources/models/player/player@fall.fbx";
 import playerBored from "../resources/models/player/player@bored.fbx";
-import playerReady from "../resources/models/player/player@ready.fbx";
-import playerSad from "../resources/models/player/player@sad.fbx";
-import playerVictory from "../resources/models/player/player@victory.fbx";
+
+import playerReady1 from "../resources/models/player/player@ready1.fbx";
+import playerReady2 from "../resources/models/player/player@ready2.fbx";
+import playerReady3 from "../resources/models/player/player@ready3.fbx";
+
+import playerLose1 from "../resources/models/player/player@lose1.fbx";
+import playerLose2 from "../resources/models/player/player@lose2.fbx";
+import playerLose3 from "../resources/models/player/player@lose3.fbx";
+import playerLose4 from "../resources/models/player/player@lose4.fbx";
+
+import playerVictory1 from "../resources/models/player/player@victory1.fbx";
+import playerVictory2 from "../resources/models/player/player@victory2.fbx";
+import playerVictory3 from "../resources/models/player/player@victory3.fbx";
+import playerVictory4 from "../resources/models/player/player@victory4.fbx";
+import playerVictory5 from "../resources/models/player/player@victory5.fbx";
 
 import rock from "../resources/models/rock/Rock3.fbx";
 
@@ -68,9 +80,22 @@ export default class Library {
             playerWalk: null,
             playerFall: null,
             playerBored: null,
-            playerReady: null,
-            playerSad: null,
-            playerVictory: null,
+
+            playerReady1: null,
+            playerReady2: null,
+            playerReady3: null,
+
+            playerLose1: null,
+            playerLose2: null,
+            playerLose3: null,
+            playerLose4: null,
+
+            playerVictory1: null,
+            playerVictory2: null,
+            playerVictory3: null,
+            playerVictory4: null,
+            playerVictory5: null,
+
             rock: null,
             island: null,
             playerCastle: null,
@@ -188,19 +213,64 @@ export default class Library {
                 this.models.playerBored = object;
                 if (--counter == 0) { resolve() };
             })
-            fbxLoader.load(playerReady, (object) => {
+            fbxLoader.load(playerReady1, (object) => {
                 object.scale.set(.5, .5, .5)
-                this.models.playerReady = object;
+                this.models.playerReady1 = object;
                 if (--counter == 0) { resolve() };
             })
-            fbxLoader.load(playerSad, (object) => {
+            fbxLoader.load(playerReady2, (object) => {
                 object.scale.set(.5, .5, .5)
-                this.models.playerSad = object;
+                this.models.playerReady2 = object;
                 if (--counter == 0) { resolve() };
             })
-            fbxLoader.load(playerVictory, (object) => {
+            fbxLoader.load(playerReady3, (object) => {
                 object.scale.set(.5, .5, .5)
-                this.models.playerVictory = object;
+                this.models.playerReady3 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerLose1, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerLose1 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerLose2, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerLose2 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerLose3, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerLose3 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerLose4, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerLose4 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerVictory1, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerVictory1 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerVictory2, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerVictory2 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerVictory3, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerVictory3 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerVictory4, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerVictory4 = object;
+                if (--counter == 0) { resolve() };
+            })
+            fbxLoader.load(playerVictory5, (object) => {
+                object.scale.set(.5, .5, .5)
+                this.models.playerVictory5 = object;
                 if (--counter == 0) { resolve() };
             })
 
