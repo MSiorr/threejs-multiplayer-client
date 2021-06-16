@@ -1,11 +1,11 @@
 @font-face {
-    font-family: MedivalFont;
+    font-family: MedievalFont;
     src: url("./resources/fonts/Seagram.ttf");
 }
 
 * {
     box-sizing: border-box;
-    // font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
 }
 
 html,
@@ -164,13 +164,13 @@ body {
         #player-bar {
             background-color: rgba(59, 59, 211, 0.7);
             height: 30%;
-            transition: width .5s;
+            transition: width 0.5s;
         }
-        
+
         #enemy-bar {
             background-color: rgba(204, 36, 36, 0.7);
             height: 30%;
-            transition: width .5s;
+            transition: width 0.5s;
         }
     }
 
@@ -288,10 +288,14 @@ body {
         left: 10px;
         padding: 25px 25px;
         font-weight: bold;
-        font-family: 'MedivalFont';
         background-image: url("./resources/textures/GUI/configDiv.png");
         border: none;
         background-color: none;
+
+        &,
+        & * {
+            font-family: "MedievalFont";
+        }
 
         display: flex;
         flex-direction: column;
@@ -300,14 +304,12 @@ body {
 
         #count-info,
         #current-info {
-            font-family: 'MedivalFont';
             display: flex;
             flex-direction: column;
             justify-content: center;
             width: 100%;
 
             & > * {
-                font-family: 'MedivalFont';
                 width: 100%;
                 display: flex;
                 justify-content: space-between;
@@ -316,7 +318,7 @@ body {
             }
         }
         #current-info {
-            letter-spacing: -2px;
+            letter-spacing: -1.5px;
         }
 
         #time {
