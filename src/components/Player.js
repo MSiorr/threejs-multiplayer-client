@@ -38,6 +38,8 @@ export default class Player extends Object3D {
         };
         for (let anim in modelObj) {
             if (anim != 'model') {
+                console.log(anim);
+                console.log(modelObj[anim]);
                 let action = this.mixer.clipAction(modelObj[anim].animations[0]);
                 this.animationActions[anim] = action;
             }

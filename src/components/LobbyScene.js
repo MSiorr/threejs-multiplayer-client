@@ -18,12 +18,14 @@ export default class LobbyScene {
 
         this.scene = new Scene();
         // @ts-ignore
-        this.renderer = new Renderer(this.container, true);
+        this.renderer = new Renderer(this.container);
         this.camera = new Camera(75, this.renderer);
 
         this.camera.position.set(220,120,0);
         this.camera.lookAt(new Vector3(0,120,0));
         this.camera.updateProjectionMatrix();
+
+        this.renderThisScene = true;
 
         this.myCameraTarget = {
             x: 220,
@@ -92,7 +94,7 @@ export default class LobbyScene {
         this.clock = new Clock();
 
         this.myPlayerStatus = 'bored';
-        this.enemyPlayerStatus = 'ready';
+        this.enemyPlayerStatus = 'ready' + Math.ceil(Math.random() * 3);
 
         // const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
@@ -103,43 +105,44 @@ export default class LobbyScene {
     }
 
     render(){
-        this.renderer.render(this.scene, this.camera);
-
-        let delta = this.clock.getDelta();
-
-        this.players.forEach( player => {
-            player.Update(delta)
-        })
-
-        if(this.camera){
-            if(this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z){
-                this.myCameraMove = false;
-            } else {
-                this.myCameraMove = true;
+        if(this.renderThisScene){
+            this.renderer.render(this.scene, this.camera);
+    
+            let delta = this.clock.getDelta();
+    
+            this.players.forEach( player => {
+                player.Update(delta)
+            })
+    
+            if(this.camera){
+                if(this.camera.position.x == this.myCameraTarget.x && this.camera.position.y == this.myCameraTarget.y && this.camera.position.z == this.myCameraTarget.z){
+                    this.myCameraMove = false;
+                } else {
+                    this.myCameraMove = true;
+                }
             }
-        }
-        if(this.myCameraMove == true){
-            let target = new Vector3(this.myCameraTarget.x, this.myCameraTarget.y, this.myCameraTarget.z).sub(this.camera.position).normalize();
-            this.camera.position.x += Math.sign(this.myCameraTarget.x - this.camera.position.x) * Math.min(Math.abs(this.myCameraTarget.x - this.camera.position.x), this.myCameraSpeed * delta * Math.abs(target.x));
-            this.camera.position.y += Math.sign(this.myCameraTarget.y - this.camera.position.y) * Math.min(Math.abs(this.myCameraTarget.y - this.camera.position.y), this.myCameraSpeed * delta * Math.abs(target.y));
-            this.camera.position.z += Math.sign(this.myCameraTarget.z - this.camera.position.z) * Math.min(Math.abs(this.myCameraTarget.z - this.camera.position.z), this.myCameraSpeed * delta * Math.abs(target.z)) ;
-        }
-        if(this.camera){
-            if(this.myCameraLookAt.x == this.newCameraLookAt.x && this.myCameraLookAt.y == this.newCameraLookAt.y && this.myCameraLookAt.z == this.newCameraLookAt.z){
-                this.myCameraRotate = false;
-            } else {
-                this.myCameraRotate = true;
+            if(this.myCameraMove == true){
+                let target = new Vector3(this.myCameraTarget.x, this.myCameraTarget.y, this.myCameraTarget.z).sub(this.camera.position).normalize();
+                this.camera.position.x += Math.sign(this.myCameraTarget.x - this.camera.position.x) * Math.min(Math.abs(this.myCameraTarget.x - this.camera.position.x), this.myCameraSpeed * delta * Math.abs(target.x));
+                this.camera.position.y += Math.sign(this.myCameraTarget.y - this.camera.position.y) * Math.min(Math.abs(this.myCameraTarget.y - this.camera.position.y), this.myCameraSpeed * delta * Math.abs(target.y));
+                this.camera.position.z += Math.sign(this.myCameraTarget.z - this.camera.position.z) * Math.min(Math.abs(this.myCameraTarget.z - this.camera.position.z), this.myCameraSpeed * delta * Math.abs(target.z)) ;
             }
-        }
-        if(this.myCameraRotate == true){
-            let target = new Vector3(this.newCameraLookAt.x, this.newCameraLookAt.y, this.newCameraLookAt.z).sub(this.myCameraLookAt).normalize();
-            this.myCameraLookAt.x += Math.sign(this.newCameraLookAt.x - this.myCameraLookAt.x) * Math.min(Math.abs(this.newCameraLookAt.x - this.myCameraLookAt.x), this.myCameraSpeed * delta * Math.abs(target.x));
-            this.myCameraLookAt.y += Math.sign(this.newCameraLookAt.y - this.myCameraLookAt.y) * Math.min(Math.abs(this.newCameraLookAt.y - this.myCameraLookAt.y), this.myCameraSpeed * delta * Math.abs(target.y));
-            this.myCameraLookAt.z += Math.sign(this.newCameraLookAt.z - this.myCameraLookAt.z) * Math.min(Math.abs(this.newCameraLookAt.z - this.myCameraLookAt.z), this.myCameraSpeed * delta * Math.abs(target.z)) ;
-        }
-        
-        this.camera.lookAt(this.myCameraLookAt);
-
+            if(this.camera){
+                if(this.myCameraLookAt.x == this.newCameraLookAt.x && this.myCameraLookAt.y == this.newCameraLookAt.y && this.myCameraLookAt.z == this.newCameraLookAt.z){
+                    this.myCameraRotate = false;
+                } else {
+                    this.myCameraRotate = true;
+                }
+            }
+            if(this.myCameraRotate == true){
+                let target = new Vector3(this.newCameraLookAt.x, this.newCameraLookAt.y, this.newCameraLookAt.z).sub(this.myCameraLookAt).normalize();
+                this.myCameraLookAt.x += Math.sign(this.newCameraLookAt.x - this.myCameraLookAt.x) * Math.min(Math.abs(this.newCameraLookAt.x - this.myCameraLookAt.x), this.myCameraSpeed * delta * Math.abs(target.x));
+                this.myCameraLookAt.y += Math.sign(this.newCameraLookAt.y - this.myCameraLookAt.y) * Math.min(Math.abs(this.newCameraLookAt.y - this.myCameraLookAt.y), this.myCameraSpeed * delta * Math.abs(target.y));
+                this.myCameraLookAt.z += Math.sign(this.newCameraLookAt.z - this.myCameraLookAt.z) * Math.min(Math.abs(this.newCameraLookAt.z - this.myCameraLookAt.z), this.myCameraSpeed * delta * Math.abs(target.z)) ;
+            }
+            
+            this.camera.lookAt(this.myCameraLookAt);
+        } 
 
         requestAnimationFrame(this.render.bind(this));
     }
@@ -150,16 +153,16 @@ export default class LobbyScene {
 
         this.playerWarriors.forEach( e => {
             if(player == true){
-                e.SetAction(e.animationActions['victory'])
+                e.SetAction(e.animationActions['victory' + Math.ceil(Math.random() * 5)])
             } else {
-                e.SetAction(e.animationActions['sad'])
+                e.SetAction(e.animationActions['lose' + Math.ceil(Math.random() * 4)])
             }
         })
         this.enemyWarriors.forEach( e => {
             if(player == true){
-                e.SetAction(e.animationActions['sad'])
+                e.SetAction(e.animationActions['lose' + Math.ceil(Math.random() * 4)])
             } else {
-                e.SetAction(e.animationActions['victory'])
+                e.SetAction(e.animationActions['victory' + Math.ceil(Math.random() * 5)])
             }
         })
 
@@ -179,13 +182,22 @@ export default class LobbyScene {
         let modelObj = {
             model: this.library.models.playerModel,
             idle: this.library.models.playerIdle,
-            ready: this.library.models.playerReady,
-            sad: this.library.models.playerSad,
-            victory: this.library.models.playerVictory
+            ready1: this.library.models.playerReady1,
+            ready2: this.library.models.playerReady2,
+            ready3: this.library.models.playerReady3,
+            lose1: this.library.models.playerLose1,
+            lose2: this.library.models.playerLose2,
+            lose3: this.library.models.playerLose3,
+            lose4: this.library.models.playerLose4,
+            victory1: this.library.models.playerVictory1,
+            victory2: this.library.models.playerVictory2,
+            victory3: this.library.models.playerVictory3,
+            victory4: this.library.models.playerVictory4,
+            victory5: this.library.models.playerVictory5
         }
         for(let i = 0; i < 5; i++){
             let player = new Player(0,0,modelObj);
-            player.SetAction(player.animationActions['ready'])
+            player.SetAction(player.animationActions['ready' + Math.ceil(Math.random() * 3)])
             player.position.set(-1000 + (i * -50), 37 + Math.min(i, 4 - i) * 1, 1050 - Math.min(i, 4 - i) * 25);
             player.scale.set(.25, .25, .25)
             player.lookAt(player.position.x, player.position.y, 0);
@@ -199,13 +211,22 @@ export default class LobbyScene {
         let modelObj = {
             model: this.library.models.playerModel,
             idle: this.library.models.playerIdle,
-            ready: this.library.models.playerReady,
-            sad: this.library.models.playerSad,
-            victory: this.library.models.playerVictory
+            ready1: this.library.models.playerReady1,
+            ready2: this.library.models.playerReady2,
+            ready3: this.library.models.playerReady3,
+            lose1: this.library.models.playerLose1,
+            lose2: this.library.models.playerLose2,
+            lose3: this.library.models.playerLose3,
+            lose4: this.library.models.playerLose4,
+            victory1: this.library.models.playerVictory1,
+            victory2: this.library.models.playerVictory2,
+            victory3: this.library.models.playerVictory3,
+            victory4: this.library.models.playerVictory4,
+            victory5: this.library.models.playerVictory5
         }
         for(let i = 0; i < 5; i++){
             let player = new Player(0,0,modelObj);
-            player.SetAction(player.animationActions['ready'])
+            player.SetAction(player.animationActions['ready' + Math.ceil(Math.random() * 3)])
             player.position.set(-1000 + (i * -50), 37 + Math.min(i, 4 - i) * 1, -1050 + Math.min(i, 4 - i) * 25);
             player.scale.set(.25, .25, .25)
             player.lookAt(player.position.x, player.position.y, 0);
@@ -247,8 +268,8 @@ export default class LobbyScene {
         this.scene.add(this.playerCastle);
 
         this.playerCastleBuildPlane = new Plane(new Vector3(0,-1,0), this.castleMin);
-        let helper = new PlaneHelper(this.playerCastleBuildPlane, 1000, 0xffff00)
-        this.scene.add(helper);
+        // let helper = new PlaneHelper(this.playerCastleBuildPlane, 1000, 0xffff00)
+        // this.scene.add(helper);
         // min 35, max 110
 
         // @ts-ignore
@@ -327,9 +348,11 @@ export default class LobbyScene {
             model: this.library.models.playerModel,
             idle: this.library.models.playerIdle,
             bored: this.library.models.playerBored,
-            ready: this.library.models.playerReady,
-            sad: this.library.models.playerSad,
-            victory: this.library.models.playerVictory
+            ready1: this.library.models.playerReady1,
+            ready2: this.library.models.playerReady2,
+            ready3: this.library.models.playerReady3,
+            lose: this.library.models.playerLose1,
+            victory: this.library.models.playerVictory1
         }
         this.myPlayer = new Player(0, 0, playerModels);
         this.myPlayer.position.set(0,0,128);
@@ -352,9 +375,11 @@ export default class LobbyScene {
             model: this.library.models.playerModel,
             idle: this.library.models.playerIdle,
             bored: this.library.models.playerBored,
-            ready: this.library.models.playerReady,
-            sad: this.library.models.playerSad,
-            victory: this.library.models.playerVictory
+            ready1: this.library.models.playerReady1,
+            ready2: this.library.models.playerReady2,
+            ready3: this.library.models.playerReady3,
+            lose: this.library.models.playerLose1,
+            victory: this.library.models.playerVictory1
         }
         this.enemyPlayer = new Player(0, 0, playerModels);
         this.enemyPlayer.position.set(0,0,-128);
@@ -362,7 +387,7 @@ export default class LobbyScene {
         this.enemyPlayer.scale.x = -1 * this.enemyPlayer.scale.x;
         this.enemyPlayer.SetAction(this.enemyPlayer.animationActions[this.enemyPlayerStatus]);
 
-        this.myPlayerStatus = 'ready';
+        this.myPlayerStatus = 'ready' + Math.ceil(Math.random() * 3);
         this.myPlayer.SetAction(this.myPlayer.animationActions[this.myPlayerStatus]);
 
         this.scene.add(this.enemyPlayer);
@@ -380,8 +405,9 @@ export default class LobbyScene {
      * @param {{player: string, enemy: string}} statusList 
      */
     Show(statusList = null){
-        this.container.style.zIndex = "30000"
-
+        this.container.style.zIndex = "19000"
+        this.renderThisScene = true;
+        
         if(statusList != null && this.myPlayer && this.enemyPlayer){
             this.myPlayerStatus = statusList.player;
             this.enemyPlayerStatus = statusList.enemy
@@ -393,10 +419,11 @@ export default class LobbyScene {
     
     Hide() {
         this.container.style.zIndex = "-1"
+        // this.renderThisScene = false;
         
         if(this.myPlayer && this.enemyPlayer){
-            this.myPlayerStatus = 'ready';
-            this.enemyPlayerStatus = 'ready';
+            this.myPlayerStatus = 'ready' + Math.ceil(Math.random() * 3);
+            this.enemyPlayerStatus = 'ready' + Math.ceil(Math.random() * 3);
     
             this.myPlayer.SetAction(this.myPlayer.animationActions[this.myPlayerStatus]);
             this.enemyPlayer.SetAction(this.enemyPlayer.animationActions[this.enemyPlayerStatus]);
@@ -411,11 +438,6 @@ export default class LobbyScene {
         if(who == 'player'){
             this.playerCastleBuildStatusPercent = percent;
             this.playerCastleBuildPlane.constant = this.castleMin + (percent * (this.castleMax - this.castleMin));
-            // console.log('playerCastle: ');
-            // console.log(percent);
-            // console.log((this.castleMax - this.castleMin))
-            // console.log(this.castleMin + (percent * (this.castleMax - this.castleMin)))
-            // console.log(this.playerCastleBuildPlane.constant)
         } else {
             this.enemyCastleBuildStatusCount = percent;
             this.enemyCastleBuildPlane.constant = this.castleMin + (percent * (this.castleMax - this.castleMin));

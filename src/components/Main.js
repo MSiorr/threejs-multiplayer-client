@@ -203,7 +203,7 @@ export default class Main {
         console.log("SERVER FOUND ROOM FOR U");
         this.menu.hide("lobby");
         this.menu.show("startsSoon");
-        this.menu.edit("startsSoon", "Get ready... </br>Game will begin shortly");
+        // this.menu.edit("startsSoon", "Get ready... </br>Game will begin shortly");
         this.lobbyScene.addEnemyWarrior();
     }
 
@@ -218,8 +218,6 @@ export default class Main {
         this.gui.edit(`<span class='diffEasy'>EASY: </span>${data.easyCount}`, 'gameInfo', 'easyMapCount');
         this.gui.edit(`<span class='diffMedium'>MEDIUM: </span>${data.mediumCount}`, 'gameInfo', 'mediumMapCount');
         this.gui.edit(`<span class='diffHard'>HARD: </span>${data.hardCount}`, 'gameInfo', 'hardMapCount');
-
-        this.gui.edit('21:37:69', 'gameInfo', 'time');
     }
 
     /**
@@ -231,9 +229,10 @@ export default class Main {
         this.menu.hide("roomTransition");
         this.menu.show("win");
 
-        this.lobbyScene.Show({ player: 'victory', enemy: 'sad' });
+        this.lobbyScene.Show({ player: 'victory', enemy: 'lose' });
         this.lobbyScene.CreatePlayerCannon();
         this.lobbyScene.CreatePlayerWarriors();
+        this.lobbyScene.CreateEnemyWarriors();
         setTimeout(() => {
             this.lobbyScene.EndGameCutscene(true);
         }, 5000)
@@ -289,7 +288,7 @@ export default class Main {
         console.log("U WAIT FOR NEXT MAP");
 
         this.menu.show("roomTransition");
-        this.lobbyScene.Show({ player: 'victory', enemy: 'sad' });
+        this.lobbyScene.Show({ player: 'victory', enemy: 'lose' });
     }
 
     WinBattle() {
@@ -298,9 +297,10 @@ export default class Main {
         this.menu.hide("roomTransition");
         this.menu.show("win");
 
-        this.lobbyScene.Show({ player: 'victory', enemy: 'sad' });
+        this.lobbyScene.Show({ player: 'victory', enemy: 'lose' });
         this.lobbyScene.CreatePlayerCannon();
         this.lobbyScene.CreatePlayerWarriors();
+        this.lobbyScene.CreateEnemyWarriors();
         setTimeout(() => {
             this.lobbyScene.EndGameCutscene(true);
         }, 5000)
@@ -315,9 +315,10 @@ export default class Main {
         this.menu.hide("roomTransition");
         this.menu.show("lose");
 
-        this.lobbyScene.Show({ player: 'sad', enemy: 'victory' });
+        this.lobbyScene.Show({ player: 'lose', enemy: 'victory' });
         this.lobbyScene.CreateEnemyCannon();
         this.lobbyScene.CreatePlayerWarriors();
+        this.lobbyScene.CreateEnemyWarriors();
         setTimeout(() => {
             this.lobbyScene.EndGameCutscene(false);
         }, 5000)

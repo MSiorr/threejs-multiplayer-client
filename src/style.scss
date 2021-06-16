@@ -1,6 +1,11 @@
+@font-face {
+    font-family: MedivalFont;
+    src: url("./resources/fonts/Seagram.ttf");
+}
+
 * {
     box-sizing: border-box;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+    // font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
 }
 
 html,
@@ -64,7 +69,8 @@ body {
 
     #lobby {
         // background-color: rgb(77, 77, 83);
-        background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
+        // background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
+        background-color: transparent;
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -81,7 +87,8 @@ body {
 
     #starts-soon {
         background-color: rgb(137, 137, 145);
-        background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
+        // background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
+        background-color: transparent;
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -90,7 +97,8 @@ body {
     }
 
     #room-transition {
-        background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
+        // background: linear-gradient(90deg, rgb(112, 176, 226) 50%, rgb(239, 79, 89) 50%);
+        background-color: transparent;
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -99,7 +107,8 @@ body {
     }
 
     #win {
-        background-color: rgb(136, 232, 136);
+        // background-color: rgb(136, 232, 136);
+        background-color: transparent;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -107,7 +116,8 @@ body {
     }
 
     #lose {
-        background-color: rgb(232, 136, 136);
+        // background-color: rgb(232, 136, 136);
+        background-color: transparent;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -127,7 +137,7 @@ body {
         z-index: 0;
         position: absolute;
 
-        background-color: rgba(100, 100, 100, 0.7);
+        // background-color: rgba(100, 100, 100, 0.7);
         border: 2px solid black;
 
         &.active {
@@ -137,11 +147,14 @@ body {
     }
 
     #status-bars {
-        width: 800px;
-        height: 50px;
+        width: 600px;
+        height: 80px;
         top: 10px;
-        left: calc(50% - 400px);
-        padding: 5px 7.5px;
+        left: calc(50% - 300px);
+        padding: 20px 25px;
+        background-image: url("./resources/textures/GUI/barsDiv.png");
+        border: none;
+        background-color: none;
 
         display: flex;
         flex-direction: column;
@@ -150,12 +163,14 @@ body {
 
         #player-bar {
             background-color: rgba(59, 59, 211, 0.7);
-            height: 40%;
+            height: 30%;
+            transition: width .5s;
         }
-
+        
         #enemy-bar {
             background-color: rgba(204, 36, 36, 0.7);
-            height: 40%;
+            height: 30%;
+            transition: width .5s;
         }
     }
 
@@ -167,11 +182,15 @@ body {
     }
 
     #active-effects {
-        width: 200px;
+        width: 250px;
         height: 300px;
         top: calc(50% - 150px);
         right: 10px;
         padding: 0;
+
+        background-image: url("./resources/textures/GUI/configDiv.png");
+        border: none;
+        background-color: none;
 
         .item {
             @keyframes onUse {
@@ -263,12 +282,16 @@ body {
     }
 
     #game-info {
-        width: 200px;
+        width: 250px;
         height: 300px;
         top: calc(50% - 150px);
         left: 10px;
-        padding: 15px 10px;
+        padding: 25px 25px;
         font-weight: bold;
+        font-family: 'MedivalFont';
+        background-image: url("./resources/textures/GUI/configDiv.png");
+        border: none;
+        background-color: none;
 
         display: flex;
         flex-direction: column;
@@ -277,12 +300,14 @@ body {
 
         #count-info,
         #current-info {
+            font-family: 'MedivalFont';
             display: flex;
             flex-direction: column;
             justify-content: center;
             width: 100%;
 
             & > * {
+                font-family: 'MedivalFont';
                 width: 100%;
                 display: flex;
                 justify-content: space-between;
@@ -290,16 +315,23 @@ body {
                 margin: 1px 0;
             }
         }
+        #current-info {
+            letter-spacing: -2px;
+        }
+
+        #time {
+            font-size: 24px;
+        }
     }
 }
 
 .diffEasy {
-    color: rgb(51, 253, 51);
+    color: rgb(0, 164, 0);
     margin-left: 20px;
 }
 
 .diffMedium {
-    color: rgb(255, 181, 44);
+    color: rgb(222, 131, 0);
     margin-left: 20px;
 }
 
