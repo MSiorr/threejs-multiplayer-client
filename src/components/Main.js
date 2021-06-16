@@ -193,7 +193,13 @@ export default class Main {
      * @param {Number} s
      */
     ParseToTimeString(h, m, s) {
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+        let ss = "<span>";
+
+        if (h === 21 && m === 37) {
+            ss = "<span class='kremowka'>"
+        }
+
+        return `${ss}${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}</span>`
     }
 
     startSearch() {
