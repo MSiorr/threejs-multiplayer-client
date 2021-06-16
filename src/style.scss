@@ -175,18 +175,29 @@ body {
     }
 
     #options {
-        width: 50px;
-        height: 50px;
+        width: 80px;
+        height: 80px;
         top: 10px;
         right: 10px;
+        border: none;
+        background-color: none;
+
+        .on {
+            background-image: url("./resources/textures/GUI/shadowON.png");
+        }
+
+        .off {
+            background-image: url("./resources/textures/GUI/shadowOFF.png");
+        }
     }
 
     #active-effects {
         width: 250px;
         height: 300px;
         top: calc(50% - 150px);
+        padding: 20px 25px;
         right: 10px;
-        padding: 0;
+        overflow: hidden;
 
         background-image: url("./resources/textures/GUI/configDiv.png");
         border: none;
@@ -195,28 +206,33 @@ body {
         .item {
             @keyframes onUse {
                 0% {
-                    background-color: rgba(204, 36, 36, 1);
+                    // background-color: rgba(204, 36, 36, 1);
+                    box-shadow: inset 0 0 99999px rgba(204, 36, 36, 1);
                 }
                 100% {
-                    background-color: rgba(100, 100, 100, 0.7);
+                    // background-color: rgba(100, 100, 100, 0.7);
+                    box-shadow: inset 0 0 0 transparent;
                 }
             }
 
-            width: 190px;
+            width: 100%;
             margin: 5px auto;
-            height: 92px;
-            padding: 10px 10px;
+            height: 80px;
+            padding: 10px 20px;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            border: 2px solid black;
+            background-image: url("./resources/textures/GUI/activePowerupDiv.png");
+            border: none;
+            background-color: none;
+            // border: 2px solid black;
 
             animation: onUse 1s ease-in-out 0s 1 normal forwards;
 
             .icon {
-                width: 68px;
-                height: 68px;
+                width: 58px;
+                height: 58px;
                 background-color: red;
                 background-position: center;
                 background-size: cover;
@@ -225,7 +241,7 @@ body {
 
             .time {
                 font-size: 36px;
-                color: whitesmoke;
+                color: black;
                 text-align: right;
                 width: 90px;
             }
@@ -241,13 +257,17 @@ body {
     }
 
     #powerups {
-        width: 340px;
-        height: 120px;
+        width: 420px;
+        height: 150px;
         bottom: 10px;
-        left: calc(50% - 170px);
+        left: calc(50% - 210px);
+        padding: 0 15px;
         display: flex;
         justify-content: space-around;
         align-items: center;
+        background-image: url("./resources/textures/GUI/powerupsDiv.png");
+        border: none;
+        background-color: none;
 
         .powerup {
             display: block;
@@ -318,7 +338,7 @@ body {
             }
         }
         #current-info {
-            letter-spacing: -1.5px;
+            letter-spacing: -2px;
         }
 
         #time {
