@@ -8,7 +8,7 @@ module.exports = {
     devServer: {
         port: 8080
     },
-    mode: 'development',
+    mode: 'production',
     plugins: [
         new HtmlWebpackPlugin({
             hash: true,
@@ -47,12 +47,12 @@ module.exports = {
             {
                 test: /\.(ttf)$/i,
                 use: [
-                  {
-                    loader: 'file-loader',
-                    options: {
-                      name: '[name].[ext]',
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'fonts/[hash]-[name].[ext]',
+                        }
                     }
-                  }
                 ]
             }
         ]
