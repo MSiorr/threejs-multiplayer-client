@@ -1,4 +1,4 @@
-# Three.JS Multiplayer Client
+# Three.JS Multiplayer Client (Castle Royale)
 
 Logic 1v1 game, written in Javascript and Three.js.
 
