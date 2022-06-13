@@ -2,6 +2,12 @@
 
 Logic 1v1 game, written in Javascript and Three.js.
 
+![look1](https://user-images.githubusercontent.com/49323088/173359614-84156176-ddec-4b50-8791-09ada77c6c90.png)
+![look2](https://user-images.githubusercontent.com/49323088/173359629-a9e2a74d-0aa8-4ca8-893c-b90f296dda1e.png)
+
+### Test it now 
+**👉 https://fk-ms-yearly-project.herokuapp.com/game/ 👈**
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Installation and setup](#installation-and-setup)
